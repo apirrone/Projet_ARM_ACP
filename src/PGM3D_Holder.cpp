@@ -11,7 +11,7 @@ PGM3D_Holder::PGM3D_Holder(char* filePath) {
   ifstream fileToRead(filePath);
 
   if (fileToRead.is_open()) {
-    
+    // First, load the header
     getline(fileToRead, line);
     
     if(line.compare("PGM3D") != 0){
@@ -50,10 +50,11 @@ PGM3D_Holder::PGM3D_Holder(char* filePath) {
     _maxValue = stoi(line);
     
     _data = new unsigned char(_width*_height*_depth);
-    
+
+    // Then load the data in _data
     i = 0;
     while (getline(fileToRead, line)) 
-	 _data[i] = stoi(line);
+      _data[i] = stoi(line);
     
     
     fileToRead.close();
