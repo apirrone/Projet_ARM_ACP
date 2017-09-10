@@ -1,7 +1,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
-#include "PGM3D_Holder.h"
+#include "PGM3D_Holder.hpp"
 
 using namespace std;
 

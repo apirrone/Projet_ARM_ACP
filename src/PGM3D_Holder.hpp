@@ -1,12 +1,12 @@
-#ifndef PGM3D_HOLDER_H
-#define PGM3D_HOLDER_H
+#ifndef PGM3D_HOLDER_HPP
+#define PGM3D_HOLDER_HPP
 
 class PGM3D_Holder {
 
- public:
+public:
   PGM3D_Holder(char* filePath);
 
- private:
+private:
   // the image dimensions
   int _width;
   int _height;
@@ -17,4 +17,4 @@ class PGM3D_Holder {
   unsigned char* _data;
 };
 
-#endif // PGM3D_HOLDER_H
+#endif // PGM3D_HOLDER_HPP
