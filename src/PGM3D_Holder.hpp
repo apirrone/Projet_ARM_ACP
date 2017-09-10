@@ -5,6 +5,7 @@ class PGM3D_Holder {
 
 public:
   PGM3D_Holder(char* filePath);
+  ~PGM3D_Holder();
 
 private:
   // the image dimensions
