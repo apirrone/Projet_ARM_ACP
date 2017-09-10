@@ -53,9 +53,11 @@ PGM3D_Holder::PGM3D_Holder(char* filePath) {
 
     // Then load the data in _data
     i = 0;
-    while (getline(fileToRead, line)) 
-      _data[i] = stoi(line);
-    
+    while (getline(fileToRead, line))
+      {
+	_data[i] = stoi(line);
+	i++;
+      }
     
     fileToRead.close();
   }
@@ -70,4 +72,29 @@ PGM3D_Holder::PGM3D_Holder(char* filePath) {
 PGM3D_Holder::~PGM3D_Holder()
 {
   delete _data;
+}
+
+int PGM3D_Holder::getWidth() const
+{
+  return _width;
+}
+
+int PGM3D_Holder::getHeight() const
+{
+  return _height;
+}
+
+int PGM3D_Holder::getDepth() const
+{
+  return _depth;
+}
+
+int PGM3D_Holder::getMaxValue() const
+{
+  return _maxValue;
+}
+
+const unsigned char* PGM3D_Holder::getData() const
+{
+  return _data;
 }

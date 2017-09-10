@@ -7,6 +7,12 @@ public:
   PGM3D_Holder(char* filePath);
   ~PGM3D_Holder();
 
+  int getWidth() const;
+  int getHeight() const;
+  int getDepth() const;
+  int getMaxValue() const;
+  const unsigned char * getData() const;
+
 private:
   // the image dimensions
   int _width;

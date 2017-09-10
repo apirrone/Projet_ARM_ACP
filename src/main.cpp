@@ -16,7 +16,19 @@ int main(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
   
-  PGM3D_Holder test = PGM3D_Holder(argv[1]); 
+  PGM3D_Holder test = PGM3D_Holder(argv[1]);
+  int w = test.getWidth();
+  int h = test.getHeight();
+  int d = test.getDepth();
+  const unsigned char * data = test.getData();
+  cout << "Test : \n\t - w : " << w << endl
+       << "\t - h : " << h << endl
+       << "\t - d : " << d << endl
+       << "\t - max : " << test.getMaxValue() << endl;
+  for(int i = 0; i < w*h*d*3; ++i)
+    {
+      cout << "\t - data[" << i << "] = " << (int)data[i] << endl;
+    }
   
   return EXIT_SUCCESS;
 }
