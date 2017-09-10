@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 # project name
 project(VisioBrain)
 
+# Qt5
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
