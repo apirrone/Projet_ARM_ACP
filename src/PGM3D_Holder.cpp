@@ -1,9 +1,10 @@
 #include "PGM3D_Holder.h"
 #include <fstream>
-#include <string>
 #include <iostream>
 
-pgm3D_Holder::pgm3D_Holder(char* filePath) {
+using namespace std;
+
+PGM3D_Holder::PGM3D_Holder(char* filePath) {
 
   string line;
   ifstream fileToRead(filePath);
@@ -19,4 +20,5 @@ pgm3D_Holder::pgm3D_Holder(char* filePath) {
     std::cerr << "The file : " << filePath <<" could not be opened" << std::endl;
     return;
   }
+  
 }
