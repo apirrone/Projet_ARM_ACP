@@ -11,6 +11,7 @@ class PGM3D_Holder {
   int _width;
   int _height;
   int _depth;
+  int _maxValue;
   
   // the data stored in 1 byte long chunks
   unsigned char* _data;
