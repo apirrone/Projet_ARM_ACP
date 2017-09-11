@@ -3,6 +3,8 @@
 #include <fstream>
 #include "PGM3D_Holder.hpp"
 
+//#define DEBUG
+
 using namespace std;
 
 void usage(char* programName){
@@ -15,8 +17,10 @@ int main(int argc, char *argv[]) {
     usage(argv[0]);
     return EXIT_FAILURE;
   }
-  
+
   PGM3D_Holder test = PGM3D_Holder(argv[1]);
+
+#ifdef DEBUG
   int w = test.getWidth();
   int h = test.getHeight();
   int d = test.getDepth();
@@ -29,6 +33,7 @@ int main(int argc, char *argv[]) {
     {
       cout << "\t - data[" << i << "] = " << (int)data[i] << endl;
     }
-  
+#endif
+
   return EXIT_SUCCESS;
 }

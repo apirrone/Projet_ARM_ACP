@@ -13,21 +13,22 @@ PGM3D_Holder::PGM3D_Holder(char* filePath) {
   if (fileToRead.is_open()) {
     // First, load the header
     getline(fileToRead, line);
-    
+
     if(line.compare("PGM3D") != 0){
       cerr << "Incorrect Header" << endl;
+      fileToRead.close();
       return;
     }
 
     getline(fileToRead, line);
-    
+
     char* temp;
     char* line_char = const_cast<char*>(line.c_str());
-    
+
     temp = strtok(line_char, " ");
 
     char* res[3];
-    
+
     int i = 0;
     while (temp != NULL) {
       res[i++] = temp;
@@ -36,29 +37,28 @@ PGM3D_Holder::PGM3D_Holder(char* filePath) {
 
     if(i != 3){
       cerr << "Incorrect Header" << endl;
+      fileToRead.close();
       return;
     }
-    
-    
+
+
     _width = atoi(res[0]);
     _height = atoi(res[1]);
     _depth = atoi(res[2]);
 
-    
+
     getline(fileToRead, line);
-    
+
     _maxValue = stoi(line);
-    
-    _data = new unsigned char(_width*_height*_depth);
+
+    _data = new unsigned char[_width*_height*_depth*4];
 
     // Then load the data in _data
     i = 0;
-    while (getline(fileToRead, line))
-      {
-	_data[i] = stoi(line);
-	i++;
-      }
-    
+    while (getline(fileToRead, line)) {
+    	_data[i] = (unsigned char)stoi(line);
+    	i++;
+    }
     fileToRead.close();
   }
   else {
@@ -66,12 +66,12 @@ PGM3D_Holder::PGM3D_Holder(char* filePath) {
     cerr << "The file : " << filePath <<" could not be opened" << endl;
     return;
   }
-  
+
 }
 
 PGM3D_Holder::~PGM3D_Holder()
 {
-  delete _data;
+  delete[] _data;
 }
 
 int PGM3D_Holder::getWidth() const
