@@ -1,6 +1,7 @@
 #include <fstream>
 #include <iostream>
 #include <string.h>
+#include <regex>
 #include "PGM3D_Holder.hpp"
 
 using namespace std;
@@ -13,15 +14,17 @@ PGM3D_Holder::PGM3D_Holder(char* filePath) {
   if (fileToRead.is_open()) {
     // First, load the header
     getline(fileToRead, line);
-
-    if(line.compare("PGM3D") != 0){
+    const auto rtline = regex_replace( line, regex( "\\s+$" ), "" ) ;
+    if(rtline.compare("PGM3D") != 0){
       cerr << "Incorrect Header" << endl;
       fileToRead.close();
       return;
     }
 
+    //parsing size line
     getline(fileToRead, line);
-
+    
+    
     char* temp;
     char* line_char = const_cast<char*>(line.c_str());
 
@@ -30,7 +33,7 @@ PGM3D_Holder::PGM3D_Holder(char* filePath) {
     char* res[3];
 
     int i = 0;
-    while (temp != NULL) {
+    while (temp != NULL){
       res[i++] = temp;
       temp = strtok(NULL, " ");
     }
@@ -46,19 +49,41 @@ PGM3D_Holder::PGM3D_Holder(char* filePath) {
     _height = atoi(res[1]);
     _depth = atoi(res[2]);
 
+    int size = _width*_height*_depth;
 
+    //parsing max value line
     getline(fileToRead, line);
 
     _maxValue = stoi(line);
 
-    _data = new unsigned char[_width*_height*_depth*4];
+    _data = new unsigned char[size];
 
     // Then load the data in _data
     i = 0;
-    while (getline(fileToRead, line)) {
-    	_data[i] = (unsigned char)stoi(line);
-    	i++;
+    while(getline(fileToRead, line)){
+      size_t prev = 0, pos, end = min(line.find_first_of("#", 0), line.size());
+      while(prev < end){
+	pos = min(line.find_first_not_of("0123456789-", prev), end);
+	if(i<size){
+	  int val = stoi(line.substr(prev, pos-prev));
+	  if(val >= 0 && val <= _maxValue)
+	    _data[i] = val;
+	  else{
+	    cerr << "Value (" << val << ") is not in range [O;" << _maxValue << "]" << endl;
+	    fileToRead.close();
+	    return;
+	  }
+	}
+	else{
+	  cerr << "Too many values." << endl;
+	  fileToRead.close();
+	  return;
+	}
+	prev = pos+1;
+	i++;
+      }
     }
+    
     fileToRead.close();
   }
   else {

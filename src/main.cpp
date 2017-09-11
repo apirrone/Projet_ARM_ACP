@@ -3,7 +3,7 @@
 #include <fstream>
 #include "PGM3D_Holder.hpp"
 
-//#define DEBUG
+#define DEBUG
 
 using namespace std;
 
@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
        << "\t - h : " << h << endl
        << "\t - d : " << d << endl
        << "\t - max : " << test.getMaxValue() << endl;
-  for(int i = 0; i < w*h*d*3; ++i)
+  for(int i = 0; i < w*h*d; ++i)
     {
       cout << "\t - data[" << i << "] = " << (int)data[i] << endl;
     }
