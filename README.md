@@ -11,3 +11,10 @@ from the folder you want your build to be in :
 - cmake "path-to-the-folder-with-CMakeLists.txt"
 - make
 - ./VisioBrain
+
+# TODO 
+
+- Create class containing image3D data (transforms the data of pgm3D_holder in voxel)
+- Create qt window with opengl widget to display
+
+
