@@ -12,6 +12,7 @@ public:
   int getDepth() const;
   int getMaxValue() const;
   const unsigned char * getData() const;
+  unsigned char getValue(int, int, int) const; 
 
 private:
   // the image dimensions
