@@ -123,3 +123,8 @@ const unsigned char* PGM3D_Holder::getData() const
 {
   return _data;
 }
+
+unsigned char PGM3D_Holder::getValue(int x, int y, int z) const
+{
+  return _data[(x*_width+y)*_depth+z];
+}
