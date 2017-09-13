@@ -23,8 +23,8 @@ PGM3D_Holder::PGM3D_Holder(char* filePath) {
 
     //parsing size line
     getline(fileToRead, line);
-    
-    
+
+
     char* temp;
     char* line_char = const_cast<char*>(line.c_str());
 
@@ -83,7 +83,7 @@ PGM3D_Holder::PGM3D_Holder(char* filePath) {
 	i++;
       }
     }
-    
+
     fileToRead.close();
   }
   else {
