@@ -1,52 +1,26 @@
 #ifndef VEF_HPP
 #define VEF_HPP
 
+#include <vector>
+
+
 // Base class for object composed of vertices, edges and faces
 class VEF {
 
 public:
-
-  // TODO arrays ?
-  struct Vertex {
-    double x;
-    double y;
-    double z;
-
-    Vertex(double x, double y, double z)
-    :x(x),y(y),z(z) {}
-  };
-
-  struct Edge {
-    Vertex& v1;
-    Vertex& v2;
-
-    Edge(Vertex& v1, Vertex& v2)
-    :v1(v1),v2(v2) {}
-  };
-
-  struct Face {
-    Edge& e1;
-    Edge& e2;
-    Edge& e3;
-
-    Face(Edge& e1, Edge& e2, Edge& e3)
-    :e1(e1),e2(e2),e3(e3) {}
-  };
-
   // getters & setters
-  std::vector<Vertex*>& getVertices();
-  std::vector<Edge*>& getEdges();
-  std::vector<Face*>& getFaces();
+  std::vector<double>* getVertices();
+  std::vector<int>* getEdges();
+  std::vector<int>* getFaces();
 
-  void addVertex(Vertex& vertex);
-  void addEdge(Edge& edge);
-  void addFace(Face& face);
+  int addVertex(double x, double y, double z);
+  int addEdge(int p1, int p2);
+  int addFace(int e1, int e2, int e3, int e4);
 
 private:
-  std::vector<Vertex*> _vertices;
-  std::vector<Edge*> _edges;
-  std::vector<Face*> _faces;
-
+  std::vector<double> _vertices;
+  std::vector<int> _edges;
+  std::vector<int> _faces;
 };
 
 #endif // VEF_HPP
