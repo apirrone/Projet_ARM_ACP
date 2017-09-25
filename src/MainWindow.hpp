@@ -1,0 +1,28 @@
+// MainWindow.hpp
+
+#ifndef MAINWINDOW_HPP
+#define MAINWINDOW_HPP
+
+#include <QWidget>
+#include <QSlider>
+
+namespace Ui {
+class MainWindow;
+}
+
+class MainWindow : public QWidget
+{
+    Q_OBJECT
+
+public:
+    explicit MainWindow(QWidget *parent = 0);
+    ~MainWindow();
+
+protected:
+    void keyPressEvent(QKeyEvent *event);
+
+private:
+    Ui::MainWindow *ui;
+};
+
+#endif // MAINWINDOW_HPP

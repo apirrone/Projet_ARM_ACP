@@ -43,5 +43,3 @@ Voxel::Voxel(double x, double y, double z, double val)
   int f11 = this->addface(e7, e12, e18);
   int f12 = this->addface(e3, e11, e17);
 }
-
-

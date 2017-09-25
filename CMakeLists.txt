@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
+find_package(Qt5 COMPONENTS Core Widgets OpenGL REQUIRED)
 
 
 #Variable "source_files" to store all the files in src directory
@@ -25,5 +25,5 @@ add_executable(
   ${source_files}
   )
 
-target_link_libraries(VisioBrain Qt5::Widgets Qt5::Core)
+target_link_libraries(VisioBrain Qt5::Widgets Qt5::Core Qt5::OpenGL)
 
