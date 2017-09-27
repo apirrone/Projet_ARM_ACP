@@ -31,11 +31,10 @@ int VEF::addEdge(int p1, int p2) {
   return id;
 }
 
-int VEF::addFace(int e1, int e2, int e3, int e4) {
+int VEF::addFace(int e1, int e2, int e3) {
   int id = _faces.size();
   _faces.push_back(e1);
   _faces.push_back(e2);
   _faces.push_back(e3);
-  _faces.push_back(e4);
   return id;
 }

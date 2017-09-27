@@ -3,6 +3,7 @@
 #ifndef MAINWINDOW_HPP
 #define MAINWINDOW_HPP
 
+#include <QMainWindow>
 #include <QWidget>
 #include <QSlider>
 
@@ -10,7 +11,7 @@ namespace Ui {
 class MainWindow;
 }
 
-class MainWindow : public QWidget
+class MainWindow : public QMainWindow
 {
     Q_OBJECT
 

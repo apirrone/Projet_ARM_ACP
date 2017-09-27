@@ -5,39 +5,39 @@
 
 #include "3DViewer.hpp"
 
-3DViewer::3DViewer(QWidget *parent)
+SACViewer::SACViewer(QWidget *parent)
     : QGLWidget(QGLFormat(QGL::SampleBuffers), parent)
 {
 }
 
-3DViewer::~3DViewer()
+SACViewer::~SACViewer()
 {
 }
 
-QSize 3DViewer::minimumSizeHint() const
+QSize SACViewer::minimumSizeHint() const
 {
     return QSize(50, 50);
 }
 
-QSize 3DViewer::sizeHint() const
+QSize SACViewer::sizeHint() const
 {
     return QSize(400, 400);
 }
 
-void 3DViewer::initializeGL()
+void SACViewer::initializeGL()
 {
 }
 
-void 3DViewer::paintGL()
+void SACViewer::paintGL()
 {
 }
 
-void 3DViewer::resizeGL(int width, int height)
+void SACViewer::resizeGL(int width, int height)
 {
 
 }
 
-void 3DViewer::draw()
+void SACViewer::draw()
 {
 
 }

@@ -45,19 +45,11 @@ int main(int argc, char *argv[]) {
 
     return EXIT_SUCCESS;
   */
-
+  cout << "DEBUT" << endl;
   QApplication app(argc, argv);
   MainWindow window;
-  window.resize(window.sizeHint());
-  int desktopArea = QApplication::desktop()->width() *
-    QApplication::desktop()->height();
-  int widgetArea = window.width() * window.height();
-
-  window.setWindowTitle("OpenGL with Qt");
-
-  if (((float)widgetArea / (float)desktopArea) < 0.75f)
-    window.show();
-  else
-    window.showMaximized();
+  window.resize(800,600);
+  window.show();
+    cout << "FIN" << endl;
   return app.exec();
 }

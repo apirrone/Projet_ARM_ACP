@@ -8,6 +8,7 @@ set(CMAKE_CXX_STANDARD 11)
 # Qt5
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
+set(CMAKE AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 find_package(Qt5 COMPONENTS Core Widgets OpenGL REQUIRED)
 
@@ -22,7 +23,7 @@ file(
 # Executable + source_files
 add_executable(
   VisioBrain
-  ${source_files}
+  ${source_files}  
   )
 
 target_link_libraries(VisioBrain Qt5::Widgets Qt5::Core Qt5::OpenGL)

@@ -30,16 +30,16 @@ Voxel::Voxel(double x, double y, double z, double val)
   int e17 = this->addEdge(p6, p8);
   int e18 = this->addEdge(p4, p7);
 
-  int f1 = this->addface(e3, e4, e13);
-  int f2 = this->addface(e1, e2, e13);
-  int f3 = this->addface(e4, e12, e14);
-  int f4 = this->addface(e8, e9, e14);
-  int f5 = this->addface(e1, e9, e15);
-  int f6 = this->addface(e5, e10, e15);
-  int f7 = this->addface(e2, e10, e16);
-  int f8 = this->addface(e6, e11, e16);
-  int f9 = this->addface(e5, e8, e17);
-  int f10 = this->addface(e6, e17, e7);
-  int f11 = this->addface(e7, e12, e18);
-  int f12 = this->addface(e3, e11, e17);
+  int f1 = this->addFace(e3, e4, e13);
+  int f2 = this->addFace(e1, e2, e13);
+  int f3 = this->addFace(e4, e12, e14);
+  int f4 = this->addFace(e8, e9, e14);
+  int f5 = this->addFace(e1, e9, e15);
+  int f6 = this->addFace(e5, e10, e15);
+  int f7 = this->addFace(e2, e10, e16);
+  int f8 = this->addFace(e6, e11, e16);
+  int f9 = this->addFace(e5, e8, e17);
+  int f10 = this->addFace(e6, e17, e7);
+  int f11 = this->addFace(e7, e12, e18);
+  int f12 = this->addFace(e3, e11, e17);
 }

@@ -1,13 +1,13 @@
 // MainWindow.cpp
 
 #include <QtWidgets>
-#include "MainWindow.h"
+#include "MainWindow.hpp"
 #include "ui_MainWindow.h"
 
-#include "VisioBrainSpecialOpenGL3DWidget.h"
+#include "3DViewer.hpp"
 
 MainWindow::MainWindow(QWidget *parent) :
-    QWidget(parent),
+    QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
