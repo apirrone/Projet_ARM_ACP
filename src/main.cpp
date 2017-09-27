@@ -9,8 +9,9 @@
 #include <iostream>
 #include <fstream>
 #include "PGM3D_Holder.hpp"
+#include "Voxel.hpp"
 
-#define DEBUG
+// #define DEBUG
 
 using namespace std;
 
@@ -20,36 +21,53 @@ void usage(char* programName){
 
 int main(int argc, char *argv[]) {
 
-  /*
-    if(argc != 2){
+  
+  if(argc != 2){
     usage(argv[0]);
     return EXIT_FAILURE;
-    }
+  }
 
     PGM3D_Holder test = PGM3D_Holder(argv[1]);
+  
+  int w = test.getWidth();
+  int h = test.getHeight();
+  int d = test.getDepth();
+  
+  const unsigned char * data = test.getData();
+  
+#ifdef DEBUG
 
-    #ifdef DEBUG
-    int w = test.getWidth();
-    int h = test.getHeight();
-    int d = test.getDepth();
-    const unsigned char * data = test.getData();
-    cout << "Test : \n\t - w : " << w << endl
-    << "\t - h : " << h << endl
-    << "\t - d : " << d << endl
-    << "\t - max : " << test.getMaxValue() << endl;
-    for(int i = 0; i < w*h*d; ++i)
+
+  cout << "Test : \n\t - w : " << w << endl
+       << "\t - h : " << h << endl
+       << "\t - d : " << d << endl
+       << "\t - max : " << test.getMaxValue() << endl;
+  for(int i = 0; i < w*h*d; ++i)
     {
-    cout << "\t - data[" << i << "] = " << (int)data[i] << endl;
+      cout << "\t - data[" << i << "] = " << (int)data[i] << endl;
     }
-    #endif
+#endif
 
-    return EXIT_SUCCESS;
-  */
+  std::vector<Voxel> voxels;
+  int iter = 0;
+
+  //TODO CHECK ORDER
+  for(int i = 0 ; i < w ; i++)
+    for(int j = 0 ; j < h ; j++)
+      for(int k = 0 ; k < d  ; k++)
+	voxels.push_back(Voxel(i, j, k, data[iter++]));
+
+  std::cout << "iter : " << iter << std::endl;
+
   cout << "DEBUT" << endl;
+  
   QApplication app(argc, argv);
+  
   MainWindow window;
   window.resize(800,600);
   window.show();
-    cout << "FIN" << endl;
+  
+  cout << "FIN" << endl;
+  
   return app.exec();
 }

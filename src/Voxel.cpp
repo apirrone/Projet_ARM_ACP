@@ -2,6 +2,7 @@
 
 Voxel::Voxel(double x, double y, double z, double val)
   : _x(x), _y(y), _z(z), _value(val) {
+
   int p1 = this->addVertex(_x-0.5, _y+0.5, _z+0.5);
   int p2 = this->addVertex(_x+0.5, _y+0.5, _z+0.5);
   int p3 = this->addVertex(_x+0.5, _y+0.5, _z-0.5);

@@ -7,23 +7,27 @@
 #include <QWidget>
 #include <QSlider>
 
+#include "3DViewer.hpp" 
+
 namespace Ui {
-class MainWindow;
+  class MainWindow;
 }
 
 class MainWindow : public QMainWindow
 {
-    Q_OBJECT
+  // Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+  explicit MainWindow(QWidget *parent = 0);
+  ~MainWindow();
 
 protected:
-    void keyPressEvent(QKeyEvent *event);
+  void keyPressEvent(QKeyEvent *event);
 
 private:
-    Ui::MainWindow *ui;
+  Ui::MainWindow *ui;
+  Viewer* viewer;
+  
 };
 
 #endif // MAINWINDOW_HPP

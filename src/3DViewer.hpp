@@ -1,15 +1,19 @@
-//SACViewer.hpp
+//3DViewer.hpp
 
-#ifndef HAHALOLJOUJ
-#define HAHALOLJOUJ
+#ifndef VIEWER_HPP
+#define VIEWER_HPP
 
-#include <QGLWidget>
+#include <QtWidgets>
+#include <QtOpenGL>
+#include <QOpenGLFunctions>
 
-class SACViewer : public QGLWidget
+class Viewer : public QGLWidget
 {
+  Q_OBJECT
+  
 public:
-  explicit SACViewer(QWidget *parent = 0);
-  ~SACViewer();
+  explicit Viewer(QWidget *parent = 0);
+  ~Viewer();
   
 protected:
   void initializeGL();
@@ -23,4 +27,4 @@ private:
   void draw();
 };
 
-#endif // 3DVIEWERSAC_HPP
+#endif // VIEWER_HPP
