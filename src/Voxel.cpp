@@ -44,3 +44,34 @@ Voxel::Voxel(double x, double y, double z, double val)
   int f11 = this->addFace(e7, e12, e18);
   int f12 = this->addFace(e3, e11, e17);
 }
+
+void Voxel::paint(){
+
+  glBegin(GL_QUADS);
+  
+
+  int val = _value/255;
+  glColor3f(val,val,val);  
+
+  //  ????  
+
+  // for(int i = 0 ; i < 24 ; i+=3){//3*8=24
+    
+  //   double x = _vertices[i];
+  //   double y = _vertices[i+1];
+  //   double z = _vertices[i+2];
+
+  //   glVertex3f(x, y, z);
+    
+  // }
+  
+  // glVertex3f(_vertices[0], _vertices[0], _vertices[0]);
+  
+  // glVertex3f(1.0,1.0,1.0);
+  // glVertex3f(-1.0,1.0,1.0);
+  // glVertex3f(-1.0,-1.0,1.0);
+  // glVertex3f(1.0,-1.0,1.0);
+  
+  glEnd();
+  
+}

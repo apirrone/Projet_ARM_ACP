@@ -1,10 +1,9 @@
-// myglwidget.cpp
-
 
 #include "3DViewer.hpp"
 
 Viewer::Viewer(QWidget *parent)
-  : QGLWidget(QGLFormat(QGL::SampleBuffers), parent){
+  : QGLWidget(QGLFormat(QGL::SampleBuffers), parent)
+{
 }
 
 Viewer::~Viewer(){
@@ -25,6 +24,7 @@ void Viewer::initializeGL(){
 }
 
 void Viewer::paintGL(){
+  
   //TODO Récup les voxels et les afficher ici  
   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
   glMatrixMode(GL_MODELVIEW);

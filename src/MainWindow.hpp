@@ -7,7 +7,7 @@
 #include <QWidget>
 #include <QSlider>
 
-#include "3DViewer.hpp" 
+#include "3DViewer.hpp"
 
 namespace Ui {
   class MainWindow;
@@ -27,7 +27,7 @@ protected:
 private:
   Ui::MainWindow *ui;
   Viewer* viewer;
-  
+
 };
 
 #endif // MAINWINDOW_HPP

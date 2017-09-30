@@ -7,9 +7,9 @@
 #include "3DViewer.hpp"
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
-    // viewer(parent)
+  QMainWindow(parent),
+  ui(new Ui::MainWindow)
+  // viewer(parent)
 {
   ui->setupUi(this);
 

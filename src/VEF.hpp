@@ -17,7 +17,7 @@ public:
   int addEdge(int p1, int p2);
   int addFace(int e1, int e2, int e3);
 
-private:
+protected:
   std::vector<double> _vertices;
   std::vector<int> _edges;
   std::vector<int> _faces;

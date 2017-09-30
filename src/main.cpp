@@ -36,16 +36,15 @@ int main(int argc, char *argv[]) {
   const unsigned char * data = test.getData();
   
 #ifdef DEBUG
-
-
+  
   cout << "Test : \n\t - w : " << w << endl
        << "\t - h : " << h << endl
        << "\t - d : " << d << endl
        << "\t - max : " << test.getMaxValue() << endl;
+  
   for(int i = 0; i < w*h*d; ++i)
-    {
-      cout << "\t - data[" << i << "] = " << (int)data[i] << endl;
-    }
+    cout << "\t - data[" << i << "] = " << (int)data[i] << endl;
+  
 #endif
 
   std::vector<Voxel> voxels;
