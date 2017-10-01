@@ -8,6 +8,7 @@
 #include <QSlider>
 
 #include "3DViewer.hpp"
+#include "Voxel.hpp"
 
 namespace Ui {
   class MainWindow;
@@ -18,7 +19,7 @@ class MainWindow : public QMainWindow
   // Q_OBJECT
 
 public:
-  explicit MainWindow(QWidget *parent = 0);
+  explicit MainWindow(std::vector<Voxel>* voxels = NULL, QWidget *parent = 0);
   ~MainWindow();
 
 protected:
@@ -27,7 +28,6 @@ protected:
 private:
   Ui::MainWindow *ui;
   Viewer* viewer;
-
 };
 
 #endif // MAINWINDOW_HPP

@@ -6,14 +6,14 @@
 #include "ui_MainWindow.h"
 #include "3DViewer.hpp"
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(std::vector<Voxel>* voxels, QWidget *parent) :
   QMainWindow(parent),
   ui(new Ui::MainWindow)
   // viewer(parent)
 {
   ui->setupUi(this);
 
-  viewer = new Viewer(this);
+  viewer = new Viewer(voxels, this);
   this->setCentralWidget(viewer);
 }
 

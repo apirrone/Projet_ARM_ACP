@@ -1,5 +1,5 @@
 #include "Voxel.hpp"
-
+#include <iostream>
 Voxel::Voxel(double x, double y, double z, double val)
   : _x(x), _y(y), _z(z), _value(val) {
 
@@ -43,35 +43,63 @@ Voxel::Voxel(double x, double y, double z, double val)
   int f10 = this->addFace(e6, e17, e7);
   int f11 = this->addFace(e7, e12, e18);
   int f12 = this->addFace(e3, e11, e17);
+  
 }
 
 void Voxel::paint(){
 
-  glBegin(GL_QUADS);
-  
-
   int val = _value/255;
-  glColor3f(val,val,val);  
+  
+  // glColor3f(val,val,val);  
+  glColor3f(1, 0, 0);  
 
-  //  ????  
+  for(int i = 0 ; i < _faces.size() ; i+=3){
 
-  // for(int i = 0 ; i < 24 ; i+=3){//3*8=24
+    int e1 = _faces.at(i);
+    int e2 = _faces.at(i+1);
+    int e3 = _faces.at(i+2);
+
+    int v1 = _edges.at(e1);
+    int v2 = _edges.at(e1+1);
+
+    int v3 = _edges.at(e2);
+    int v4 = _edges.at(e2+1);
+
+    int v5 = _edges.at(e3);
+    int v6 = _edges.at(e3+1);
     
-  //   double x = _vertices[i];
-  //   double y = _vertices[i+1];
-  //   double z = _vertices[i+2];
+    double v1_x = _vertices.at(v1);
+    double v1_y = _vertices.at(v1+1);
+    double v1_z = _vertices.at(v1+2);
 
-  //   glVertex3f(x, y, z);
+    double v2_x = _vertices.at(v2);
+    double v2_y = _vertices.at(v2+1);
+    double v2_z = _vertices.at(v2+2);
+
+    double v3_x = _vertices.at(v3);
+    double v3_y = _vertices.at(v3+1);
+    double v3_z = _vertices.at(v3+2);
+
+    double v4_x = _vertices.at(v4);
+    double v4_y = _vertices.at(v4+1);
+    double v4_z = _vertices.at(v4+2);
     
-  // }
-  
-  // glVertex3f(_vertices[0], _vertices[0], _vertices[0]);
-  
-  // glVertex3f(1.0,1.0,1.0);
-  // glVertex3f(-1.0,1.0,1.0);
-  // glVertex3f(-1.0,-1.0,1.0);
-  // glVertex3f(1.0,-1.0,1.0);
-  
-  glEnd();
+    double v5_x = _vertices.at(v5);
+    double v5_y = _vertices.at(v5+1);
+    double v5_z = _vertices.at(v5+2); 
+    
+    double v6_x = _vertices.at(v6);
+    double v6_y = _vertices.at(v6+1);
+    double v6_z = _vertices.at(v6+2);
+    // std::cout << "coucou6" << std::endl;
+ 
+    glVertex3f(v1_x, v1_y, v1_z);
+    glVertex3f(v2_x, v2_y, v2_z);
+    glVertex3f(v3_x, v3_y, v3_z);
+
+    // glVertex3f(v4_x, v4_y, v4_z);
+    // glVertex3f(v5_x, v5_y, v5_z);
+    // glVertex3f(v6_x, v6_y, v6_z);
+  } 
   
 }

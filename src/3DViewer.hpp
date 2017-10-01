@@ -6,13 +6,13 @@
 #include <QtWidgets>
 #include <QtOpenGL>
 #include <QOpenGLFunctions>
-
+#include "Voxel.hpp"
 class Viewer : public QGLWidget
 {
   Q_OBJECT
   
 public:
-  explicit Viewer(QWidget *parent = 0);
+  explicit Viewer(std::vector<Voxel>* voxels, QWidget *parent = 0);
   ~Viewer();
   
 protected:
@@ -25,6 +25,7 @@ protected:
 
 private:
   void draw();
+  std::vector<Voxel>* _voxels;
 };
 
 #endif // VIEWER_HPP

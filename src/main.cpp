@@ -62,7 +62,7 @@ int main(int argc, char *argv[]) {
   
   QApplication app(argc, argv);
   
-  MainWindow window;
+  MainWindow window(&voxels);
   window.resize(800,600);
   window.show();
   
