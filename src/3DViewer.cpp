@@ -30,14 +30,16 @@ void Viewer::paintGL(){
   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-  glTranslatef(0.0f,0.0f,-40.0f); //move along z-axis
+  glTranslatef(0.0f,0.0f,-5.0f); //move along z-axis
   // glRotatef(45.0,0.0,1.0,0.0); //rotate 30 degress around y-axis
   // glRotatef(45.0,1.0,0.0,0.0); //rotate 15 degress around x-axis
 
   glBegin(GL_TRIANGLES);
 
-  for(std::vector<Voxel>::iterator it = _voxels->begin() ; it != _voxels->end(); ++it)
-    it->paint(); 
+  (*_voxels)[0].paint();
+  
+  // for(std::vector<Voxel>::iterator it = _voxels->begin() ; it != _voxels->end(); ++it) 
+  // 	    it->paint(); 
   
   //   //front
   // glColor3f(1.0,0.0,0.0);

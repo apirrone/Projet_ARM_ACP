@@ -1,8 +1,13 @@
 #include "Voxel.hpp"
 #include <iostream>
+
+static initVEF() {
+  
+} 
 Voxel::Voxel(double x, double y, double z, double val)
   : _x(x), _y(y), _z(z), _value(val) {
-
+  if(_vef == NULL)
+    initVEF();
   int p1 = this->addVertex(_x-0.5, _y+0.5, _z+0.5);
   int p2 = this->addVertex(_x+0.5, _y+0.5, _z+0.5);
   int p3 = this->addVertex(_x+0.5, _y+0.5, _z-0.5);
@@ -46,6 +51,23 @@ Voxel::Voxel(double x, double y, double z, double val)
   
 }
 
+void Voxel::initVBA(){
+
+  glGenBuffers(1,&_vertexBufferId);
+  glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferId);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(double)*_vertices.size(), _vertices.data(), GL_STATIC_DRAW);
+  
+  glGenBuffers(1,&mIndexBufferId);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferId);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Vector3i)*mFaces.size(), mFaces[0].data(), GL_STATIC_DRAW);
+  
+  glGenVertexArrays(1,&mVertexArrayId);
+  
+  mIsInitialized = true;
+  
+  glClearColor(0.8, 0.8, 0.8, 1);
+}
+
 void Voxel::paint(){
 
   int val = _value/255;
@@ -53,7 +75,7 @@ void Voxel::paint(){
   // glColor3f(val,val,val);  
   glColor3f(1, 0, 0);  
 
-  for(int i = 0 ; i < _faces.size() ; i+=3){
+  for(int i = 9 ; i < 12 ; i+=3){
 
     int e1 = _faces.at(i);
     int e2 = _faces.at(i+1);
@@ -92,7 +114,15 @@ void Voxel::paint(){
     double v6_y = _vertices.at(v6+1);
     double v6_z = _vertices.at(v6+2);
     // std::cout << "coucou6" << std::endl;
- 
+
+    std::cout << "v1_x : " << v1_x << ", v1_y : " << v1_y << ", v1_z : " << v1_z << std::endl;
+    std::cout << "v2_x : " << v2_x << ", v2_y : " << v2_y << ", v2_z : " << v2_z << std::endl;
+    std::cout << "v3_x : " << v3_x << ", v3_y : " << v3_y << ", v3_z : " << v3_z << std::endl;
+
+    // std::cout << "v4_x : " << v4_x << ", v4_y : " << v4_y << ", v4_z : " << v4_z << std::endl;
+    // std::cout << "v5_x : " << v5_x << ", v5_y : " << v5_y << ", v5_z : " << v5_z << std::endl;
+    // std::cout << "v6_x : " << v6_x << ", v6_y : " << v6_y << ", v6_z : " << v6_z << std::endl;
+    
     glVertex3f(v1_x, v1_y, v1_z);
     glVertex3f(v2_x, v2_y, v2_z);
     glVertex3f(v3_x, v3_y, v3_z);
