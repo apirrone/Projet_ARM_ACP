@@ -2,12 +2,6 @@
 #include <iostream>
 
 static initVEF() {
-  
-} 
-Voxel::Voxel(double x, double y, double z, double val)
-  : _x(x), _y(y), _z(z), _value(val) {
-  if(_vef == NULL)
-    initVEF();
   int p1 = this->addVertex(_x-0.5, _y+0.5, _z+0.5);
   int p2 = this->addVertex(_x+0.5, _y+0.5, _z+0.5);
   int p3 = this->addVertex(_x+0.5, _y+0.5, _z-0.5);
@@ -36,19 +30,74 @@ Voxel::Voxel(double x, double y, double z, double val)
   int e17 = this->addEdge(p6, p8);
   int e18 = this->addEdge(p4, p7);
 
-  int f1 = this->addFace(e3, e4, e13);
-  int f2 = this->addFace(e1, e2, e13);
-  int f3 = this->addFace(e4, e12, e14);
-  int f4 = this->addFace(e8, e9, e14);
-  int f5 = this->addFace(e1, e9, e15);
-  int f6 = this->addFace(e5, e10, e15);
-  int f7 = this->addFace(e2, e10, e16);
-  int f8 = this->addFace(e6, e11, e16);
-  int f9 = this->addFace(e5, e8, e17);
-  int f10 = this->addFace(e6, e17, e7);
-  int f11 = this->addFace(e7, e12, e18);
-  int f12 = this->addFace(e3, e11, e17);
+  _faceIndices[Voxel::Face::TOP][0] = this->addFace(e3, e4, e13);
+  _faceIndices[Voxel::Face::TOP][1] = this->addFace(e1, e2, e13);
+  _faceIndices[Voxel::Face::LEFT][0] = this->addFace(e4, e12, e14);
+  _faceIndices[Voxel::Face::LEFT][1] = this->addFace(e8, e9, e14);
+  _faceIndices[Voxel::Face::FRONT][0] = this->addFace(e1, e9, e15);
+  _faceIndices[Voxel::Face::FRONT][1] = this->addFace(e5, e10, e15);
+  _faceIndices[Voxel::Face::RIGHT][0] = this->addFace(e2, e10, e16);
+  _faceIndices[Voxel::Face::RIGHT][1] = this->addFace(e6, e11, e16);
+  _faceIndices[Voxel::Face::BOTTOM][0] = this->addFace(e5, e8, e17);
+  _faceIndices[Voxel::Face::BOTTOM][1] = this->addFace(e6, e17, e7);
+  _faceIndices[Voxel::Face::REAR][0] = this->addFace(e7, e12, e18);
+  _faceIndices[Voxel::Face::REAR][1] = this->addFace(e3, e11, e18);
+}
+
+static fillVBO(){
+  //adds all the vertices and select the faces to show
   
+  int e1,e2,e3, v1_1, v1_2, v2_1, v2_2, v3_1, v3_2, v1, v2, v3;
+  std::vector<double> * verts = _vef.getVertices();
+  std::vector<double> * edges = _vef.getEdges();
+  std::vector<double> * faces = _vef.getFaces();
+
+  std::vector<int> faceVertex;
+  for(int i = 0; i < 6; ++i){
+    if(_showFace[i])
+      {
+	for(int f=0; f<2; ++f){
+	  int ind = _faceIndices[i][0]; 
+	  e1 = (*faces)[ind];
+	  e2 = (*faces)[ind+1];
+	  e3 = (*faces)[ind+2];
+
+	  v1_1 = (*edges)[e1];
+	  v1_2 = (*edges)[e1+1];
+	  
+	  v2_1 = (*edges)[e2];
+	  v2_2 = (*edges)[e2+1];
+	  
+	  v3_1 = (*edges)[e3];
+	  v3_2 = (*edges)[e3+1];
+
+	  if(v1_1 == v2_1){
+	    v1 = v1_2;
+	    v2 = v1_1;
+	    v3 = v2_2;
+	  }else if(v1_1 == v2_2){
+	    v1 = v1_2;
+	    v2 = v1_1;
+	    v3 = v2_1;
+	  }else if(v1_2 == v2_1){
+	    v1 = v1_1;
+	    v2 = v1_2;
+	    v3 = v2_2;
+	  }
+	  
+		  
+	}
+      }
+  }
+}
+
+Voxel::Voxel(double x, double y, double z, double val)
+  : _x(x), _y(y), _z(z), _value(val) {
+  if(_vef == NULL)
+    initVEF();
+  for(int i = 0; i<6; ++i)
+    _showFace[i] = true;
+  _changed = true;
 }
 
 void Voxel::initVBA(){
@@ -69,7 +118,7 @@ void Voxel::initVBA(){
 }
 
 void Voxel::paint(){
-
+  //TODO check _changed
   int val = _value/255;
   
   // glColor3f(val,val,val);  
