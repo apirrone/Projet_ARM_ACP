@@ -5,7 +5,7 @@
 #include <QtOpenGL>
 #include <QOpenGLFunctions>
 
-class Voxel{
+class Voxel : public VEF{
 
 public:
   static enum Face {TOP = 0, BOTTOM = 1, FRONT = 2, REAR = 3, LEFT = 4, RIGHT = 5};
@@ -14,7 +14,6 @@ public:
   void paint();
   
 private:
-  static VEF* _vef = NULL;
   static int _faceIndices[6][2];
   
   double _x, _y, _z, _value;

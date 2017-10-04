@@ -56,21 +56,25 @@ static fillVBO(){
   for(int i = 0; i < 6; ++i){
     if(_showFace[i])
       {
+	//for each triangle of the face
 	for(int f=0; f<2; ++f){
-	  int ind = _faceIndices[i][0]; 
+	  int ind = _faceIndices[i][0];
+	  //we retrieve the three edges
 	  e1 = (*faces)[ind];
 	  e2 = (*faces)[ind+1];
 	  e3 = (*faces)[ind+2];
 
+	  //the two vertices of the first edge
 	  v1_1 = (*edges)[e1];
 	  v1_2 = (*edges)[e1+1];
-	  
+	  //the two vertices of the second edge
 	  v2_1 = (*edges)[e2];
 	  v2_2 = (*edges)[e2+1];
-	  
+	  //the two vertices of the third edge
 	  v3_1 = (*edges)[e3];
 	  v3_2 = (*edges)[e3+1];
 
+	  //we check which vertex is common between e1 and e2 to determine the order of the vertices
 	  if(v1_1 == v2_1){
 	    v1 = v1_2;
 	    v2 = v1_1;
@@ -83,8 +87,18 @@ static fillVBO(){
 	    v1 = v1_1;
 	    v2 = v1_2;
 	    v3 = v2_2;
+	  }else if(v1_2 == v2_2){
+	    v1 = v1_1;
+	    v2 = v1_2;
+	    v3 = v2_1;
+	  }else{
+	    std::cerr << "ERROR Voxel::fillVBO() : broken voxel face (no common vertex between two edges)" << std::endl;
 	  }
-	  
+
+	  //we check if e3 vertices are correct
+	  assert((v3_1 == v3 && v3_2 == v1) || (v3_1 == v1 && v3_2 == v3));
+
+	  //TODO add v1 v2 v3 to openGL face indices array
 		  
 	}
       }
@@ -102,6 +116,7 @@ Voxel::Voxel(double x, double y, double z, double val)
 
 void Voxel::initVBA(){
 
+  //vertex VBO
   glGenBuffers(1,&_vertexBufferId);
   glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferId);
   glBufferData(GL_ARRAY_BUFFER, sizeof(double)*_vertices.size(), _vertices.data(), GL_STATIC_DRAW);
@@ -109,6 +124,7 @@ void Voxel::initVBA(){
   glGenBuffers(1,&mIndexBufferId);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBufferId);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Vector3i)*mFaces.size(), mFaces[0].data(), GL_STATIC_DRAW);
+  //TODO peut être mettre GL_DYNAMIC pour si on veut changer à la volée les faces affichées ?
   
   glGenVertexArrays(1,&mVertexArrayId);
   
