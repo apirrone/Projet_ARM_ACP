@@ -2,7 +2,7 @@
 #include "VEF.hpp"
 
 // getters
-std::vector<double>* VEF::getVertices() {
+std::vector<Vertex>* VEF::getVertices() {
   return &_vertices;
 }
 
@@ -18,9 +18,7 @@ std::vector<int>* VEF::getFaces() {
 //add an element and returns its index in the VEF
 int VEF::addVertex(double x, double y, double z) {
   int id = _vertices.size();
-  _vertices.push_back(x);
-  _vertices.push_back(y);
-  _vertices.push_back(z);
+  _vertices.push_back(Vertex(x, y, z));
   return id;
 }
 

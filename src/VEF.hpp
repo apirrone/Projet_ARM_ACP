@@ -8,8 +8,17 @@
 class VEF {
 
 public:
+  
+  struct Vertex {
+    Vertex(double x, double y, double z)
+      : position[0](x), position[1](y), position[2](z) {}
+    double position[3];
+    double normal[3];
+    double color[4];
+  };
+  
   // getters & setters
-  std::vector<double>* getVertices();
+  std::vector<Vertex>* getVertices();
   std::vector<int>* getEdges();
   std::vector<int>* getFaces();
 
@@ -18,7 +27,7 @@ public:
   int addFace(int e1, int e2, int e3);
 
 protected:
-  std::vector<double> _vertices;
+  std::vector<Vertex> _vertices;
   std::vector<int> _edges;
   std::vector<int> _faces;
 };
