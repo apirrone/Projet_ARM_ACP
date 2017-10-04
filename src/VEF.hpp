@@ -22,6 +22,7 @@ public:
   std::vector<int>* getEdges();
   std::vector<int>* getFaces();
 
+  int addVertex(const Vertex& v);
   int addVertex(double x, double y, double z);
   int addEdge(int p1, int p2);
   int addFace(int e1, int e2, int e3);

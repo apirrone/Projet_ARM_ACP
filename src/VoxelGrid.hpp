@@ -22,7 +22,7 @@ private :
     //Y : F = FRONT, R = REAR
     //Z : L = LEFT, R = RIGHT
     static enum Corner{TFL = 0, TFR = 1, TRL = 2, TRR = 3, BFL = 4, BFR = 5, BRL = 6, BRR = 7};
-    Vertex* vertices[8];
+    int vertices[8];
     double value;
 
     Voxel() : value(0) {
