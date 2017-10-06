@@ -10,8 +10,25 @@ class VEF {
 public:
   
   struct Vertex {
-    Vertex(double x, double y, double z)
-      : position[0](x), position[1](y), position[2](z) {}
+    Vertex() {
+      position[0] = 0.;
+      position[1] = 0.;
+      position[2] = 0.;
+      color[0] = 0.8;
+      color[1] = 0.8;
+      color[2] = 0.8;
+      color[3] = 1.0;
+    }
+    Vertex(double x, double y, double z) {
+      position[0] = x;
+      position[1] = y;
+      position[2] = z;
+      color[0] = 0.8;
+      color[1] = 0.8;
+      color[2] = 0.8;
+      color[3] = 1.0;
+    }
+    
     double position[3];
     double normal[3];
     double color[4];

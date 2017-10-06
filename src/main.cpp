@@ -9,7 +9,7 @@
 #include <iostream>
 #include <fstream>
 #include "PGM3D_Holder.hpp"
-#include "Voxel.hpp"
+#include "VoxelGrid.hpp"
 
 // #define DEBUG
 
@@ -47,22 +47,12 @@ int main(int argc, char *argv[]) {
   
 #endif
 
-  std::vector<Voxel> voxels;
-  int iter = 0;
-
-  //TODO CHECK ORDER
-  for(int i = 0 ; i < w ; i++)
-    for(int j = 0 ; j < h ; j++)
-      for(int k = 0 ; k < d  ; k++)
-	voxels.push_back(Voxel(i, j, k, data[iter++]));
-
-  std::cout << "iter : " << iter << std::endl;
-
+  VoxelGrid * grid = new VoxelGrid(h,w,d,data);
   cout << "DEBUT" << endl;
   
   QApplication app(argc, argv);
   
-  MainWindow window(&voxels);
+  MainWindow window(*grid);
   window.resize(800,600);
   window.show();
   

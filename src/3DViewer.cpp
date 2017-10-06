@@ -1,14 +1,13 @@
-
 #include "3DViewer.hpp"
 
-Viewer::Viewer(std::vector<Voxel>* voxels, QWidget *parent)
+Viewer::Viewer(VoxelGrid& grid, QWidget *parent)
   : QGLWidget(QGLFormat(QGL::SampleBuffers), parent),
-    _voxels(voxels)
+    _voxelGrid(grid)
 {
 }
 
 Viewer::~Viewer(){
-  
+  delete _shader;
 }
 
 QSize Viewer::minimumSizeHint() const{
@@ -20,7 +19,20 @@ QSize Viewer::sizeHint() const{
 }
 
 void Viewer::initializeGL(){
-  // glClearColor(0.0, 0.0, 0.0, 0.0);
+  glClearColor(0.6, 0.2, 0.2, 1.0);
+
+  //shader init
+  _shader = new QOpenGLShaderProgram();
+  _shader->addShaderFromSourceFile(QOpenGLShader::Vertex, "../data/shaders/simple.vert");
+  _shader->addShaderFromSourceFile(QOpenGLShader::Fragment, "../data/shaders/simple.frag");
+  _shader->link();
+
+  _projectionMat.setToIdentity();
+  _projectionMat.perspective(45.0f, this->width() / float(this->height()), 0.1f, 1000.0f);
+
+  _viewMat.setToIdentity();
+
+  
   glEnable(GL_DEPTH_TEST);
 }
 
@@ -28,89 +40,22 @@ void Viewer::paintGL(){
   
   //TODO Récup les voxels et les afficher ici  
   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  glTranslatef(0.0f,0.0f,-5.0f); //move along z-axis
-  // glRotatef(45.0,0.0,1.0,0.0); //rotate 30 degress around y-axis
-  // glRotatef(45.0,1.0,0.0,0.0); //rotate 15 degress around x-axis
+  _shader->bind();
 
-  glBegin(GL_TRIANGLES);
-
-  (*_voxels)[0].paint();
+  _shader->setUniformValue(_shader->uniformLocation("proj_mat"), _projectionMat);
+  _shader->setUniformValue(_shader->uniformLocation("view_mat"), _viewMat);
   
-  // for(std::vector<Voxel>::iterator it = _voxels->begin() ; it != _voxels->end(); ++it) 
-  // 	    it->paint(); 
+  _voxelGrid.draw(_shader);
+
+  _shader->release();
+
   
-  //   //front
-  // glColor3f(1.0,0.0,0.0);
-
-  // glVertex3f(1.0,1.0,1.0);
-  // glVertex3f(-1.0,1.0,1.0);
-  // glVertex3f(-1.0,-1.0,1.0);
-  // glVertex3f(1.0,-1.0,1.0);
-
-
-  // //back
-
-  // glColor3f(0.0,1.0,0.0);
-
-  // glVertex3f(1.0,1.0,-1.0);
-  // glVertex3f(-1.0,1.0,-1.0);
-  // glVertex3f(-1.0,-1.0,-1.0);
-  // glVertex3f(1.0,-1.0,-1.0);
-
-
-  // //top
-  // //glColor3f(0.0,0.0,1.0);
-
-  // glVertex3f(-1.0,1.0,1.0);
-  // glVertex3f(1.0,1.0,1.0);
-  // glVertex3f(1.0,1.0,-1.0);
-  // glVertex3f(-1.0,1.0,-1.0);
-
-
-  // //bottom
-  // glColor3f(0.0,1.0,1.0);
-
-  // glVertex3f(1.0,-1.0,1.0);
-  // glVertex3f(1.0,-1.0,-1.0);
-  // glVertex3f(-1.0,-1.0,-1.0);
-  // glVertex3f(-1.0,-1.0,1.0);
-
-  // //right
-  // glColor3f(1.0,0.0,1.0);
-
-  // glVertex3f(1.0,1.0,1.0);
-  // glVertex3f(1.0,-1.0,1.0);
-  // glVertex3f(1.0,-1.0,-1.0);
-  // glVertex3f(1.0,1.0,-1.0);
-
-
-  // //left
-  // glColor3f(1.0,1.0,0.0);
-
-  // glVertex3f(-1.0,1.0,1.0);
-  // glVertex3f(-1.0,-1.0,1.0);
-  // glVertex3f(-1.0,-1.0,-1.0);
-  // glVertex3f(-1.0,1.0,-1.0);
-
-
-  glEnd();
 }
 
 void Viewer::resizeGL(int width, int height){
 
-  glViewport( 0, 0, (GLint)width, (GLint)height );
-
-  /* create viewing cone with near and far clipping planes */
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  glFrustum( -1.0, 1.0, -1.0, 1.0, 5.0, 30.0);
-
-  glMatrixMode( GL_MODELVIEW );
-
+  //glViewport( 0, 0, (GLint)width, (GLint)height );
+  _projectionMat.setToIdentity();
+  _projectionMat.perspective(45.0f, width / float(height), 0.1f, 1000.0f);
 }
 
-void Viewer::draw(){
-
-}

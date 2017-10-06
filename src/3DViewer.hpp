@@ -6,13 +6,16 @@
 #include <QtWidgets>
 #include <QtOpenGL>
 #include <QOpenGLFunctions>
-#include "Voxel.hpp"
+#include <QOpenGLShaderProgram>
+
+#include "VoxelGrid.hpp"
+
 class Viewer : public QGLWidget
 {
   Q_OBJECT
   
 public:
-  explicit Viewer(std::vector<Voxel>* voxels, QWidget *parent = 0);
+  explicit Viewer(VoxelGrid& grid, QWidget *parent = 0);
   ~Viewer();
   
 protected:
@@ -24,8 +27,10 @@ protected:
   QSize sizeHint() const;
 
 private:
-  void draw();
-  std::vector<Voxel>* _voxels;
+  VoxelGrid& _voxelGrid;
+  QOpenGLShaderProgram * _shader;
+  QMatrix4x4 _projectionMat;
+  QMatrix4x4 _viewMat;
 };
 
 #endif // VIEWER_HPP
