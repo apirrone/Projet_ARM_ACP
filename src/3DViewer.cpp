@@ -35,6 +35,10 @@ void Viewer::initializeGL(){
   std::cout << "init" << std::endl;
   f->glClearColor(0.6, 0.2, 0.2, 1.0);
   f->glEnable(GL_CULL_FACE);
+
+  f->glEnable(GL_BLEND);
+  f->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  
   //shader init
   _shader = new QOpenGLShaderProgram();
   _shader->addShaderFromSourceFile(QOpenGLShader::Vertex, "../data/shaders/simple.vert");
@@ -45,9 +49,9 @@ void Viewer::initializeGL(){
   _projectionMat.setToIdentity();
   _projectionMat.perspective(45.0f, this->width() / float(this->height()), 0.1f, 1000.0f);
 
-
   _viewMat.setToIdentity();
   _viewMat.lookAt(QVector3D(0,0,5), QVector3D(0,0,0), QVector3D(0,1,0));
+  _viewMat.translate(QVector3D(0., 0., -150.));
 }
 
 void Viewer::paintGL(){
@@ -73,5 +77,10 @@ void Viewer::resizeGL(int width, int height){
   f->glViewport( 0, 0, (GLint)width, (GLint)height );
   _projectionMat.setToIdentity();
   _projectionMat.perspective(45.0f, width / float(height), 0.1f, 1000.0f);
+}
+
+void Viewer::rotateAroundTarget(float angle, QVector3D axis)
+{
+
 }
 

@@ -22,7 +22,7 @@ public:
       color[0] = 0.8;
       color[1] = 0.8;
       color[2] = 0.8;
-      color[3] = 1.0;
+      color[3] = 0.3;
     }
     Vertex(double x, double y, double z) {
       position[0] = x;
@@ -31,7 +31,17 @@ public:
       color[0] = 0.8;
       color[1] = 0.8;
       color[2] = 0.8;
-      color[3] = 1.0;
+      color[3] = 0.3;
+    }
+
+    Vertex(double x, double y, double z, float r, float g, float b, float a) {
+      position[0] = x;
+      position[1] = y;
+      position[2] = z;
+      color[0] = r;
+      color[1] = g;
+      color[2] = b;
+      color[3] = a;
     }    
   };
   

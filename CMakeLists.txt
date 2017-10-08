@@ -27,4 +27,3 @@ add_executable(
   )
 
 target_link_libraries(VisioBrain Qt5::Widgets Qt5::Core Qt5::OpenGL GL)
-

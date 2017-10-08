@@ -17,32 +17,33 @@ VoxelGrid::VoxelGrid(unsigned int h, unsigned int w, unsigned int d, const unsig
     for(int j=0; j<w; ++j)
       for(int k=0; k<d; ++k) {
 	Voxel& current = _voxels[i*_w*_d + j*_d + k];
-	std::cout << "test" << std::endl;
+	double currentValue = _voxels[i*_w*_d + j*_d + k].value;
+	// std::cout << "test" << std::endl;
 	VEF::Vertex v;
 	//we create all the vertices
 	//TFL
-	v = VEF::Vertex(i-0.5f, j+0.5f, k+0.5f);
+	v = VEF::Vertex(i-0.5f, j+0.5f, k+0.5f, currentValue, currentValue, currentValue, 0.1);
 	current.vertices[Voxel::Corner::TFL] = this->addVertex(v);
 	//TFR
-	v = VEF::Vertex(i+0.5f, j+0.5f, k+0.5f);
+	v = VEF::Vertex(i+0.5f, j+0.5f, k+0.5f, currentValue, currentValue, currentValue, 0.1);
 	current.vertices[Voxel::Corner::TFR] = this->addVertex(v);
 	//TRL
-	v = VEF::Vertex(i-0.5f, j+0.5f, k-0.5f);
+	v = VEF::Vertex(i-0.5f, j+0.5f, k-0.5f, currentValue, currentValue, currentValue, 0.1);
 	current.vertices[Voxel::Corner::TRL] = this->addVertex(v);
 	//TRR
-	v = VEF::Vertex(i+0.5f, j+0.5f, k-0.5f);
+	v = VEF::Vertex(i+0.5f, j+0.5f, k-0.5f, currentValue, currentValue, currentValue, 0.1);
 	current.vertices[Voxel::Corner::TRR] = this->addVertex(v);
 	//BFL
-	v = VEF::Vertex(i-0.5f, j-0.5f, k+0.5f);
+	v = VEF::Vertex(i-0.5f, j-0.5f, k+0.5f, currentValue, currentValue, currentValue, 0.1);
 	current.vertices[Voxel::Corner::BFL] = this->addVertex(v);
 	//BFR
-	v = VEF::Vertex(i+0.5f, j-0.5f, k+0.5f);
+	v = VEF::Vertex(i+0.5f, j-0.5f, k+0.5f, currentValue, currentValue, currentValue, 0.1);
 	current.vertices[Voxel::Corner::BFR] = this->addVertex(v);
 	//BRL
-	v = VEF::Vertex(i-0.5f, j-0.5f, k-0.5f);
+	v = VEF::Vertex(i-0.5f, j-0.5f, k-0.5f, currentValue, currentValue, currentValue, 0.1);
 	current.vertices[Voxel::Corner::BRL] = this->addVertex(v);
 	//BRR
-	v = VEF::Vertex(i+0.5f, j-0.5f, k-0.5f);
+	v = VEF::Vertex(i+0.5f, j-0.5f, k-0.5f, currentValue, currentValue, currentValue, 0.1);
 	current.vertices[Voxel::Corner::BRR] = this->addVertex(v);
 	//retrieve neighborhood
 	Voxel * top, * bot, * left, * right, * front, * rear;
@@ -171,11 +172,18 @@ void VoxelGrid::draw(QOpenGLShaderProgram* shader){
 
   _vertexArray.bind();
   _indexBuffer->bind();
-  int vertex_loc = shader->attributeLocation("vtx_position");
+  
+  int vertex_loc = shader->attributeLocation("vtx_position"); 
   if(vertex_loc>=0) {
     shader->setAttributeBuffer(vertex_loc, GL_FLOAT, offsetof(VEF::Vertex,position), 3, sizeof(VEF::Vertex));
     shader->enableAttributeArray(vertex_loc);
   }
+
+  int color_loc = shader->attributeLocation("vtx_color");
+  if(color_loc>=0) {
+    shader->setAttributeBuffer(color_loc, GL_FLOAT, offsetof(VEF::Vertex,color), 4, sizeof(VEF::Vertex));
+    shader->enableAttributeArray(color_loc);
+  }  
 
   glDrawElements(GL_TRIANGLES, _faces.size(), GL_UNSIGNED_INT, 0);
   _indexBuffer->release();

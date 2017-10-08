@@ -16,9 +16,11 @@ class Viewer : public QOpenGLWidget
 public:
   explicit Viewer(VoxelGrid& grid, QWidget *parent = 0);
   ~Viewer();
+
+  void rotateAroundTarget(float angle, QVector3D axis);
   
 protected:
-  void initializeGL();
+     void initializeGL();
   void paintGL();
   void resizeGL(int width, int height);
 

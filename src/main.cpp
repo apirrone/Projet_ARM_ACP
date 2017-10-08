@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
 
-    PGM3D_Holder test = PGM3D_Holder(argv[1]);
+  PGM3D_Holder test = PGM3D_Holder(argv[1]);
   
   int w = test.getWidth();
   int h = test.getHeight();
