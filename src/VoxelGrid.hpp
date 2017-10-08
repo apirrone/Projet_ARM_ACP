@@ -40,13 +40,10 @@ private :
   Voxel* getRearVoxel(int, int, int);
   
   bool _initialized;//true if VAO has been initialized
-  //QOpenGLVertexArrayObject _vertexArrayId;
-  //QOpenGLBuffer* _vertexBufferId;
-  //QOpenGLBuffer* _indexBufferId;
-  unsigned int _vertexArrayId;
-  unsigned int _vertexBufferId;
-  unsigned int _faceBufferId;
-
+  QOpenGLVertexArrayObject _vertexArray;
+  QOpenGLBuffer* _vertexBuffer;
+  QOpenGLBuffer* _indexBuffer;
+  
   Voxel* _voxels;
 
   unsigned int _w, _h, _d;

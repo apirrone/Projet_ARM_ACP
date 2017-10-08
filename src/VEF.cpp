@@ -6,11 +6,11 @@ std::vector<VEF::Vertex>* VEF::getVertices() {
   return &_vertices;
 }
 
-std::vector<int>* VEF::getEdges() {
+std::vector<unsigned int>* VEF::getEdges() {
   return &_edges;
 }
 
-std::vector<int>* VEF::getFaces() {
+std::vector<unsigned int>* VEF::getFaces() {
   return &_faces;
 }
 

@@ -33,8 +33,8 @@ private:
   QOpenGLVertexArrayObject _object;
   QOpenGLBuffer _vertexBufferId;
   QOpenGLBuffer* _faceBuffer;
-  float _vertices[9];
-  unsigned int _faces[3];
+  std::vector<VEF::Vertex> _vertices;
+  std::vector<unsigned int> _faces;
 
 };
 

@@ -8,8 +8,13 @@
 class VEF {
 
 public:
+
   
   struct Vertex {
+    float position[3];
+    float normal[3];
+    float color[4];
+    
     Vertex() {
       position[0] = 0.;
       position[1] = 0.;
@@ -27,17 +32,13 @@ public:
       color[1] = 0.8;
       color[2] = 0.8;
       color[3] = 1.0;
-    }
-    
-    double position[3];
-    double normal[3];
-    double color[4];
+    }    
   };
   
   // getters & setters
   std::vector<Vertex>* getVertices();
-  std::vector<int>* getEdges();
-  std::vector<int>* getFaces();
+  std::vector<unsigned int>* getEdges();
+  std::vector<unsigned int>* getFaces();
 
   int addVertex(const Vertex& v);
   int addVertex(double x, double y, double z);
@@ -46,8 +47,8 @@ public:
 
 protected:
   std::vector<Vertex> _vertices;
-  std::vector<int> _edges;
-  std::vector<int> _faces;
+  std::vector<unsigned int> _edges;
+  std::vector<unsigned int> _faces;
 };
 
 #endif // VEF_HPP
