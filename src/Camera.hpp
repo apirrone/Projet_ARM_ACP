@@ -8,7 +8,7 @@
 
 class Camera
 {
-  
+
 public:
   Camera();
   Camera(QVector3D Position, QVector3D target, int viewPortWidth, int viewPortHeight);
@@ -17,16 +17,16 @@ public:
   void initCamera(QVector3D position, QVector3D target, int viewPortWidth, int viewPortHeight);
   void rotateAroundAxis(float angle, QVector3D axis);
   void rotateAroundTarget(float angle, QVector3D axis);
+  void zoom(int orientation);
   void translateCamera(QVector3D direction);
   void updateCamera();
   void updateProjectionMatrix(int width, int height);
-  void setPosition(QVector3D position);  
+  void setPosition(QVector3D position);
   void setTarget(QVector3D target);
   QMatrix4x4 getProjectionMatrix();
   QMatrix4x4 getViewMatrix();
   int getVpWidth();
   int getVpHeight();
-  
   
 private:
   QMatrix4x4 _projectionMat;
@@ -42,7 +42,7 @@ private:
   int _vpWidth;
   int _vpHeight;
 
-  
+
 };
 
 #endif // CAMERA_HPP

@@ -5,7 +5,7 @@ Camera::Camera(){
 }
 
 Camera::Camera(QVector3D position, QVector3D target, int viewPortWidth, int viewPortHeight){
-  initCamera(position, target, viewPortWidth, viewPortHeight);  
+  initCamera(position, target, viewPortWidth, viewPortHeight);
 }
 
 Camera::~Camera(){}
@@ -15,15 +15,15 @@ void Camera::initCamera(QVector3D position, QVector3D target, int viewPortWidth,
   _vpWidth = viewPortWidth;
   _vpHeight = viewPortHeight;
   _position = position;
-  
+
   _target = target;
-  
+
   _projectionMat.setToIdentity();
   _projectionMat.perspective(45.0f, viewPortWidth / float(viewPortHeight), 0.1f, 1000.0f);
 
   _viewMat.setToIdentity();
-  _viewMat.lookAt(_position, _target, QVector3D(0,1,0));   
-  
+  _viewMat.lookAt(_position, _target, QVector3D(0,1,0));
+
 }
 
 void Camera::updateCamera(){
@@ -35,7 +35,7 @@ void Camera::updateProjectionMatrix(int width, int height){
 
   _projectionMat.setToIdentity();
   _projectionMat.perspective(45.0f, width / float(height), 0.1f, 1000.0f);
-  
+
 }
 
 void Camera::setPosition(QVector3D position){
@@ -66,15 +66,15 @@ QMatrix4x4 Camera::getViewMatrix(){
 }
 
 void Camera::translateCamera(QVector3D direction){
-  
+
   _position += direction;
-  
+
   // std::cout << "_position.x() : " << _position.x() << " _position.y() : " << _position.y() << " _position.z() : " << _position.z()  << std::endl;
 
   _viewMat.setToIdentity();
   _viewMat.translate(direction);
-  
-  _viewMat.lookAt(_position, _target, QVector3D(0,1,0));  
+
+  _viewMat.lookAt(_position, _target, QVector3D(0,1,0));
 }
 
 void Camera::rotateAroundTarget(float angle, QVector3D axis)
@@ -85,21 +85,9 @@ void Camera::rotateAroundTarget(float angle, QVector3D axis)
 
   //TODO Find how to update context from here
   
-  // _viewMat.setToIdentity();
-  
-  // QVector3D dir = _target - _position;
+  //updateCamera();
+}
 
-  // QMatrix4x4 tmp;
-  // tmp.setToIdentity();
-
-  // tmp.translate(_position.x() , _position.y(), _position.z());
-  // tmp.translate(QVector3D(dir.x(), dir.y(), dir.z()));
-  // tmp.rotate(-angle, QVector3D(axis.x(), axis.y(), axis.z()));
-  // tmp.translate(QVector3D(-dir.x(), -dir.y(), -dir.z()));
-
-  // _position.setX(tmp.column(3).x());
-  // _position.setY(tmp.column(3).y());
-  // _position.setZ(tmp.column(3).z());
-
-  // updateCamera(); 
+void Camera::zoom(int orientation){
+  _viewMat.translate(orientation*.1*(_viewMat*_target));
 }

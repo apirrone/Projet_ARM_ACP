@@ -9,7 +9,7 @@ Viewer::Viewer(VoxelGrid& grid, QWidget *parent)
     _voxelGrid(grid)
 {
   QSurfaceFormat format;
-  
+
   format.setVersion(3, 3);
 
   this->setFormat(format);
@@ -22,7 +22,6 @@ Viewer::Viewer(VoxelGrid& grid, QWidget *parent)
   unsigned int d = _voxelGrid.getD();
   // std::cout << "this->width() : " << this->width()  << std::endl;
   // _camera = Camera(QVector3D(-32., -32., -143), QVector3D(w/2., h/2., d/2.), this->width(), this->height());
-
 }
 
 Viewer::~Viewer(){
@@ -40,14 +39,14 @@ QSize Viewer::sizeHint() const{
 void Viewer::initializeGL(){
 
   QOpenGLFunctions * f = QOpenGLContext::currentContext()->functions();
-  
+
   std::cout << "init" << std::endl;
   f->glClearColor(0.6, 0.2, 0.2, 1.0);
   f->glEnable(GL_CULL_FACE);
 
   f->glEnable(GL_BLEND);
   f->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  
+
   //shader init
   _shader = new QOpenGLShaderProgram();
   _shader->addShaderFromSourceFile(QOpenGLShader::Vertex, "../data/shaders/simple.vert");
@@ -62,7 +61,6 @@ void Viewer::initializeGL(){
 
   
   _trackball.setCamera(&_camera);
-  
 }
 
 void Viewer::paintGL(){
@@ -75,9 +73,9 @@ void Viewer::paintGL(){
   _shader->setUniformValue(_shader->uniformLocation("view_mat"), _camera.getViewMatrix());
 
   _voxelGrid.draw(_shader);
-  
+
   _shader->release();
-  
+
 }
 
 void Viewer::resizeGL(int width, int height){
@@ -85,7 +83,6 @@ void Viewer::resizeGL(int width, int height){
   f->glViewport( 0, 0, (GLint)width, (GLint)height );
 
   _camera.updateProjectionMatrix(width, height);
- 
 }
 
 void Viewer::mousePressEvent(QMouseEvent *e){
@@ -105,6 +102,7 @@ void Viewer::mouseMoveEvent(QMouseEvent *e){
   // QVector3D n = QVector3D(diff.y(), diff.x(), 0.0).normalized();
   
   // qreal acc = diff.length() / 500.0;
+
 
   // _rotationAxis = (_rotationAxis * _angularSpeed + n * acc).normalized();
 
@@ -126,7 +124,7 @@ void Viewer::timerEvent(QTimerEvent *){
 }
 
 void Viewer::eventFromParent(QKeyEvent *e){
-  
+
   if (e->key() == Qt::Key_Escape)
     close();
   else if (e->key() == Qt::Key_Right)
@@ -145,8 +143,12 @@ void Viewer::eventFromParent(QKeyEvent *e){
     _camera.rotateAroundTarget(2, QVector3D(0, 1, 0));
   else if (e->key() == Qt::Key_E)
     _camera.rotateAroundTarget(-2, QVector3D(0, 1, 0));
-  else 
+  else if (e->key() == Qt::Key_Z)
+    _camera.zoom(1);
+  else if (e->key() == Qt::Key_S)
+    _camera.zoom(-1);
+  else
     QWidget::keyPressEvent(e);
-  
+
   update();
 }
