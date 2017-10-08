@@ -9,24 +9,18 @@ Viewer::Viewer(VoxelGrid& grid, QWidget *parent)
     _voxelGrid(grid)
 {
   QSurfaceFormat format;
-  //format.setDepthBufferSize(24);
-  //format.setStencilBufferSize(8);
+  
   format.setVersion(3, 3);
-  //format.setProfile(QSurfaceFormat::CoreProfile);
+
   this->setFormat(format);
 
-
-  // _position = QVector3D(-33., -32., -148);
-  _position = QVector3D(-32., -32., -143);
+  prevPos = QVector2D(0, 0);
+  timer.start(0, this);
+  
   unsigned int w = _voxelGrid.getW();
   unsigned int h = _voxelGrid.getH();
   unsigned int d = _voxelGrid.getD();
-  _target = QVector3D(w/2., h/2., d/2.);
-  
-  // _position = QVector3D(0., 0., 0.);
-  prevPos = QVector2D(0, 0);
-  timer.start(0, this);
-  // this.startTimer();
+  camera = Camera(QVector3D(-32., -32., -143), QVector3D(w/2., h/2., d/2.), this->width(), this->height());
 }
 
 Viewer::~Viewer(){
@@ -58,14 +52,7 @@ void Viewer::initializeGL(){
   _shader->addShaderFromSourceFile(QOpenGLShader::Fragment, "../data/shaders/simple.frag");
   _shader->link();
   _shader->bind();
-
-  _projectionMat.setToIdentity();
-  _projectionMat.perspective(45.0f, this->width() / float(this->height()), 0.1f, 1000.0f);
-
-  _viewMat.setToIdentity();
-  // _viewMat.translate(_position);
-  _viewMat.lookAt(_position, _target, QVector3D(0,1,0));
-  // _viewMat.inverted();
+  
 }
 
 void Viewer::paintGL(){
@@ -74,13 +61,12 @@ void Viewer::paintGL(){
   f->glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
   _shader->bind();
 
-  _shader->setUniformValue(_shader->uniformLocation("proj_mat"), _projectionMat);
-  _shader->setUniformValue(_shader->uniformLocation("view_mat"), _viewMat);
+  _shader->setUniformValue(_shader->uniformLocation("proj_mat"), camera.getProjectionMatrix());
+  _shader->setUniformValue(_shader->uniformLocation("view_mat"), camera.getViewMatrix());
 
   _voxelGrid.draw(_shader);
   
   _shader->release();
-
   
 }
 
@@ -88,47 +74,10 @@ void Viewer::resizeGL(int width, int height){
 
   QOpenGLFunctions * f = QOpenGLContext::currentContext()->functions();
   f->glViewport( 0, 0, (GLint)width, (GLint)height );
-  _projectionMat.setToIdentity();
-  _projectionMat.perspective(45.0f, width / float(height), 0.1f, 1000.0f);
+
+  camera.updateProjectionMatrix(width, height);
+ 
 }
-
-void Viewer::translateCamera(QVector3D direction){
-  
-  _position += direction;
-  
-  // std::cout << "_position.x() : " << _position.x() << " _position.y() : " << _position.y() << " _position.z() : " << _position.z()  << std::endl;
-
-  _viewMat.setToIdentity();
-  _viewMat.translate(direction);
-  
-  _viewMat.lookAt(_position, _target, QVector3D(0,1,0));  
-
-  update();
-}
-
-void Viewer::rotateAroundTarget(float angle, QVector3D axis)
-{
-  _viewMat.setToIdentity();
-  
-  QVector3D dir = _target - _position;
-
-  QMatrix4x4 tmp;
-  tmp.setToIdentity();
-
-  tmp.translate(_position.x() , _position.y(), _position.z());
-  tmp.translate(QVector3D(dir.x(), dir.y(), dir.z()));
-  tmp.rotate(-angle, QVector3D(axis.x(), axis.y(), axis.z()));
-  tmp.translate(QVector3D(-dir.x(), -dir.y(), -dir.z()));
-
-  _position.setX(tmp.column(3).x());
-  _position.setY(tmp.column(3).y());
-  _position.setZ(tmp.column(3).z());
-  
-  _viewMat.lookAt(_position, _target, QVector3D(0,1,0));
-  
-  update();  
-}
-
 
 void Viewer::mouseMoveEvent(QMouseEvent *e){
 
@@ -142,7 +91,6 @@ void Viewer::mouseMoveEvent(QMouseEvent *e){
   angularSpeed += acc; 
   
   prevPos = QVector2D(e->localPos());
-
 }
 
 void Viewer::timerEvent(QTimerEvent *){
@@ -151,6 +99,33 @@ void Viewer::timerEvent(QTimerEvent *){
   if (angularSpeed < 0.02) {
     angularSpeed = 0.0;
   } else {
-    rotateAroundTarget(angularSpeed, rotationAxis);
+    camera.rotateAroundTarget(angularSpeed, rotationAxis);
+    update();
   }
+}
+
+void Viewer::eventFromParent(QKeyEvent *e){
+  
+  if (e->key() == Qt::Key_Escape)
+    close();
+  else if (e->key() == Qt::Key_Right)
+    camera.translateCamera(QVector3D(-1, 0, 0));
+  else if (e->key() == Qt::Key_Left)
+    camera.translateCamera(QVector3D(1, 0, 0));
+  else if (e->key() == Qt::Key_Up)
+    camera.translateCamera(QVector3D(0, -1, 0));
+  else if (e->key() == Qt::Key_Down)
+    camera.translateCamera(QVector3D(0, 1, 0));
+  else if (e->key() == Qt::Key_P)
+    camera.translateCamera(QVector3D(0, 0, 1));
+  else if (e->key() == Qt::Key_L)
+    camera.translateCamera(QVector3D(0, 0, -1));
+  else if (e->key() == Qt::Key_A)
+    camera.rotateAroundTarget(2, QVector3D(0, 1, 0));
+  else if (e->key() == Qt::Key_E)
+    camera.rotateAroundTarget(-2, QVector3D(0, 1, 0));
+  else 
+    QWidget::keyPressEvent(e);
+  
+  update();
 }
