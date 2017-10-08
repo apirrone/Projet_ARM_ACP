@@ -30,10 +30,11 @@ private:
   QOpenGLShaderProgram * _shader;
   QMatrix4x4 _projectionMat;
   QMatrix4x4 _viewMat;
-  unsigned int _vertexBufferId;
-  unsigned int _faceBufferId;
-  std::vector<VEF::Vertex> _vertices;
-  std::vector<unsigned int> _faces;
+  QOpenGLVertexArrayObject _object;
+  QOpenGLBuffer _vertexBufferId;
+  QOpenGLBuffer* _faceBuffer;
+  float _vertices[9];
+  unsigned int _faces[3];
 
 };
 

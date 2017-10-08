@@ -170,8 +170,8 @@ void VoxelGrid::draw(QOpenGLShaderProgram* shader){
   QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();  
   
   //glFuncs->glBindVertexArray(_vertexArrayId);
-  glFuncs->glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferId);
-  glFuncs->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _faceBufferId);
+  //glFuncs->glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferId);
+  //glFuncs->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _faceBufferId);
 
   //position
   int vertex_loc = shader->attributeLocation("vtx_position");

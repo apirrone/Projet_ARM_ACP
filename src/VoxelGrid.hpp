@@ -41,8 +41,8 @@ private :
   
   bool _initialized;//true if VAO has been initialized
   //QOpenGLVertexArrayObject _vertexArrayId;
-  //QOpenGLBuffer _vertexBufferId;
-  //QOpenGLBuffer _faceBufferId;
+  //QOpenGLBuffer* _vertexBufferId;
+  //QOpenGLBuffer* _indexBufferId;
   unsigned int _vertexArrayId;
   unsigned int _vertexBufferId;
   unsigned int _faceBufferId;
