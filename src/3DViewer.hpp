@@ -5,12 +5,11 @@
 
 #include <QtWidgets>
 #include <QtOpenGL>
-#include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
 
 #include "VoxelGrid.hpp"
 
-class Viewer : public QGLWidget
+class Viewer : public QOpenGLWidget
 {
   Q_OBJECT
   
@@ -31,6 +30,11 @@ private:
   QOpenGLShaderProgram * _shader;
   QMatrix4x4 _projectionMat;
   QMatrix4x4 _viewMat;
+  unsigned int _vertexBufferId;
+  unsigned int _faceBufferId;
+  std::vector<VEF::Vertex> _vertices;
+  std::vector<unsigned int> _faces;
+
 };
 
 #endif // VIEWER_HPP

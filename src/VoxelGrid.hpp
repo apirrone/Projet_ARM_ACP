@@ -3,8 +3,6 @@
 
 #include <QtWidgets>
 #include <QtOpenGL>
-#include <QOpenGLFunctions>
-
 #include "VEF.hpp"
 
 class VoxelGrid : public VEF {
@@ -42,9 +40,12 @@ private :
   Voxel* getRearVoxel(int, int, int);
   
   bool _initialized;//true if VAO has been initialized
-  QOpenGLVertexArrayObject _vertexArrayId;
-  QOpenGLBuffer _vertexBufferId;
-  QOpenGLBuffer _vertexFaceId;
+  //QOpenGLVertexArrayObject _vertexArrayId;
+  //QOpenGLBuffer _vertexBufferId;
+  //QOpenGLBuffer _faceBufferId;
+  unsigned int _vertexArrayId;
+  unsigned int _vertexBufferId;
+  unsigned int _faceBufferId;
 
   Voxel* _voxels;
 

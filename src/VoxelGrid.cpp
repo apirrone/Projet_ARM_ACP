@@ -1,10 +1,12 @@
 #include <QOpenGLShaderProgram>
 #include <iostream>
+#include <QOpenGLFunctions>
 
 #include "VoxelGrid.hpp"
 
 VoxelGrid::VoxelGrid(unsigned int h, unsigned int w, unsigned int d, const unsigned char* data)
   : _w(w), _h(h), _d(d) {
+
   //créer tableau de voxels avec h w d
   _voxels = new Voxel[h*w*d];
   for(int i=0; i<h*w*d; ++i) {
@@ -155,15 +157,59 @@ VoxelGrid::~VoxelGrid() {
   //free _voxels
 
 
-  _vertexBufferId.destroy();
-  _vertexArrayId.destroy();
+  //_vertexBufferId.destroy();
+  //_vertexArrayId.destroy();
 }
 
 void VoxelGrid::draw(QOpenGLShaderProgram* shader){
+
+  std::cout << "VOXELGRID DRAW" << std::endl;
   if(!_initialized)
    initVAO();
-  glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
-  glEnableClientState(GL_VERTEX_ARRAY);
+  
+  QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();  
+  
+  //glFuncs->glBindVertexArray(_vertexArrayId);
+  glFuncs->glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferId);
+  glFuncs->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _faceBufferId);
+
+  //position
+  int vertex_loc = shader->attributeLocation("vtx_position");
+  if(vertex_loc>=0) {
+    shader->setAttributeBuffer(vertex_loc, GL_FLOAT, 0, 3, sizeof(VEF::Vertex));
+    shader->enableAttributeArray(vertex_loc);
+  }
+  /*
+  //normal
+  int normal_loc = shader->attributeLocation("vtx_normal");
+  if(normal_loc>=0) {
+    shader->setAttributeBuffer(normal_loc, GL_FLOAT, sizeof(double) * 3, 3, sizeof(VEF::Vertex));
+    shader->enableAttributeArray(normal_loc);
+  }
+
+  //color
+  int color_loc = shader->attributeLocation("vtx_color");
+  if(color_loc>=0) {
+    shader->setAttributeBuffer(color_loc, GL_FLOAT, sizeof(double)*6, 4, sizeof(VEF::Vertex));
+    shader->enableAttributeArray(color_loc);
+  }
+*/
+  std::cout << "BEFORE DRAW" << std::endl;
+  glFuncs->glDrawElements(GL_TRIANGLES, _faces.size(), GL_UNSIGNED_INT, 0);
+
+  std::cout << "AFTER DRAW" << std::endl;
+  if(vertex_loc)
+    shader->disableAttributeArray(vertex_loc);
+  /*
+  if(normal_loc)
+    shader->disableAttributeArray(normal_loc);
+  if(color_loc)
+    shader->disableAttributeArray(color_loc);
+  */
+  
+  /*
+  //glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+  //glEnableClientState(GL_VERTEX_ARRAY);
 
   _vertexArrayId.bind();
   _vertexBufferId.bind();
@@ -208,12 +254,12 @@ void VoxelGrid::draw(QOpenGLShaderProgram* shader){
   //_vertexBufferId.release();
   _vertexArrayId.release();
 
-  glDisableClientState(GL_VERTEX_ARRAY);
-
+  //glDisableClientState(GL_VERTEX_ARRAY);
+  */
 }
 
 void VoxelGrid::initVAO() {
-  _vertexBufferId.create();
+  /*_vertexBufferId.create();
   _vertexBufferId.bind();
   _vertexBufferId.setUsagePattern(QOpenGLBuffer::StaticDraw);
   //DEBUG
@@ -257,23 +303,55 @@ void VoxelGrid::initVAO() {
 
   _initialized = true;
   //_vertexArrayId.bind();
-  
-
-  /*
-  //create our VAO and bind it
-  glGenVertexArrays(1, &_vertexArrayId);
-  glBindVertexArray(_vertexArrayId);
-
-  glGenBuffers(1, &_vertexBufferId);
-  glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferId);
-  glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(VEF::Vertex), _vertices[0].position, GL_STATIC_DRAW); 
-  
-  glGenBuffers(1, &_vertexFaceId);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _vertexBufferId);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int)*_faces.size(), _faces[0], GL_STATIC_DRAW);
-  
-  glEnableVertexAttribArray(0);
-  glBindVertexArray(0);
   */
+
+  //*
+  //create our VAO and bind it
+
+  QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();
+  
+  //DEBUG
+  _vertices.clear();
+  Vertex v1, v2, v3;
+  v1.position[0] = -0.1;
+  v1.position[1] = 0.1;
+  v1.position[2] = -5.;
+  
+  v2.position[0] = -0.1;
+  v2.position[1] = -0.1;
+  v2.position[2] = -5.;
+  
+  v3.position[0] = 0.1;
+  v3.position[1] = 0.1;
+  v3.position[2] = -5.;
+  _vertices.push_back(v1);
+  _vertices.push_back(v2);
+  _vertices.push_back(v3);
+  _faces.clear();
+  _faces.push_back(0);
+  _faces.push_back(1);
+  _faces.push_back(2);
+  //END DEBUG
+
+  for(int i = 0; i<_vertices.size(); ++i)
+    std::cout << "vert " << i << " : " << _vertices[i].position[0]
+	      << " " << _vertices[i].position[1]
+	      << " " << _vertices[i].position[2] << std::endl;
+
+  for(int i = 0; i<_faces.size(); ++i)
+    std::cout << "face " << i << " : " << _faces[i] << std::endl;
+  
+  glFuncs->glGenBuffers(1, &_vertexBufferId);
+  glFuncs->glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferId);
+  glFuncs->glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(VEF::Vertex), _vertices[0].position, GL_STATIC_DRAW); 
+  
+  glFuncs->glGenBuffers(1, &_faceBufferId);
+  glFuncs->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _faceBufferId);
+  glFuncs->glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int)*_faces.size(), _faces.data(), GL_STATIC_DRAW);
+
+  //glFuncs->glGenVertexArrays(1, &_vertexArrayId);
+
+  _initialized = true;
+  //*/
 }
 
