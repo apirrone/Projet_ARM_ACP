@@ -14,6 +14,19 @@ Viewer::Viewer(VoxelGrid& grid, QWidget *parent)
   format.setVersion(3, 3);
   //format.setProfile(QSurfaceFormat::CoreProfile);
   this->setFormat(format);
+
+
+  // _position = QVector3D(-33., -32., -148);
+  _position = QVector3D(-32., -32., -143);
+  unsigned int w = _voxelGrid.getW();
+  unsigned int h = _voxelGrid.getH();
+  unsigned int d = _voxelGrid.getD();
+  _target = QVector3D(w/2., h/2., d/2.);
+  
+  // _position = QVector3D(0., 0., 0.);
+  prevPos = QVector2D(0, 0);
+  timer.start(0, this);
+  // this.startTimer();
 }
 
 Viewer::~Viewer(){
@@ -50,12 +63,12 @@ void Viewer::initializeGL(){
   _projectionMat.perspective(45.0f, this->width() / float(this->height()), 0.1f, 1000.0f);
 
   _viewMat.setToIdentity();
-  _viewMat.lookAt(QVector3D(0,0,5), QVector3D(0,0,0), QVector3D(0,1,0));
-  _viewMat.translate(QVector3D(0., 0., -150.));
+  // _viewMat.translate(_position);
+  _viewMat.lookAt(_position, _target, QVector3D(0,1,0));
+  // _viewMat.inverted();
 }
 
 void Viewer::paintGL(){
-
   QOpenGLFunctions * f = QOpenGLContext::currentContext()->functions();
   f->glClearColor(0.2, 0.2, 0.2, 1.0);
   f->glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
@@ -79,8 +92,65 @@ void Viewer::resizeGL(int width, int height){
   _projectionMat.perspective(45.0f, width / float(height), 0.1f, 1000.0f);
 }
 
+void Viewer::translateCamera(QVector3D direction){
+  
+  _position += direction;
+  
+  // std::cout << "_position.x() : " << _position.x() << " _position.y() : " << _position.y() << " _position.z() : " << _position.z()  << std::endl;
+
+  _viewMat.setToIdentity();
+  _viewMat.translate(direction);
+  
+  _viewMat.lookAt(_position, _target, QVector3D(0,1,0));  
+
+  update();
+}
+
 void Viewer::rotateAroundTarget(float angle, QVector3D axis)
 {
+  _viewMat.setToIdentity();
+  
+  QVector3D dir = _target - _position;
+
+  QMatrix4x4 tmp;
+  tmp.setToIdentity();
+
+  tmp.translate(_position.x() , _position.y(), _position.z());
+  tmp.translate(QVector3D(dir.x(), dir.y(), dir.z()));
+  tmp.rotate(-angle, QVector3D(axis.x(), axis.y(), axis.z()));
+  tmp.translate(QVector3D(-dir.x(), -dir.y(), -dir.z()));
+
+  _position.setX(tmp.column(3).x());
+  _position.setY(tmp.column(3).y());
+  _position.setZ(tmp.column(3).z());
+  
+  _viewMat.lookAt(_position, _target, QVector3D(0,1,0));
+  
+  update();  
+}
+
+
+void Viewer::mouseMoveEvent(QMouseEvent *e){
+
+  QVector2D diff = QVector2D(e->localPos()) - prevPos;
+  QVector3D n = QVector3D(diff.y(), diff.x(), 0.0).normalized();
+  
+  qreal acc = diff.length() / 500.0;
+
+  rotationAxis = (rotationAxis * angularSpeed + n * acc).normalized();
+
+  angularSpeed += acc; 
+  
+  prevPos = QVector2D(e->localPos());
 
 }
 
+void Viewer::timerEvent(QTimerEvent *){
+  angularSpeed *= 0.97;
+
+  if (angularSpeed < 0.02) {
+    angularSpeed = 0.0;
+  } else {
+    rotateAroundTarget(angularSpeed, rotationAxis);
+  }
+}

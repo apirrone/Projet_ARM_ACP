@@ -164,7 +164,7 @@ VoxelGrid::~VoxelGrid() {
 
 void VoxelGrid::draw(QOpenGLShaderProgram* shader){
 
-  std::cout << "VOXELGRID DRAW" << std::endl;
+  // std::cout << "VOXELGRID DRAW" << std::endl;
   if(!_initialized)
    initVAO();
   
@@ -231,3 +231,14 @@ void VoxelGrid::initVAO() {
 
 }
 
+unsigned int VoxelGrid::getW(){
+  return _w;
+}
+
+unsigned int VoxelGrid::getH(){
+  return _h;
+}
+
+unsigned int VoxelGrid::getD(){
+  return _d;
+}

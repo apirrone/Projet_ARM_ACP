@@ -17,7 +17,9 @@ public:
   explicit Viewer(VoxelGrid& grid, QWidget *parent = 0);
   ~Viewer();
 
+  void rotateAroundAxis(float angle, QVector3D axis);
   void rotateAroundTarget(float angle, QVector3D axis);
+  void translateCamera(QVector3D direction);
   
 protected:
      void initializeGL();
@@ -26,6 +28,9 @@ protected:
 
   QSize minimumSizeHint() const;
   QSize sizeHint() const;
+
+  void timerEvent(QTimerEvent *);
+  void mouseMoveEvent(QMouseEvent *e);
 
 private:
   VoxelGrid& _voxelGrid;
@@ -38,6 +43,14 @@ private:
   std::vector<VEF::Vertex> _vertices;
   std::vector<unsigned int> _faces;
 
+  QVector3D _position;
+  QVector3D _target;
+
+  QVector2D prevPos;
+  float angularSpeed;
+  QVector3D rotationAxis;
+
+  QBasicTimer timer;
 };
 
 #endif // VIEWER_HPP

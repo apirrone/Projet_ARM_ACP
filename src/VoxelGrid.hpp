@@ -13,6 +13,10 @@ public :
   ~VoxelGrid();
   
   void draw(QOpenGLShaderProgram* shader);
+
+  unsigned int getW();
+  unsigned int getH();
+  unsigned int getD();
     
 private :
 
