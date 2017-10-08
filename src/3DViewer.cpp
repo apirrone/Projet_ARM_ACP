@@ -9,18 +9,18 @@ Viewer::Viewer(VoxelGrid& grid, QWidget *parent)
     _voxelGrid(grid)
 {
   QSurfaceFormat format;
-  
+
   format.setVersion(3, 3);
 
   this->setFormat(format);
 
   prevPos = QVector2D(0, 0);
-  timer.start(0, this);
-  
+  //timer.start(0, this);
+
   unsigned int w = _voxelGrid.getW();
   unsigned int h = _voxelGrid.getH();
   unsigned int d = _voxelGrid.getD();
-  camera = Camera(QVector3D(-32., -32., -143), QVector3D(w/2., h/2., d/2.), this->width(), this->height());
+  camera = Camera(QVector3D(0., 0., -143), QVector3D(w/2., h/2., d/2.), this->width(), this->height());
 }
 
 Viewer::~Viewer(){
@@ -38,21 +38,21 @@ QSize Viewer::sizeHint() const{
 void Viewer::initializeGL(){
 
   QOpenGLFunctions * f = QOpenGLContext::currentContext()->functions();
-  
+
   std::cout << "init" << std::endl;
   f->glClearColor(0.6, 0.2, 0.2, 1.0);
   f->glEnable(GL_CULL_FACE);
 
   f->glEnable(GL_BLEND);
   f->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  
+
   //shader init
   _shader = new QOpenGLShaderProgram();
   _shader->addShaderFromSourceFile(QOpenGLShader::Vertex, "../data/shaders/simple.vert");
   _shader->addShaderFromSourceFile(QOpenGLShader::Fragment, "../data/shaders/simple.frag");
   _shader->link();
   _shader->bind();
-  
+
 }
 
 void Viewer::paintGL(){
@@ -65,9 +65,9 @@ void Viewer::paintGL(){
   _shader->setUniformValue(_shader->uniformLocation("view_mat"), camera.getViewMatrix());
 
   _voxelGrid.draw(_shader);
-  
+
   _shader->release();
-  
+
 }
 
 void Viewer::resizeGL(int width, int height){
@@ -76,20 +76,19 @@ void Viewer::resizeGL(int width, int height){
   f->glViewport( 0, 0, (GLint)width, (GLint)height );
 
   camera.updateProjectionMatrix(width, height);
- 
+
 }
 
 void Viewer::mouseMoveEvent(QMouseEvent *e){
 
   QVector2D diff = QVector2D(e->localPos()) - prevPos;
   QVector3D n = QVector3D(diff.y(), diff.x(), 0.0).normalized();
-  
+
   qreal acc = diff.length() / 500.0;
 
   rotationAxis = (rotationAxis * angularSpeed + n * acc).normalized();
 
-  angularSpeed += acc; 
-  
+  angularSpeed += acc;
   prevPos = QVector2D(e->localPos());
 }
 
@@ -105,7 +104,7 @@ void Viewer::timerEvent(QTimerEvent *){
 }
 
 void Viewer::eventFromParent(QKeyEvent *e){
-  
+
   if (e->key() == Qt::Key_Escape)
     close();
   else if (e->key() == Qt::Key_Right)
@@ -124,8 +123,12 @@ void Viewer::eventFromParent(QKeyEvent *e){
     camera.rotateAroundTarget(2, QVector3D(0, 1, 0));
   else if (e->key() == Qt::Key_E)
     camera.rotateAroundTarget(-2, QVector3D(0, 1, 0));
-  else 
+  else if (e->key() == Qt::Key_Z)
+    camera.zoom(1);
+  else if (e->key() == Qt::Key_S)
+    camera.zoom(-1);
+  else
     QWidget::keyPressEvent(e);
-  
+
   update();
 }
