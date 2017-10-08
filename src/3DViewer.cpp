@@ -14,13 +14,15 @@ Viewer::Viewer(VoxelGrid& grid, QWidget *parent)
 
   this->setFormat(format);
 
-  prevPos = QVector2D(0, 0);
-  timer.start(0, this);
+  _prevPos = QVector2D(0, 0);
+  _timer.start(0, this);
   
   unsigned int w = _voxelGrid.getW();
   unsigned int h = _voxelGrid.getH();
   unsigned int d = _voxelGrid.getD();
-  camera = Camera(QVector3D(-32., -32., -143), QVector3D(w/2., h/2., d/2.), this->width(), this->height());
+  // std::cout << "this->width() : " << this->width()  << std::endl;
+  // _camera = Camera(QVector3D(-32., -32., -143), QVector3D(w/2., h/2., d/2.), this->width(), this->height());
+
 }
 
 Viewer::~Viewer(){
@@ -52,6 +54,14 @@ void Viewer::initializeGL(){
   _shader->addShaderFromSourceFile(QOpenGLShader::Fragment, "../data/shaders/simple.frag");
   _shader->link();
   _shader->bind();
+
+  unsigned int w = _voxelGrid.getW();
+  unsigned int h = _voxelGrid.getH();
+  unsigned int d = _voxelGrid.getD();
+  _camera.initCamera(QVector3D(-32., -32., -143), QVector3D(w/2., h/2., d/2.), this->width(), this->height());
+
+  
+  _trackball.setCamera(&_camera);
   
 }
 
@@ -61,8 +71,8 @@ void Viewer::paintGL(){
   f->glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
   _shader->bind();
 
-  _shader->setUniformValue(_shader->uniformLocation("proj_mat"), camera.getProjectionMatrix());
-  _shader->setUniformValue(_shader->uniformLocation("view_mat"), camera.getViewMatrix());
+  _shader->setUniformValue(_shader->uniformLocation("proj_mat"), _camera.getProjectionMatrix());
+  _shader->setUniformValue(_shader->uniformLocation("view_mat"), _camera.getViewMatrix());
 
   _voxelGrid.draw(_shader);
   
@@ -71,37 +81,48 @@ void Viewer::paintGL(){
 }
 
 void Viewer::resizeGL(int width, int height){
-
   QOpenGLFunctions * f = QOpenGLContext::currentContext()->functions();
   f->glViewport( 0, 0, (GLint)width, (GLint)height );
 
-  camera.updateProjectionMatrix(width, height);
+  _camera.updateProjectionMatrix(width, height);
  
 }
 
+void Viewer::mousePressEvent(QMouseEvent *e){
+  _trackball.start();
+  _trackball.track(_prevPos);
+}
+
+void Viewer::mouseReleaseEvent(QMouseEvent *e){
+  _trackball.stop();
+  
+}
+
 void Viewer::mouseMoveEvent(QMouseEvent *e){
-
-  QVector2D diff = QVector2D(e->localPos()) - prevPos;
-  QVector3D n = QVector3D(diff.y(), diff.x(), 0.0).normalized();
+  _trackball.track(QVector2D(e->localPos()));
   
-  qreal acc = diff.length() / 500.0;
-
-  rotationAxis = (rotationAxis * angularSpeed + n * acc).normalized();
-
-  angularSpeed += acc; 
+  // QVector2D diff = QVector2D(e->localPos()) - _prevPos;
+  // QVector3D n = QVector3D(diff.y(), diff.x(), 0.0).normalized();
   
-  prevPos = QVector2D(e->localPos());
+  // qreal acc = diff.length() / 500.0;
+
+  // _rotationAxis = (_rotationAxis * _angularSpeed + n * acc).normalized();
+
+  // _angularSpeed += acc; 
+  
+  _prevPos = QVector2D(e->localPos());
 }
 
 void Viewer::timerEvent(QTimerEvent *){
-  angularSpeed *= 0.97;
+  // angularSpeed *= 0.97;
 
-  if (angularSpeed < 0.02) {
-    angularSpeed = 0.0;
-  } else {
-    camera.rotateAroundTarget(angularSpeed, rotationAxis);
-    update();
-  }
+  // if (angularSpeed < 0.02) {
+  //   angularSpeed = 0.0;
+  // } else {
+  //   _camera.rotateAroundTarget(angularSpeed, rotationAxis);
+  //   update();
+  // }
+  update();//TODO ne pas faire ca, update que quand il y a besoin
 }
 
 void Viewer::eventFromParent(QKeyEvent *e){
@@ -109,21 +130,21 @@ void Viewer::eventFromParent(QKeyEvent *e){
   if (e->key() == Qt::Key_Escape)
     close();
   else if (e->key() == Qt::Key_Right)
-    camera.translateCamera(QVector3D(-1, 0, 0));
+    _camera.translateCamera(QVector3D(-1, 0, 0));
   else if (e->key() == Qt::Key_Left)
-    camera.translateCamera(QVector3D(1, 0, 0));
+    _camera.translateCamera(QVector3D(1, 0, 0));
   else if (e->key() == Qt::Key_Up)
-    camera.translateCamera(QVector3D(0, -1, 0));
+    _camera.translateCamera(QVector3D(0, -1, 0));
   else if (e->key() == Qt::Key_Down)
-    camera.translateCamera(QVector3D(0, 1, 0));
+    _camera.translateCamera(QVector3D(0, 1, 0));
   else if (e->key() == Qt::Key_P)
-    camera.translateCamera(QVector3D(0, 0, 1));
+    _camera.translateCamera(QVector3D(0, 0, 1));
   else if (e->key() == Qt::Key_L)
-    camera.translateCamera(QVector3D(0, 0, -1));
+    _camera.translateCamera(QVector3D(0, 0, -1));
   else if (e->key() == Qt::Key_A)
-    camera.rotateAroundTarget(2, QVector3D(0, 1, 0));
+    _camera.rotateAroundTarget(2, QVector3D(0, 1, 0));
   else if (e->key() == Qt::Key_E)
-    camera.rotateAroundTarget(-2, QVector3D(0, 1, 0));
+    _camera.rotateAroundTarget(-2, QVector3D(0, 1, 0));
   else 
     QWidget::keyPressEvent(e);
   

@@ -24,6 +24,8 @@ public:
   void setTarget(QVector3D target);
   QMatrix4x4 getProjectionMatrix();
   QMatrix4x4 getViewMatrix();
+  int getVpWidth();
+  int getVpHeight();
   
   
 private:
@@ -37,6 +39,8 @@ private:
   float _angularSpeed;
   QVector3D _rotationAxis;
 
+  int _vpWidth;
+  int _vpHeight;
 
   
 };

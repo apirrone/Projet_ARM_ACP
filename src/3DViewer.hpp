@@ -9,6 +9,7 @@
 
 #include "VoxelGrid.hpp"
 #include "Camera.hpp"
+#include "Trackball.hpp"
 
 class Viewer : public QOpenGLWidget
 {
@@ -29,6 +30,8 @@ protected:
 
   void timerEvent(QTimerEvent *);
   void mouseMoveEvent(QMouseEvent *e);
+  void mousePressEvent(QMouseEvent *e);
+  void mouseReleaseEvent(QMouseEvent *e);
 
 private:
   VoxelGrid& _voxelGrid;
@@ -41,13 +44,15 @@ private:
   std::vector<VEF::Vertex> _vertices;
   std::vector<unsigned int> _faces;
 
-  QVector2D prevPos;
-  float angularSpeed;
-  QVector3D rotationAxis;
+  QVector2D _prevPos;
+  float _angularSpeed;
+  QVector3D _rotationAxis;
   
-  Camera camera;
+  Camera _camera;
   
-  QBasicTimer timer;
+  QBasicTimer _timer;
+
+  Trackball _trackball;
 };
 
 #endif // VIEWER_HPP

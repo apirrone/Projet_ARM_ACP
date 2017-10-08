@@ -11,7 +11,9 @@ Camera::Camera(QVector3D position, QVector3D target, int viewPortWidth, int view
 Camera::~Camera(){}
 
 void Camera::initCamera(QVector3D position, QVector3D target, int viewPortWidth, int viewPortHeight){
-  
+
+  _vpWidth = viewPortWidth;
+  _vpHeight = viewPortHeight;
   _position = position;
   
   _target = target;
@@ -25,8 +27,8 @@ void Camera::initCamera(QVector3D position, QVector3D target, int viewPortWidth,
 }
 
 void Camera::updateCamera(){
-  _viewMat.setToIdentity();
-  _viewMat.lookAt(_position, _target, QVector3D(0,1,0)); 
+  // _viewMat.setToIdentity();
+  // _viewMat.lookAt(_position, _target, QVector3D(0,1,0)); 
 }
 
 void Camera::updateProjectionMatrix(int width, int height){
@@ -44,6 +46,14 @@ void Camera::setPosition(QVector3D position){
 void Camera::setTarget(QVector3D target){
   _target = target;
   updateCamera();
+}
+
+int Camera::getVpWidth(){
+  return _vpWidth;
+}
+
+int Camera::getVpHeight(){
+  return _vpHeight;
 }
 
 QMatrix4x4 Camera::getProjectionMatrix(){
@@ -69,21 +79,27 @@ void Camera::translateCamera(QVector3D direction){
 
 void Camera::rotateAroundTarget(float angle, QVector3D axis)
 {
-  _viewMat.setToIdentity();
+  _viewMat.translate(_target);
+  _viewMat.rotate(-angle, axis);
+  _viewMat.translate(-_target);
+
+  //TODO Find how to update context from here
   
-  QVector3D dir = _target - _position;
+  // _viewMat.setToIdentity();
+  
+  // QVector3D dir = _target - _position;
 
-  QMatrix4x4 tmp;
-  tmp.setToIdentity();
+  // QMatrix4x4 tmp;
+  // tmp.setToIdentity();
 
-  tmp.translate(_position.x() , _position.y(), _position.z());
-  tmp.translate(QVector3D(dir.x(), dir.y(), dir.z()));
-  tmp.rotate(-angle, QVector3D(axis.x(), axis.y(), axis.z()));
-  tmp.translate(QVector3D(-dir.x(), -dir.y(), -dir.z()));
+  // tmp.translate(_position.x() , _position.y(), _position.z());
+  // tmp.translate(QVector3D(dir.x(), dir.y(), dir.z()));
+  // tmp.rotate(-angle, QVector3D(axis.x(), axis.y(), axis.z()));
+  // tmp.translate(QVector3D(-dir.x(), -dir.y(), -dir.z()));
 
-  _position.setX(tmp.column(3).x());
-  _position.setY(tmp.column(3).y());
-  _position.setZ(tmp.column(3).z());
+  // _position.setX(tmp.column(3).x());
+  // _position.setY(tmp.column(3).y());
+  // _position.setZ(tmp.column(3).z());
 
-  updateCamera(); 
+  // updateCamera(); 
 }

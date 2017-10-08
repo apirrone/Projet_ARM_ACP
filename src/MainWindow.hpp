@@ -25,6 +25,7 @@ public:
 protected:
   void keyPressEvent(QKeyEvent *e);
 
+
 private:
   Ui::MainWindow *ui;
   Viewer* viewer;
