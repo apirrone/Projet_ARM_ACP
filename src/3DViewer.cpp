@@ -16,7 +16,7 @@ Viewer::Viewer(VoxelGrid& grid, QWidget *parent)
 
   _prevPos = QVector2D(0, 0);
   _timer.start(0, this);
-  
+
   unsigned int w = _voxelGrid.getW();
   unsigned int h = _voxelGrid.getH();
   unsigned int d = _voxelGrid.getD();
@@ -42,8 +42,8 @@ void Viewer::initializeGL(){
 
   std::cout << "init" << std::endl;
   f->glClearColor(0.6, 0.2, 0.2, 1.0);
-  // f->glEnable(GL_CULL_FACE);
-
+  //f->glEnable(GL_CULL_FACE);
+  //glPolygonMode(GL_FRONT, GL_LINE);
   f->glEnable(GL_BLEND);
   f->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -57,10 +57,10 @@ void Viewer::initializeGL(){
   unsigned int w = _voxelGrid.getW();
   unsigned int h = _voxelGrid.getH();
   unsigned int d = _voxelGrid.getD();
-  _camera.initCamera(QVector3D(-32., -32., -143), QVector3D(w/2., h/2., d/2.), this->width(), this->height());
 
-  
-  _trackball.setCamera(&_camera);
+  _camera.initCamera(143, 0, 0, QVector3D(-1.*h/2, -1.*w/2, -1.*d/2), this->width(), this->height(), 45.);  
+
+  //_trackball.setCamera(&_camera);
 }
 
 void Viewer::paintGL(){
@@ -68,10 +68,9 @@ void Viewer::paintGL(){
   f->glClearColor(0.2, 0.2, 0.2, 1.0);
   f->glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
   _shader->bind();
-
-  _shader->setUniformValue(_shader->uniformLocation("proj_mat"), _camera.getProjectionMatrix());
-  _shader->setUniformValue(_shader->uniformLocation("view_mat"), _camera.getViewMatrix());
-
+  _shader->setUniformValue(_shader->uniformLocation("proj_mat"), _camera.projectionMatrix());
+  _shader->setUniformValue(_shader->uniformLocation("view_mat"), _camera.viewMatrix());
+  std::cout << "coucou" << std::endl;
   _voxelGrid.draw(_shader);
 
   _shader->release();
@@ -81,33 +80,33 @@ void Viewer::paintGL(){
 void Viewer::resizeGL(int width, int height){
   QOpenGLFunctions * f = QOpenGLContext::currentContext()->functions();
   f->glViewport( 0, 0, (GLint)width, (GLint)height );
-
-  _camera.updateProjectionMatrix(width, height);
+  _camera.setViewPort(width, height);
+  //_camera.updateProjectionMatrix(width, height);
 }
 
 void Viewer::mousePressEvent(QMouseEvent *e){
-  _trackball.start();
-  _trackball.track(_prevPos);
+  //  _trackball.start();
+  //_trackball.track(_prevPos);
 }
 
 void Viewer::mouseReleaseEvent(QMouseEvent *e){
-  _trackball.stop();
-  
+  //_trackball.stop();
+
 }
 
 void Viewer::mouseMoveEvent(QMouseEvent *e){
-  _trackball.track(QVector2D(e->localPos()));
-  
+  //_trackball.track(QVector2D(e->localPos()));
+
   // QVector2D diff = QVector2D(e->localPos()) - _prevPos;
   // QVector3D n = QVector3D(diff.y(), diff.x(), 0.0).normalized();
-  
+
   // qreal acc = diff.length() / 500.0;
 
 
   // _rotationAxis = (_rotationAxis * _angularSpeed + n * acc).normalized();
 
-  // _angularSpeed += acc; 
-  
+  // _angularSpeed += acc;
+
   _prevPos = QVector2D(e->localPos());
 }
 
@@ -118,7 +117,7 @@ void Viewer::timerEvent(QTimerEvent *){
   //   angularSpeed = 0.0;
   // } else {
   //   _camera.rotateAroundTarget(angularSpeed, rotationAxis);
-  //   update();
+  //   updat();
   // }
   update();//TODO ne pas faire ca, update que quand il y a besoin
 }
@@ -127,26 +126,37 @@ void Viewer::eventFromParent(QKeyEvent *e){
 
   if (e->key() == Qt::Key_Escape)
     close();
+  /*
   else if (e->key() == Qt::Key_Right)
-    _camera.translateCamera(QVector3D(-1, 0, 0));
+    //_camera.translateCamera(QVector3D(-1, 0, 0));
   else if (e->key() == Qt::Key_Left)
-    _camera.translateCamera(QVector3D(1, 0, 0));
+    //_camera.translateCamera(QVector3D(1, 0, 0));
   else if (e->key() == Qt::Key_Up)
-    _camera.translateCamera(QVector3D(0, -1, 0));
+    //_camera.translateCamera(QVector3D(0, -1, 0));
   else if (e->key() == Qt::Key_Down)
-    _camera.translateCamera(QVector3D(0, 1, 0));
+    //_camera.translateCamera(QVector3D(0, 1, 0));
   else if (e->key() == Qt::Key_P)
-    _camera.translateCamera(QVector3D(0, 0, 1));
+    //_camera.translateCamera(QVector3D(0, 0, 1));
   else if (e->key() == Qt::Key_L)
-    _camera.translateCamera(QVector3D(0, 0, -1));
-  else if (e->key() == Qt::Key_A)
-    _camera.rotateAroundTarget(2, QVector3D(0, 1, 0));
-  else if (e->key() == Qt::Key_E)
-    _camera.rotateAroundTarget(-2, QVector3D(0, 1, 0));
-  else if (e->key() == Qt::Key_Z)
-    _camera.zoom(1);
-  else if (e->key() == Qt::Key_S)
-    _camera.zoom(-1);
+    //_camera.translateCamera(QVector3D(0, 0, -1));
+    */
+  else if (e->key() == Qt::Key_A){
+    // _camera.rotateAroundTarget(2, QVector3D(0, 1, 0));
+    _camera.zoom(0.95);
+  }else if (e->key() == Qt::Key_E){
+    //_camera.rotateAroundTarget(-2, QVector3D(0, 1, 0));
+    _camera.zoom(1.05);
+  }else if (e->key() == Qt::Key_Z){
+    //_camera.zoom(1);
+    _camera.rotateLatitude(1);
+  }else if (e->key() == Qt::Key_S){
+    //_camera.zoom(-1);
+    _camera.rotateLatitude(-1);
+  }else if (e->key() == Qt::Key_Q){
+    _camera.rotateLongitude(1);
+  }else if (e->key() == Qt::Key_D){
+    _camera.rotateLongitude(-1);
+  }
   else
     QWidget::keyPressEvent(e);
 

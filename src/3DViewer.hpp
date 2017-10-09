@@ -8,7 +8,7 @@
 #include <QOpenGLShaderProgram>
 
 #include "VoxelGrid.hpp"
-#include "Camera.hpp"
+#include "SatelliteCamera.hpp"
 #include "Trackball.hpp"
 
 class Viewer : public QOpenGLWidget
@@ -48,11 +48,11 @@ private:
   float _angularSpeed;
   QVector3D _rotationAxis;
   
-  Camera _camera;
+  SatelliteCamera _camera;
   
   QBasicTimer _timer;
 
-  Trackball _trackball;
+  //Trackball _trackball;
 };
 
 #endif // VIEWER_HPP
