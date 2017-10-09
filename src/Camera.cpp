@@ -28,7 +28,7 @@ void Camera::initCamera(QVector3D position, QVector3D target, int viewPortWidth,
 
 void Camera::updateCamera(){
   // _viewMat.setToIdentity();
-  // _viewMat.lookAt(_position, _target, QVector3D(0,1,0)); 
+  // _viewMat.lookAt(_position, _target, QVector3D(0,1,0));
 }
 
 void Camera::updateProjectionMatrix(int width, int height){
@@ -79,15 +79,17 @@ void Camera::translateCamera(QVector3D direction){
 
 void Camera::rotateAroundTarget(float angle, QVector3D axis)
 {
-  _viewMat.translate(_target);
+  QVector3D t = (_target-_position);
+  _viewMat.translate(t);
   _viewMat.rotate(-angle, axis);
-  _viewMat.translate(-_target);
+  _viewMat.translate(-t);
 
   //TODO Find how to update context from here
-  
+
   //updateCamera();
 }
 
 void Camera::zoom(int orientation){
-  _viewMat.translate(orientation*.1*(_viewMat*_target));
+  QVector3D t = (_target-_position).normalized();
+  _viewMat.translate(orientation*t);
 }

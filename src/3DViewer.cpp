@@ -16,7 +16,7 @@ Viewer::Viewer(VoxelGrid& grid, QWidget *parent)
 
   _prevPos = QVector2D(0, 0);
   _timer.start(0, this);
-  
+
   unsigned int w = _voxelGrid.getW();
   unsigned int h = _voxelGrid.getH();
   unsigned int d = _voxelGrid.getD();
@@ -42,7 +42,7 @@ void Viewer::initializeGL(){
 
   std::cout << "init" << std::endl;
   f->glClearColor(0.6, 0.2, 0.2, 1.0);
-  f->glEnable(GL_CULL_FACE);
+  //f->glEnable(GL_CULL_FACE);
 
   f->glEnable(GL_BLEND);
   f->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -57,9 +57,9 @@ void Viewer::initializeGL(){
   unsigned int w = _voxelGrid.getW();
   unsigned int h = _voxelGrid.getH();
   unsigned int d = _voxelGrid.getD();
-  _camera.initCamera(QVector3D(-32., -32., -143), QVector3D(w/2., h/2., d/2.), this->width(), this->height());
+  _camera.initCamera(QVector3D(0., 0., -143), QVector3D(w/2., h/2., d/2.), this->width(), this->height());
 
-  
+
   _trackball.setCamera(&_camera);
 }
 
@@ -92,22 +92,22 @@ void Viewer::mousePressEvent(QMouseEvent *e){
 
 void Viewer::mouseReleaseEvent(QMouseEvent *e){
   _trackball.stop();
-  
+
 }
 
 void Viewer::mouseMoveEvent(QMouseEvent *e){
   _trackball.track(QVector2D(e->localPos()));
-  
+
   // QVector2D diff = QVector2D(e->localPos()) - _prevPos;
   // QVector3D n = QVector3D(diff.y(), diff.x(), 0.0).normalized();
-  
+
   // qreal acc = diff.length() / 500.0;
 
 
   // _rotationAxis = (_rotationAxis * _angularSpeed + n * acc).normalized();
 
-  // _angularSpeed += acc; 
-  
+  // _angularSpeed += acc;
+
   _prevPos = QVector2D(e->localPos());
 }
 
