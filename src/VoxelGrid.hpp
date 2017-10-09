@@ -50,7 +50,9 @@ private :
   
   Voxel* _voxels;
 
-  unsigned int _w, _h, _d;
+  unsigned int _w, _h, _d, _minValue, _maxValue, _displayMinValue, _displayMaxValue;
+
+  //float _firstColor[3], _secondColor[3];
   
   void initVAO();
   void fillVBO();
