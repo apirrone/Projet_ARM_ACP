@@ -58,7 +58,7 @@ void Viewer::initializeGL(){
   unsigned int h = _voxelGrid.getH();
   unsigned int d = _voxelGrid.getD();
 
-  _camera.initCamera(143, 0, 0, QVector3D(-1.*h/2, -1.*w/2, -1.*d/2), this->width(), this->height(), 45.);  
+  _camera.initCamera(300, 0, 0, QVector3D(-1.*w/2, 1.*h/2, d/2), this->width(), this->height(), 45.);  
 
   //_trackball.setCamera(&_camera);
 }
@@ -70,7 +70,7 @@ void Viewer::paintGL(){
   _shader->bind();
   _shader->setUniformValue(_shader->uniformLocation("proj_mat"), _camera.projectionMatrix());
   _shader->setUniformValue(_shader->uniformLocation("view_mat"), _camera.viewMatrix());
-  std::cout << "coucou" << std::endl;
+  //std::cout << "coucou" << std::endl;
   _voxelGrid.draw(_shader);
 
   _shader->release();

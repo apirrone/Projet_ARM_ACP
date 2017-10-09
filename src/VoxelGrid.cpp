@@ -6,26 +6,39 @@
 
 VoxelGrid::VoxelGrid(unsigned int h, unsigned int w, unsigned int d, const unsigned char* data)
   : _w(w), _h(h), _d(d) {
-
+  unsigned int size = h*w*d;
   //créer tableau de voxels avec h w d
-  _voxels = new Voxel[h*w*d];
+  _voxels = new Voxel[size];
+  unsigned int maxVal, minVal;
+  if(size > 0)
+    maxVal = minVal = data[0];
   for(int i=0; i<h*w*d; ++i) {
     _voxels[i].value = data[i];
+    if(data[i] > maxVal)
+      maxVal = data[i];
+    if(data[i] < minVal)
+      minVal = data[i];
   }
+  float r1 = 99., g1 = 0., b1 = 0., r2 = 0., g2 = 0., b2 = 99.;
 
   for(int i=0; i<h; ++i)
     for(int j=0; j<w; ++j)
       for(int k=0; k<d; ++k) {
 	Voxel& current = _voxels[i*_w*_d + j*_d + k];
 	double currentValue = _voxels[i*_w*_d + j*_d + k].value;
-	float alpha;
+	float r, g, b, alpha;
+	r = r1 + ((currentValue-minVal)/(maxVal-minVal)) * (r2-r1);
+	g = g1 + ((currentValue-minVal)/(maxVal-minVal)) * (g2-g1);
+	b = b1 + ((currentValue-minVal)/(maxVal-minVal)) * (b2-b1);
 	if(currentValue == 0)
 	  alpha = 0.;
 	else
 	  alpha = 0.1;
+	
 	// std::cout << "test" << std::endl;
 	VEF::Vertex v;
 	//we create all the vertices
+	/*
 	//TFL
 	v = VEF::Vertex(i-0.5f, j+0.5f, k+0.5f, currentValue, currentValue, currentValue, alpha);
 	current.vertices[Voxel::Corner::TFL] = this->addVertex(v);
@@ -49,6 +62,32 @@ VoxelGrid::VoxelGrid(unsigned int h, unsigned int w, unsigned int d, const unsig
 	current.vertices[Voxel::Corner::BRL] = this->addVertex(v);
 	//BRR
 	v = VEF::Vertex(i+0.5f, j-0.5f, k-0.5f, currentValue, currentValue, currentValue, alpha);
+	current.vertices[Voxel::Corner::BRR] = this->addVertex(v);
+	//*/
+	
+	//TFL
+	v = VEF::Vertex(j-0.5, -i+0.5, -k+0.5, r, g, b, alpha);
+	current.vertices[Voxel::Corner::TFL] = this->addVertex(v);
+	//TFR
+	v = VEF::Vertex(j+0.5, -i+0.5, -k+0.5, r, g, b, alpha);
+	current.vertices[Voxel::Corner::TFR] = this->addVertex(v);
+	//TRL
+	v = VEF::Vertex(j-0.5, -i+0.5, -k-0.5, r, g, b, alpha);
+	current.vertices[Voxel::Corner::TRL] = this->addVertex(v);
+	//TRR
+	v = VEF::Vertex(j+0.5, -i+0.5, -k-0.5, r, g, b, alpha);
+	current.vertices[Voxel::Corner::TRR] = this->addVertex(v);
+	//BFL
+	v = VEF::Vertex(j-0.5, -i-0.5, -k+0.5, r, g, b, alpha);
+	current.vertices[Voxel::Corner::BFL] = this->addVertex(v);
+	//BFR
+	v = VEF::Vertex(j+0.5, -i-0.5, -k+0.5, r, g, b, alpha);
+	current.vertices[Voxel::Corner::BFR] = this->addVertex(v);
+	//BRL
+	v = VEF::Vertex(j-0.5, -i-0.5, -k-0.5, r, g, b, alpha);
+	current.vertices[Voxel::Corner::BRL] = this->addVertex(v);
+	//BRR
+	v = VEF::Vertex(j+0.5, -i-0.5, -k-0.5, r, g, b, alpha);
 	current.vertices[Voxel::Corner::BRR] = this->addVertex(v);
 	//retrieve neighborhood
 	Voxel * top, * bot, * left, * right, * front, * rear;

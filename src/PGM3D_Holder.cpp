@@ -45,8 +45,8 @@ PGM3D_Holder::PGM3D_Holder(char* filePath) {
     }
 
 
-    _width = atoi(res[0]);
-    _height = atoi(res[1]);
+    _height = atoi(res[0]);
+    _width = atoi(res[1]);
     _depth = atoi(res[2]);
 
     int size = _width*_height*_depth;
