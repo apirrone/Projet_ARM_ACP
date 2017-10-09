@@ -7,7 +7,7 @@
 #include "3DViewer.hpp"
 #include <iostream>
 
-MainWindow::MainWindow(VoxelGrid& voxels, QWidget *parent) :
+MainWindow::MainWindow(VEF& voxels, QWidget *parent) :
   QMainWindow(parent),
   ui(new Ui::MainWindow)
   // viewer(parent)

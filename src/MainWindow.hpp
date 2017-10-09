@@ -9,6 +9,7 @@
 
 #include "3DViewer.hpp"
 #include "VoxelGrid.hpp"
+#include "VEF.hpp"
 
 namespace Ui {
   class MainWindow;
@@ -19,7 +20,7 @@ class MainWindow : public QMainWindow
   // Q_OBJECT
 
 public:
-  explicit MainWindow(VoxelGrid& voxels, QWidget *parent = 0);
+  explicit MainWindow(VEF& voxels, QWidget *parent = 0);
   ~MainWindow();
 
 protected:

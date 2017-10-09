@@ -20,16 +20,29 @@ void usage(char* programName){
 }
 
 int main(int argc, char *argv[]) {
-
   
   if(argc != 2){
     usage(argv[0]);
     return EXIT_FAILURE;
   }
 
-  VEF testObj;
-  testObj.loadFromObj(argv[1]);
-  return 0;
+
+  //TEST OBJ
+  
+  // VEF* testObj;
+  // testObj->loadFromObj(argv[1]);
+  // QApplication app(argc, argv);
+  
+  // MainWindow window(*testObj);
+  // window.resize(1300,1300);
+  // window.show();
+  
+  // cout << "FIN" << endl;
+  
+  // return app.exec();
+ 
+  //TEST OBJ
+
 
   PGM3D_Holder test = PGM3D_Holder(argv[1]);
   

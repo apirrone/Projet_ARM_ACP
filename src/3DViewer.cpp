@@ -4,9 +4,9 @@
 #include <QOpenGLFunctions>
 #include <QOpenGLContext>
 
-Viewer::Viewer(VoxelGrid& grid, QWidget *parent)
+Viewer::Viewer(VEF& grid, QWidget *parent)
   : QOpenGLWidget(parent),
-    _voxelGrid(grid)
+    _vef(grid)
 {
   QSurfaceFormat format;
 
@@ -17,9 +17,9 @@ Viewer::Viewer(VoxelGrid& grid, QWidget *parent)
   _prevPos = QVector2D(0, 0);
   _timer.start(0, this);
 
-  unsigned int w = _voxelGrid.getW();
-  unsigned int h = _voxelGrid.getH();
-  unsigned int d = _voxelGrid.getD();
+  unsigned int w = _vef.getW();
+  unsigned int h = _vef.getH();
+  unsigned int d = _vef.getD();
   // std::cout << "this->width() : " << this->width()  << std::endl;
   // _camera = Camera(QVector3D(-32., -32., -143), QVector3D(w/2., h/2., d/2.), this->width(), this->height());
 }
@@ -54,9 +54,9 @@ void Viewer::initializeGL(){
   _shader->link();
   _shader->bind();
 
-  unsigned int w = _voxelGrid.getW();
-  unsigned int h = _voxelGrid.getH();
-  unsigned int d = _voxelGrid.getD();
+  unsigned int w = _vef.getW();
+  unsigned int h = _vef.getH();
+  unsigned int d = _vef.getD();
 
   _camera.initCamera(300, 0, 0, QVector3D(-1.*w/2, 1.*h/2, d/2), this->width(), this->height(), 45.);  
 
@@ -71,7 +71,7 @@ void Viewer::paintGL(){
   _shader->setUniformValue(_shader->uniformLocation("proj_mat"), _camera.projectionMatrix());
   _shader->setUniformValue(_shader->uniformLocation("view_mat"), _camera.viewMatrix());
   //std::cout << "coucou" << std::endl;
-  _voxelGrid.draw(_shader);
+  _vef.draw(_shader);
 
   _shader->release();
 

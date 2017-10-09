@@ -151,6 +151,53 @@ void VEF::exportToObj(char* exportFilePath){
   //TODO To be implemented
 }
 
+void VEF::draw(QOpenGLShaderProgram* shader){
+
+  // std::cout << "VOXELGRID DRAW" << std::endl;
+  if(!_initialized)
+    initVAO();
+  
+  QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();  
+
+  _vertexArray.bind();
+  _indexBuffer->bind();
+  
+  int vertex_loc = shader->attributeLocation("vtx_position"); 
+  if(vertex_loc>=0) {
+    shader->setAttributeBuffer(vertex_loc, GL_FLOAT, offsetof(VEF::Vertex,position), 3, sizeof(VEF::Vertex));
+    shader->enableAttributeArray(vertex_loc);
+  }
+
+  int color_loc = shader->attributeLocation("vtx_color");
+  if(color_loc>=0) {
+    shader->setAttributeBuffer(color_loc, GL_FLOAT, offsetof(VEF::Vertex,color), 4, sizeof(VEF::Vertex));
+    shader->enableAttributeArray(color_loc);
+  }  
+
+  glDrawElements(GL_TRIANGLES, _faces.size(), GL_UNSIGNED_INT, 0);
+  _indexBuffer->release();
+  _vertexArray.release();  
+}
+
+void VEF::initVAO() {
+  _vertexBuffer = new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
+  _vertexBuffer->create();
+  _vertexBuffer->bind();
+  _vertexBuffer->setUsagePattern(QOpenGLBuffer::StaticDraw);
+  _vertexBuffer->allocate(&(_vertices[0]), sizeof(VEF::Vertex)*_vertices.size());
+
+  _indexBuffer = new QOpenGLBuffer(QOpenGLBuffer::IndexBuffer);
+  _indexBuffer->create();
+  _indexBuffer->bind();
+  _indexBuffer->setUsagePattern(QOpenGLBuffer::StaticDraw);
+  _indexBuffer->allocate(&(_faces[0]), sizeof(unsigned int)*_faces.size());
+    
+  _vertexArray.create();
+  
+  _initialized = true;
+
+}
+
 // getters
 std::vector<VEF::Vertex>* VEF::getVertices() {
   return &_vertices;
@@ -191,4 +238,16 @@ int VEF::addFace(int e1, int e2, int e3) {
   _faces.push_back(e2);
   _faces.push_back(e3);
   return id;
+}
+
+unsigned int VEF::getW(){
+  return _w;
+}
+
+unsigned int VEF::getH(){
+  return _h;
+}
+
+unsigned int VEF::getD(){
+  return _d;
 }

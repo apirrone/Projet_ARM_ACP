@@ -8,6 +8,7 @@
 #include <QOpenGLShaderProgram>
 
 #include "VoxelGrid.hpp"
+#include "VEF.hpp"
 #include "SatelliteCamera.hpp"
 #include "Trackball.hpp"
 
@@ -16,12 +17,12 @@ class Viewer : public QOpenGLWidget
   Q_OBJECT
   
 public:
-  explicit Viewer(VoxelGrid& grid, QWidget *parent = 0);
+  explicit Viewer(VEF& grid, QWidget *parent = 0);
   ~Viewer();
 
   void eventFromParent(QKeyEvent *e);
 protected:
-     void initializeGL();
+  void initializeGL();
   void paintGL();
   void resizeGL(int width, int height);
 
@@ -34,7 +35,7 @@ protected:
   void mouseReleaseEvent(QMouseEvent *e);
 
 private:
-  VoxelGrid& _voxelGrid;
+  VEF& _vef;//TODO Semble poser problème, check cast vers VoxelGrid dans le constructeur 
   QOpenGLShaderProgram * _shader;
   
   QOpenGLVertexArrayObject _object;
