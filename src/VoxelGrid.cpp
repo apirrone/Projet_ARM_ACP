@@ -26,6 +26,7 @@ VoxelGrid::VoxelGrid(unsigned int h, unsigned int w, unsigned int d, const unsig
 	// std::cout << "test" << std::endl;
 	VEF::Vertex v;
 	//we create all the vertices
+	/*
 	//TFL
 	v = VEF::Vertex(i-0.5f, j+0.5f, k+0.5f, currentValue, currentValue, currentValue, alpha);
 	current.vertices[Voxel::Corner::TFL] = this->addVertex(v);
@@ -49,6 +50,32 @@ VoxelGrid::VoxelGrid(unsigned int h, unsigned int w, unsigned int d, const unsig
 	current.vertices[Voxel::Corner::BRL] = this->addVertex(v);
 	//BRR
 	v = VEF::Vertex(i+0.5f, j-0.5f, k-0.5f, currentValue, currentValue, currentValue, alpha);
+	current.vertices[Voxel::Corner::BRR] = this->addVertex(v);
+	//*/
+	
+	//TFL
+	v = VEF::Vertex(j-0.5, -i+0.5, -k+0.5, currentValue, currentValue, currentValue, alpha);
+	current.vertices[Voxel::Corner::TFL] = this->addVertex(v);
+	//TFR
+	v = VEF::Vertex(j+0.5, -i+0.5, -k+0.5, currentValue, currentValue, currentValue, alpha);
+	current.vertices[Voxel::Corner::TFR] = this->addVertex(v);
+	//TRL
+	v = VEF::Vertex(j-0.5, -i+0.5, -k-0.5, currentValue, currentValue, currentValue, alpha);
+	current.vertices[Voxel::Corner::TRL] = this->addVertex(v);
+	//TRR
+	v = VEF::Vertex(j+0.5, -i+0.5, -k-0.5, currentValue, currentValue, currentValue, alpha);
+	current.vertices[Voxel::Corner::TRR] = this->addVertex(v);
+	//BFL
+	v = VEF::Vertex(j-0.5, -i-0.5, -k+0.5, currentValue, currentValue, currentValue, alpha);
+	current.vertices[Voxel::Corner::BFL] = this->addVertex(v);
+	//BFR
+	v = VEF::Vertex(j+0.5, -i-0.5, -k+0.5, currentValue, currentValue, currentValue, alpha);
+	current.vertices[Voxel::Corner::BFR] = this->addVertex(v);
+	//BRL
+	v = VEF::Vertex(j-0.5, -i-0.5, -k-0.5, currentValue, currentValue, currentValue, alpha);
+	current.vertices[Voxel::Corner::BRL] = this->addVertex(v);
+	//BRR
+	v = VEF::Vertex(j+0.5, -i-0.5, -k-0.5, currentValue, currentValue, currentValue, alpha);
 	current.vertices[Voxel::Corner::BRR] = this->addVertex(v);
 	//retrieve neighborhood
 	Voxel * top, * bot, * left, * right, * front, * rear;
