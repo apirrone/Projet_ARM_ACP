@@ -102,12 +102,12 @@ VoxelGrid::VoxelGrid(unsigned int h, unsigned int w, unsigned int d, const unsig
 	}
 	//check rear
 	if(rear == NULL || rear->value != current.value) {
-	  this->addFace(current.vertices[Voxel::Corner::TRR],
-			current.vertices[Voxel::Corner::TRL],
-			current.vertices[Voxel::Corner::BRL]);
-	  this->addFace(current.vertices[Voxel::Corner::TRR],
-			current.vertices[Voxel::Corner::BRL],
+	  this->addFace(current.vertices[Voxel::Corner::TRL],
+			current.vertices[Voxel::Corner::TRR],
 			current.vertices[Voxel::Corner::BRR]);
+	  this->addFace(current.vertices[Voxel::Corner::TRL],
+			current.vertices[Voxel::Corner::BRR],
+			current.vertices[Voxel::Corner::BRL]);
 	}
       }
 }
@@ -142,14 +142,14 @@ VoxelGrid::Voxel* VoxelGrid::getBottomVoxel(int i, int j, int k) {
 
 VoxelGrid::Voxel* VoxelGrid::getFrontVoxel(int i, int j, int k) {
   if(k > 0)
-    return &_voxels[i*_w*_d + j*_d + (k-1)];
+    return &_voxels[i*_w*_d + j*_d + (k+1)];
   else
     return NULL;
 }
 
 VoxelGrid::Voxel* VoxelGrid::getRearVoxel(int i, int j, int k) {
   if(k < _d-1)
-    return &_voxels[i*_w*_d + j*_d + (k+1)];
+    return &_voxels[i*_w*_d + j*_d + (k-1)];
   else
     return NULL;
 }
