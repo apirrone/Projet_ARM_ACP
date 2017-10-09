@@ -1,5 +1,155 @@
 #include <vector>
+#include <fstream>
+#include <iostream>
+#include <string.h>
+#include <regex>
+#include <sstream>
+
 #include "VEF.hpp"
+
+using namespace std;
+
+vector<string> split(const string &s, char delim) {
+  
+  stringstream ss(s);
+  string item;
+  vector<string> tokens;
+  
+  while (getline(ss, item, delim))
+    tokens.push_back(item);
+  
+  return tokens;
+  
+}
+
+void VEF::loadFromObj(char* filePath){
+  
+  string line;
+  ifstream fileToRead(filePath);  
+
+  if (fileToRead.is_open()) {
+
+    vector<float*> tmpNormals;
+    
+    while(getline(fileToRead, line)){
+      char firstChar = line.at(0);
+      
+      if(firstChar != '#') // Ignore comments
+	break;
+      vector<string> tokens = split(line, ' ');
+	
+      if(tokens.at(0).compare("v") == 0){
+	double x = stod(tokens.at(1));
+	double y = stod(tokens.at(2));
+	double z = stod(tokens.at(3));
+	this->addVertex(x, y, z);
+      }
+      
+      
+      if(tokens.at(0).compare("vn") == 0){
+	float x = stod(tokens.at(1));
+	float y = stod(tokens.at(2));
+	float z = stod(tokens.at(3));
+	  
+	float n[3];
+	n[0] = x;
+	n[1] = y;
+	n[2] = z;
+	tmpNormals.push_back(n);
+      }
+
+      if(tokens.at(0).compare("f") == 0){
+	  
+	vector<string> vertexToken;
+	  
+	bool convertIntoTriangleFace = false;
+
+	int nbVertex = tokens.size()-1;//not taking into account the f at beggining
+	if(nbVertex == 3)//Triangle face
+	  convertIntoTriangleFace = true;
+	  
+	int *vertexIds;
+	  
+	if(convertIntoTriangleFace)
+	  vertexIds = (int*)malloc((nbVertex)*sizeof(int));
+	else
+	  vertexIds = (int*)malloc(3*sizeof(int));
+
+	  
+	for(int i = 1 ; i < tokens.size() ; i++){
+	  vertexToken = split(tokens.at(i), '/');
+
+	  if(vertexToken.size() != 3){
+	    cerr << "Incorrect face definition : " << tokens.at(i) << endl;
+	    fileToRead.close();
+	    return;
+	  }
+
+	  int vertexId = stoi(vertexToken.at(0))-1;//Indices in .obj start at 1
+	  int normalId = stoi(vertexToken.at(2))-1;
+
+	  if(this->getVertices()->at(vertexId).normal[0] == NULL){// This vertex normals has not been set yet
+	    
+	    this->getVertices()->at(vertexId).normal[0] = tmpNormals.at(normalId)[0];
+	    this->getVertices()->at(vertexId).normal[1] = tmpNormals.at(normalId)[1];
+	    this->getVertices()->at(vertexId).normal[2] = tmpNormals.at(normalId)[2];
+
+	    vertexIds[i-1] = vertexId;
+	  }
+	  else{
+
+	    if(this->getVertices()->at(vertexId).normal[0] != tmpNormals.at(normalId)[0] &&
+	       this->getVertices()->at(vertexId).normal[1] != tmpNormals.at(normalId)[1] &&
+	       this->getVertices()->at(vertexId).normal[2] != tmpNormals.at(normalId)[2]){
+		
+	      //We have to duplicate the vertex
+		
+	      double x = this->getVertices()->at(vertexId).position[0];
+	      double y = this->getVertices()->at(vertexId).position[1];
+	      double z = this->getVertices()->at(vertexId).position[2];
+		
+	      int newVertexId = this->addVertex(x, y, z);
+		
+	      this->getVertices()->at(newVertexId).normal[0] = tmpNormals.at(normalId)[0];
+	      this->getVertices()->at(newVertexId).normal[1] = tmpNormals.at(normalId)[1];
+	      this->getVertices()->at(newVertexId).normal[2] = tmpNormals.at(normalId)[2];
+		
+	      vertexIds[i-1] = newVertexId;
+	    }
+	    else//The vertex with the same normal already exists
+	      vertexIds[i-1] = vertexId;		
+	  }
+	}
+
+	  
+	if(convertIntoTriangleFace){
+	  for(int k = 0 ; k < nbVertex-1 ; k++){
+	    this->addFace(vertexIds[0],
+			  vertexIds[k],
+			  vertexIds[k+1]);	      
+	  }
+	}
+	else{
+	  this->addFace(vertexIds[0],
+			vertexIds[1],
+			vertexIds[2]);
+	} 
+      }
+    }//end while
+    
+    fileToRead.close();
+  }
+  else {
+    // file could not be opened 
+    cerr << "The file : " << filePath <<" could not be opened" << endl;
+    return;
+  }
+
+}
+
+void VEF::exportToObj(char* exportFilePath){
+  //TODO To be implemented
+}
 
 // getters
 std::vector<VEF::Vertex>* VEF::getVertices() {

@@ -44,6 +44,9 @@ public:
       color[3] = a;
     }    
   };
+
+  void loadFromObj(char* filePath);
+  void exportToObj(char* exportFilePath);
   
   // getters & setters
   std::vector<Vertex>* getVertices();
