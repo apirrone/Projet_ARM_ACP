@@ -42,7 +42,7 @@ void Viewer::initializeGL(){
 
   std::cout << "init" << std::endl;
   f->glClearColor(0.6, 0.2, 0.2, 1.0);
-  f->glEnable(GL_CULL_FACE);
+  // f->glEnable(GL_CULL_FACE);
 
   f->glEnable(GL_BLEND);
   f->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
