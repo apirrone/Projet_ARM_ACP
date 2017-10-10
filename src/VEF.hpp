@@ -15,7 +15,7 @@ public:
     float position[3];
     float normal[3];
     float color[4];
-    
+    bool normalSet;
     Vertex() {
       position[0] = 0.;
       position[1] = 0.;
@@ -24,6 +24,7 @@ public:
       color[1] = 0.8;
       color[2] = 0.8;
       color[3] = 0.3;
+      normalSet = false;
       
     }
     Vertex(double x, double y, double z) {
@@ -33,7 +34,8 @@ public:
       color[0] = 0.8;
       color[1] = 0.8;
       color[2] = 0.8;
-      color[3] = 0.3;
+      color[3] = 0.3; 
+      normalSet = false;
     }
 
     Vertex(double x, double y, double z, float r, float g, float b, float a) {
@@ -44,6 +46,7 @@ public:
       color[1] = g;
       color[2] = b;
       color[3] = a;
+      normalSet = false;
     }
 
     std::string toString() {

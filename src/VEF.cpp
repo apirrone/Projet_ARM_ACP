@@ -95,7 +95,7 @@ void VEF::loadFromObj(char* filePath){
 	bool convertIntoTriangleFace = false;
 
 	int nbVertex = tokens.size()-1;//not taking into account the f at beggining
-	if(nbVertex == 3)//Triangle face
+	if(nbVertex > 3)//Triangle face
 	  convertIntoTriangleFace = true;
 	  
 	int *vertexIds;
@@ -118,13 +118,15 @@ void VEF::loadFromObj(char* filePath){
 	  int vertexId = stoi(vertexToken.at(0))-1;//Indices in .obj start at 1
 	  int normalId = stoi(vertexToken.at(2))-1;
 
-	  if(this->getVertices()->at(vertexId).normal[0] == NULL){// This vertex normals has not been set yet
+	  if(this->getVertices()->at(vertexId).normalSet == false){// This vertex normals has not been set yet
 	    
 	    this->getVertices()->at(vertexId).normal[0] = tmpNormals.at(normalId)[0];
 	    this->getVertices()->at(vertexId).normal[1] = tmpNormals.at(normalId)[1];
 	    this->getVertices()->at(vertexId).normal[2] = tmpNormals.at(normalId)[2];
 
 	    vertexIds[i-1] = vertexId;
+
+	    this->getVertices()->at(vertexId).normalSet = true;
 	  }
 	  else{
 
@@ -145,6 +147,7 @@ void VEF::loadFromObj(char* filePath){
 	      this->getVertices()->at(newVertexId).normal[2] = tmpNormals.at(normalId)[2];
 		
 	      vertexIds[i-1] = newVertexId;
+	      this->getVertices()->at(newVertexId).normalSet = true;
 	    }
 	    else//The vertex with the same normal already exists
 	      vertexIds[i-1] = vertexId;		
@@ -153,6 +156,7 @@ void VEF::loadFromObj(char* filePath){
 
 	  
 	if(convertIntoTriangleFace){
+	  cout << "coucou" << endl;
 	  for(int k = 0 ; k < nbVertex-1 ; k++){
 	    this->addFace(vertexIds[0],
 			  vertexIds[k],
@@ -179,7 +183,7 @@ void VEF::loadFromObj(char* filePath){
 
   std::cout << "VEF vertices : " << std::endl;
   for(int i=0; i < _vertices.size(); ++i)
-    std::cout << "\tv" << i << " " << _vertices[0].toString();
+    std::cout << "\tv" << i << " " << _vertices[i].toString();
 
 }
 
