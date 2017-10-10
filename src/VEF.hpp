@@ -5,6 +5,7 @@
 #include <sstream>
 #include <QtOpenGL>
 
+
 // Base class for object composed of vertices, edges and faces
 class VEF {
 
