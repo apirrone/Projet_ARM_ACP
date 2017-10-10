@@ -23,6 +23,10 @@ vector<string> split(const string &s, char delim) {
 }
 
 void VEF::loadFromObj(char* filePath){
+
+  
+  
+  /*
   
   string line;
   ifstream fileToRead(filePath);  
@@ -145,6 +149,12 @@ void VEF::loadFromObj(char* filePath){
     return;
   }
 
+  */
+
+  std::cout << "VEF vertices : " << std::endl;
+  for(int i=0; i < _vertices.size(); ++i)
+    std::cout << "\tv" << i << " " << _vertices[0].toString();
+
 }
 
 void VEF::exportToObj(char* exportFilePath){
@@ -153,7 +163,7 @@ void VEF::exportToObj(char* exportFilePath){
 
 void VEF::draw(QOpenGLShaderProgram* shader){
 
-  // std::cout << "VOXELGRID DRAW" << std::endl;
+  std::cout << "VEF DRAW" << std::endl;
   if(!_initialized)
     initVAO();
   
@@ -180,20 +190,22 @@ void VEF::draw(QOpenGLShaderProgram* shader){
 }
 
 void VEF::initVAO() {
+  std::cout << "VEF initVAO" << std::endl;
   _vertexBuffer = new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
+  std::cout << "VEF initVAO 1" << std::endl;
   _vertexBuffer->create();
   _vertexBuffer->bind();
   _vertexBuffer->setUsagePattern(QOpenGLBuffer::StaticDraw);
   _vertexBuffer->allocate(&(_vertices[0]), sizeof(VEF::Vertex)*_vertices.size());
-
+  std::cout << "VEF initVAO 2" << std::endl;
   _indexBuffer = new QOpenGLBuffer(QOpenGLBuffer::IndexBuffer);
   _indexBuffer->create();
   _indexBuffer->bind();
   _indexBuffer->setUsagePattern(QOpenGLBuffer::StaticDraw);
   _indexBuffer->allocate(&(_faces[0]), sizeof(unsigned int)*_faces.size());
-    
+  std::cout << "VEF initVAO 3" << std::endl;
   _vertexArray.create();
-  
+  std::cout << "VEF initVAO 4" << std::endl;
   _initialized = true;
 
 }

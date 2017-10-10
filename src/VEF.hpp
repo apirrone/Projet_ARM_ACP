@@ -2,6 +2,7 @@
 #define VEF_HPP
 
 #include <vector>
+#include <sstream>
 #include <QtOpenGL>
 
 // Base class for object composed of vertices, edges and faces
@@ -42,7 +43,15 @@ public:
       color[1] = g;
       color[2] = b;
       color[3] = a;
-    }    
+    }
+
+    std::string toString() {
+      std::stringstream ss;
+      ss << "Vertex : position (" << position[0]  << "," << position[1] << "," << position[2] << ")" <<std::endl
+	 << "\tnormal (" << normal[0]  << "," << normal[1] << "," << normal[2] << ")" << std::endl
+	 << "\tcolor (" << color[0]  << "," << color[1] << "," << color[2] << "," << color[4] << ")" << std::endl;
+      return ss.str();
+    }
   };
 
   void loadFromObj(char* filePath);
