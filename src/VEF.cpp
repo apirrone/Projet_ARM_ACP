@@ -171,7 +171,7 @@ void VEF::loadFromObj(char* filePath){
     return;
   }
 
-  */
+  
 
   std::cout << "VEF vertices : " << std::endl;
   for(int i=0; i < _vertices.size(); ++i)
