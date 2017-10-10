@@ -62,8 +62,8 @@ void Viewer::initializeGL(){
   std::cout << "h : " << h  << std::endl;
   std::cout << "d : " << d  << std::endl;
   
-  _camera.initCamera(300, 0, 0, QVector3D(-1.*w/2, 1.*h/2, d/2), this->width(), this->height(), 45.);  
-
+  //_camera.initCamera(300, 0, 0, QVector3D(-1.*w/2, 1.*h/2, d/2), this->width(), this->height(), 45.);  
+  _camera.initCamera(300, 0, 0, QVector3D(0, 0, 0), this->width(), this->height(), 45.);  
   //_trackball.setCamera(&_camera);
 }
 

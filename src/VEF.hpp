@@ -50,7 +50,7 @@ public:
       std::stringstream ss;
       ss << "Vertex : position (" << position[0]  << "," << position[1] << "," << position[2] << ")" <<std::endl
 	 << "\tnormal (" << normal[0]  << "," << normal[1] << "," << normal[2] << ")" << std::endl
-	 << "\tcolor (" << color[0]  << "," << color[1] << "," << color[2] << "," << color[4] << ")" << std::endl;
+	 << "\tcolor (" << color[0]  << "," << color[1] << "," << color[2] << "," << color[3] << ")" << std::endl;
       return ss.str();
     }
   };

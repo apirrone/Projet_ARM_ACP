@@ -24,7 +24,7 @@ vector<string> split(const string &s, char delim) {
 
 void VEF::loadFromObj(char* filePath){
   //DEBUG
-
+  /*
   _vertices.clear();
   Vertex v1, v2, v3;
   v1.position[0] = -0.1;
@@ -47,9 +47,10 @@ void VEF::loadFromObj(char* filePath){
   _faces.push_back(0);
   _faces.push_back(1);
   _faces.push_back(2);
-  return ;
+  //return ;
   //
-
+  //*/
+  //*
   string line;
   ifstream fileToRead(filePath);  
 
@@ -170,7 +171,7 @@ void VEF::loadFromObj(char* filePath){
     cerr << "The file : " << filePath <<" could not be opened" << endl;
     return;
   }
-
+  //*/
   
 
   std::cout << "VEF vertices : " << std::endl;

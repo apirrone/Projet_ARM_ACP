@@ -12,6 +12,7 @@
 #include "VoxelGrid.hpp"
 
 // #define DEBUG
+#define OBJ
 
 using namespace std;
 
@@ -28,6 +29,7 @@ int main(int argc, char *argv[]) {
 
 
   //TEST OBJ
+#ifdef OBJ
 
   VEF* testObj = new VEF();
   testObj->loadFromObj(argv[1]);
@@ -40,40 +42,30 @@ int main(int argc, char *argv[]) {
   cout << "FIN" << endl;
   
   return app.exec();
- 
+
+#endif //OBJ
   //TEST OBJ
 
-
-//   PGM3D_Holder test = PGM3D_Holder(argv[1]);
+#ifndef OBJ
+  PGM3D_Holder test = PGM3D_Holder(argv[1]);
   
-//   int w = test.getWidth();
-//   int h = test.getHeight();
-//   int d = test.getDepth();
+  int w = test.getWidth();
+  int h = test.getHeight();
+  int d = test.getDepth();
   
-//   const unsigned char * data = test.getData();
+  const unsigned char * data = test.getData();
   
-// #ifdef DEBUG
+  VoxelGrid * grid = new VoxelGrid(h,w,d,data);
+  cout << "DEBUT" << endl;
   
-//   cout << "Test : \n\t - w : " << w << endl
-//        << "\t - h : " << h << endl
-//        << "\t - d : " << d << endl
-//        << "\t - max : " << test.getMaxValue() << endl;
+  QApplication app(argc, argv);
   
-//   for(int i = 0; i < w*h*d; ++i)
-//     cout << "\t - data[" << i << "] = " << (int)data[i] << endl;
+  MainWindow window(*grid);
+  window.resize(1300,1300);
+  window.show();
   
-// #endif
-
-//   VoxelGrid * grid = new VoxelGrid(h,w,d,data);
-//   cout << "DEBUT" << endl;
+  cout << "FIN" << endl;
   
-//   QApplication app(argc, argv);
-  
-//   MainWindow window(*grid);
-//   window.resize(1300,1300);
-//   window.show();
-  
-//   cout << "FIN" << endl;
-  
-//   return app.exec();
+  return app.exec();
+  #endif
 }
