@@ -10,7 +10,6 @@
 class VEF {
 
 public:
-
   
   struct Vertex {
     float position[3];

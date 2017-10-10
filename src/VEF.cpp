@@ -25,45 +25,43 @@ vector<string> split(const string &s, char delim) {
 void VEF::loadFromObj(char* filePath){
   string line;
   ifstream fileToRead(filePath);  
-  int ln = 0;
+
   if (fileToRead.is_open()) {
 
-    vector<float*> tmpNormals;
+    vector<float> tmpNormals;
 
     while(getline(fileToRead, line)){
+      
       line = regex_replace(line, regex("\\s+"), " ");
-      ln++;
+      
       if(line.size() == 0 || line[0] == '#') // Ignore comments
 	continue;
-
       
       vector<string> tokens = split(line, ' ');
-      //std::cout << "str (" << ln << ") : " << line << endl;
-      //for(int i=0; i<tokens.size(); ++i)
-      //std::cout << "tok " << tokens[i] << std::endl;
+      
       if(tokens.at(0).compare("v") == 0){
+
+	cout << "ADD VERTEX " << endl;
 	double x = stod(tokens.at(1));
 	double y = stod(tokens.at(2));
 	double z = stod(tokens.at(3));
 	this->addVertex(x, y, z);
-      }
-      
-
-      if(tokens.at(0).compare("vn") == 0){
+      } 
+      else if(tokens.at(0).compare("vn") == 0){
+	cout << "ADD NORMAL " << endl;
 	float x = stod(tokens.at(1));
 	float y = stod(tokens.at(2));
 	float z = stod(tokens.at(3));
-	  
-	float n[3];
-	n[0] = x;
-	n[1] = y;
-	n[2] = z;
-	tmpNormals.push_back(n);
-      }
 
-      if(tokens.at(0).compare("f") == 0){
+	tmpNormals.push_back(x);
+	tmpNormals.push_back(y); 
+	tmpNormals.push_back(z); 
+      }
+      else if(tokens.at(0).compare("f") == 0){
+	cout << "ADD FACE " << endl;
+	
 	vector<string> vertexToken;
-	  
+
 	bool convertIntoTriangleFace = false;
 
 	int nbVertex = tokens.size()-1;//not taking into account the f at beggining
@@ -79,8 +77,9 @@ void VEF::loadFromObj(char* filePath){
 
 	  
 	for(int i = 1 ; i < tokens.size() ; i++){
-	  vertexToken = split(tokens.at(i), '/');
 
+	  vertexToken = split(tokens.at(i), '/'); 
+	  
 	  if(vertexToken.size() != 3){
 	    cerr << "Incorrect face definition : " << tokens.at(i) << endl;
 	    fileToRead.close();
@@ -88,24 +87,28 @@ void VEF::loadFromObj(char* filePath){
 	  }
 
 	  int vertexId = stoi(vertexToken.at(0))-1;//Indices in .obj start at 1
-	  int normalId = stoi(vertexToken.at(2))-1;
-
+	  int normalId = (stoi(vertexToken.at(2))-1)*3;
+	  
 	  if(this->getVertices()->at(vertexId).normalSet == false){// This vertex normals has not been set yet
+	    cout << "vertex normals not set yet  " << endl;
 	    
-	    this->getVertices()->at(vertexId).normal[0] = tmpNormals.at(normalId)[0];
-	    this->getVertices()->at(vertexId).normal[1] = tmpNormals.at(normalId)[1];
-	    this->getVertices()->at(vertexId).normal[2] = tmpNormals.at(normalId)[2];
-
+	    this->getVertices()->at(vertexId).normal[0] = tmpNormals.at(normalId);
+	    this->getVertices()->at(vertexId).normal[1] = tmpNormals.at(normalId+1);
+	    this->getVertices()->at(vertexId).normal[2] = tmpNormals.at(normalId+2);
+	    
 	    vertexIds[i-1] = vertexId;
 
 	    this->getVertices()->at(vertexId).normalSet = true;
 	  }
 	  else{
+	    
+	    cout << "vertex normals already set  " << endl;
 
-	    if(this->getVertices()->at(vertexId).normal[0] != tmpNormals.at(normalId)[0] &&
-	       this->getVertices()->at(vertexId).normal[1] != tmpNormals.at(normalId)[1] &&
-	       this->getVertices()->at(vertexId).normal[2] != tmpNormals.at(normalId)[2]){
-		
+	    if(this->getVertices()->at(vertexId).normal[0] != tmpNormals.at(normalId) ||
+	       this->getVertices()->at(vertexId).normal[1] != tmpNormals.at(normalId+1) ||
+	       this->getVertices()->at(vertexId).normal[2] != tmpNormals.at(normalId+2)){
+
+	      cout << "vertex normals different   " << endl;		
 	      //We have to duplicate the vertex
 		
 	      double x = this->getVertices()->at(vertexId).position[0];
@@ -114,21 +117,24 @@ void VEF::loadFromObj(char* filePath){
 		
 	      int newVertexId = this->addVertex(x, y, z);
 		
-	      this->getVertices()->at(newVertexId).normal[0] = tmpNormals.at(normalId)[0];
-	      this->getVertices()->at(newVertexId).normal[1] = tmpNormals.at(normalId)[1];
-	      this->getVertices()->at(newVertexId).normal[2] = tmpNormals.at(normalId)[2];
+	      this->getVertices()->at(newVertexId).normal[0] = tmpNormals.at(normalId);
+	      this->getVertices()->at(newVertexId).normal[1] = tmpNormals.at(normalId+1);
+	      this->getVertices()->at(newVertexId).normal[2] = tmpNormals.at(normalId+2);
 		
 	      vertexIds[i-1] = newVertexId;
 	      this->getVertices()->at(newVertexId).normalSet = true;
 	    }
-	    else//The vertex with the same normal already exists
-	      vertexIds[i-1] = vertexId;		
+	    else{//The vertex with the same normal already exists
+	      cout << "vertex normals identical   " << endl;		
+	      vertexIds[i-1] = vertexId;
+	    }
+	    
 	  }
+	  
 	}
-
 	  
 	if(convertIntoTriangleFace){
-	  for(int k = 0 ; k < nbVertex-1 ; k++){
+	  for(int k = 1 ; k < nbVertex-1 ; k++){
 	    this->addFace(vertexIds[0],
 			  vertexIds[k],
 			  vertexIds[k+1]);	      
@@ -138,7 +144,9 @@ void VEF::loadFromObj(char* filePath){
 	  this->addFace(vertexIds[0],
 			vertexIds[1],
 			vertexIds[2]);
-	} 
+	}
+
+	free(vertexIds);
       }
     }//end while
     
@@ -149,17 +157,37 @@ void VEF::loadFromObj(char* filePath){
     cerr << "The file : " << filePath <<" could not be opened" << endl;
     return;
   }
-  //*/
   
-  /*
-  std::cout << "VEF vertices : " << std::endl;
-  for(int i=0; i < _vertices.size(); ++i)
-    std::cout << "\tv" << i << " " << _vertices[i].toString();
-  //*/
 }
 
 void VEF::exportToObj(char* exportFilePath){
-  //TODO To be implemented
+
+  if(_vertices.size() == 0)
+    return;
+  
+  ofstream output;
+  output.open(exportFilePath);
+
+  output << "# Obj file generated by VisioBrain software" << endl;
+  output << "# Written by Guillaume Almyre, Pierre Célor and Antoine Pirrone" << endl;
+
+  for(auto v : _vertices){
+    output << "v " << v.position[0] << " " << v.position[1] << " " << v.position[2] << endl;
+  }
+  
+  for(auto v : _vertices){
+    output << "vn " << v.normal[0] << " " << v.normal[1] << " " << v.normal[2] << endl;
+  }
+  
+  for(int f = 0 ; f < _faces.size() ; f+=3){
+    unsigned int v1 = _faces.at(f)+1;
+    unsigned int v2 = _faces.at(f+1)+1;
+    unsigned int v3 = _faces.at(f+2)+1;
+
+    output << "f " << v1 << "//" << v1 << " " << v2 << "//" << v2 << " " << v3 << "//" << v3 << endl;
+  }
+
+  output.close(); 
 }
 
 void VEF::draw(QOpenGLShaderProgram* shader){
@@ -192,22 +220,17 @@ void VEF::draw(QOpenGLShaderProgram* shader){
 }
 
 void VEF::initVAO() {
-  std::cout << "VEF initVAO" << std::endl;
   _vertexBuffer = new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
-  std::cout << "VEF initVAO 1" << std::endl;
   _vertexBuffer->create();
   _vertexBuffer->bind();
   _vertexBuffer->setUsagePattern(QOpenGLBuffer::StaticDraw);
   _vertexBuffer->allocate(&(_vertices[0]), sizeof(VEF::Vertex)*_vertices.size());
-  std::cout << "VEF initVAO 2" << std::endl;
   _indexBuffer = new QOpenGLBuffer(QOpenGLBuffer::IndexBuffer);
   _indexBuffer->create();
   _indexBuffer->bind();
   _indexBuffer->setUsagePattern(QOpenGLBuffer::StaticDraw);
   _indexBuffer->allocate(&(_faces[0]), sizeof(unsigned int)*_faces.size());
-  std::cout << "VEF initVAO 3" << std::endl;
   _vertexArray.create();
-  std::cout << "VEF initVAO 4" << std::endl;
   _initialized = true;
 
 }
