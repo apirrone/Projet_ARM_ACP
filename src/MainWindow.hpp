@@ -17,7 +17,7 @@ namespace Ui {
 
 class MainWindow : public QMainWindow
 {
-  // Q_OBJECT
+  Q_OBJECT
 
 public:
   explicit MainWindow(VEF& voxels, QWidget *parent = 0);
@@ -30,6 +30,19 @@ protected:
 private:
   Ui::MainWindow *ui;
   Viewer* viewer;
+  QMenu* fileMenu;
+  QAction* openAction;
+  QAction* exportAsAction;
+  QAction* exitAction;
+
+  void createMenu();
+  void createActions();
+
+private slots:
+  void open();
+  void exportAs();
+  void exit();
+
 };
 
 #endif // MAINWINDOW_HPP
