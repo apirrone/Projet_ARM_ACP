@@ -28,11 +28,10 @@ int main(int argc, char *argv[]) {
 
 
   //TEST OBJ
-  
-   VEF* testObj;
+
+  VEF* testObj = new VEF();
   testObj->loadFromObj(argv[1]);
-  /*
-QApplication app(argc, argv);
+  QApplication app(argc, argv);
   
   MainWindow window(*testObj);
   window.resize(1300,1300);
@@ -41,20 +40,19 @@ QApplication app(argc, argv);
   cout << "FIN" << endl;
   
   return app.exec();
-  */
-  return 0;
+ 
   //TEST OBJ
 
 
-  // PGM3D_Holder test = PGM3D_Holder(argv[1]);
+//   PGM3D_Holder test = PGM3D_Holder(argv[1]);
   
-  // int w = test.getWidth();
-  // int h = test.getHeight();
-  // int d = test.getDepth();
+//   int w = test.getWidth();
+//   int h = test.getHeight();
+//   int d = test.getDepth();
   
-  // const unsigned char * data = test.getData();
+//   const unsigned char * data = test.getData();
   
-// #ifdef DEBUG			
+// #ifdef DEBUG
   
 //   cout << "Test : \n\t - w : " << w << endl
 //        << "\t - h : " << h << endl
@@ -77,5 +75,5 @@ QApplication app(argc, argv);
   
 //   cout << "FIN" << endl;
   
-  //return app.exec();
+//   return app.exec();
 }

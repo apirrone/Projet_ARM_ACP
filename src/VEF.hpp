@@ -24,6 +24,7 @@ public:
       color[1] = 0.8;
       color[2] = 0.8;
       color[3] = 0.3;
+      
     }
     Vertex(double x, double y, double z) {
       position[0] = x;
@@ -53,7 +54,7 @@ public:
       return ss.str();
     }
   };
-
+  
   void loadFromObj(char* filePath);
   void exportToObj(char* exportFilePath);
   
@@ -67,7 +68,7 @@ public:
   int addEdge(int p1, int p2);
   int addFace(int e1, int e2, int e3);
   
-  void draw(QOpenGLShaderProgram* shader);
+  virtual void draw(QOpenGLShaderProgram* shader);
 
   unsigned int getW();
   unsigned int getH();

@@ -17,9 +17,9 @@ Viewer::Viewer(VEF& grid, QWidget *parent)
   _prevPos = QVector2D(0, 0);
   _timer.start(0, this);
 
-  unsigned int w = _vef.getW();
-  unsigned int h = _vef.getH();
-  unsigned int d = _vef.getD();
+  // unsigned int w = _vef.getW();
+  // unsigned int h = _vef.getH();
+  // unsigned int d = _vef.getD();
   // std::cout << "this->width() : " << this->width()  << std::endl;
   // _camera = Camera(QVector3D(-32., -32., -143), QVector3D(w/2., h/2., d/2.), this->width(), this->height());
 }
@@ -58,23 +58,26 @@ void Viewer::initializeGL(){
   unsigned int h = _vef.getH();
   unsigned int d = _vef.getD();
 
+  std::cout << "w : " << w  << std::endl;
+  std::cout << "h : " << h  << std::endl;
+  std::cout << "d : " << d  << std::endl;
+  
   _camera.initCamera(300, 0, 0, QVector3D(-1.*w/2, 1.*h/2, d/2), this->width(), this->height(), 45.);  
 
   //_trackball.setCamera(&_camera);
 }
 
 void Viewer::paintGL(){
+
   QOpenGLFunctions * f = QOpenGLContext::currentContext()->functions();
   f->glClearColor(0.2, 0.2, 0.2, 1.0);
   f->glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
   _shader->bind();
   _shader->setUniformValue(_shader->uniformLocation("proj_mat"), _camera.projectionMatrix());
   _shader->setUniformValue(_shader->uniformLocation("view_mat"), _camera.viewMatrix());
-  //std::cout << "coucou" << std::endl;
+  
   _vef.draw(_shader);
-
   _shader->release();
-
 }
 
 void Viewer::resizeGL(int width, int height){
