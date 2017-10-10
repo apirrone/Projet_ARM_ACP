@@ -7,17 +7,17 @@
 
 class VoxelGrid : public VEF {
 
-  
+
 public :
   VoxelGrid(unsigned int h, unsigned int w, unsigned int d, const unsigned char* data);
   ~VoxelGrid();
-  
+
   // void draw(QOpenGLShaderProgram* shader);
 
   unsigned int getW();
   unsigned int getH();
   unsigned int getD();
-    
+
 private :
 
   struct Voxel {
@@ -42,18 +42,18 @@ private :
   Voxel* getRightVoxel(int, int, int);
   Voxel* getFrontVoxel(int, int, int);
   Voxel* getRearVoxel(int, int, int);
-  
+
   bool _initialized;//true if VAO has been initialized
   QOpenGLVertexArrayObject _vertexArray;
   QOpenGLBuffer* _vertexBuffer;
   QOpenGLBuffer* _indexBuffer;
-  
+
   Voxel* _voxels;
 
   unsigned int _w, _h, _d, _minValue, _maxValue, _displayMinValue, _displayMaxValue;
 
   //float _firstColor[3], _secondColor[3];
-  
+
   void initVAO();
   void fillVBO();
 };

@@ -7,6 +7,20 @@
 #include "3DViewer.hpp"
 #include <iostream>
 
+MainWindow::MainWindow(QWidget *parent) :
+  QMainWindow(parent),
+  ui(new Ui::MainWindow)
+{
+  ui->setupUi(this);
+
+  /*viewer = new Viewer(this);
+  this->setCentralWidget(viewer);
+*/
+  createActions();
+  createMenu();
+  setWindowTitle(tr("Visiobrain"));
+}
+
 MainWindow::MainWindow(VEF& voxels, QWidget *parent) :
   QMainWindow(parent),
   ui(new Ui::MainWindow)
@@ -59,8 +73,12 @@ void MainWindow::open() {
 
   std::cout << "Open called" << '\n';
   QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),"../data", tr("3D files (*.obj *pgm3d)"));
-  //ui->listWidget->addItems(fileNames);
   std::cout << "opened : " << fileName.toStdString() << '\n';
+  QFileInfo fileInfo(fileName);
+  QString fileExtension = fileInfo.suffix();
+  std::cout << "file extension : " << fileExtension.toStdString() << '\n';
+
+
 }
 
 void MainWindow::exportAs() {

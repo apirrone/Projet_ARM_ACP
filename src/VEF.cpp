@@ -10,35 +10,35 @@
 using namespace std;
 
 vector<string> split(const string &s, char delim) {
-  
+
   stringstream ss(s);
   string item;
   vector<string> tokens;
-  
+
   while (getline(ss, item, delim))
     tokens.push_back(item);
-  
+
   return tokens;
-  
+
 }
 
 void VEF::loadFromObj(char* filePath){
   string line;
-  ifstream fileToRead(filePath);  
+  ifstream fileToRead(filePath);
 
   if (fileToRead.is_open()) {
 
     vector<float> tmpNormals;
 
     while(getline(fileToRead, line)){
-      
+
       line = regex_replace(line, regex("\\s+"), " ");
-      
+
       if(line.size() == 0 || line[0] == '#') // Ignore comments
-	continue;
-      
+	       continue;
+
       vector<string> tokens = split(line, ' ');
-      
+
       if(tokens.at(0).compare("v") == 0){
 
 	cout << "ADD VERTEX " << endl;
@@ -46,7 +46,7 @@ void VEF::loadFromObj(char* filePath){
 	double y = stod(tokens.at(2));
 	double z = stod(tokens.at(3));
 	this->addVertex(x, y, z);
-      } 
+      }
       else if(tokens.at(0).compare("vn") == 0){
 	cout << "ADD NORMAL " << endl;
 	float x = stod(tokens.at(1));
@@ -54,12 +54,12 @@ void VEF::loadFromObj(char* filePath){
 	float z = stod(tokens.at(3));
 
 	tmpNormals.push_back(x);
-	tmpNormals.push_back(y); 
-	tmpNormals.push_back(z); 
+	tmpNormals.push_back(y);
+	tmpNormals.push_back(z);
       }
       else if(tokens.at(0).compare("f") == 0){
 	cout << "ADD FACE " << endl;
-	
+
 	vector<string> vertexToken;
 
 	bool convertIntoTriangleFace = false;
@@ -67,19 +67,19 @@ void VEF::loadFromObj(char* filePath){
 	int nbVertex = tokens.size()-1;//not taking into account the f at beggining
 	if(nbVertex > 3)//Triangle face
 	  convertIntoTriangleFace = true;
-	  
+
 	int *vertexIds;
-	  
+
 	if(convertIntoTriangleFace)
 	  vertexIds = (int*)malloc((nbVertex)*sizeof(int));
 	else
 	  vertexIds = (int*)malloc(3*sizeof(int));
 
-	  
+
 	for(int i = 1 ; i < tokens.size() ; i++){
 
-	  vertexToken = split(tokens.at(i), '/'); 
-	  
+	  vertexToken = split(tokens.at(i), '/');
+
 	  if(vertexToken.size() != 3){
 	    cerr << "Incorrect face definition : " << tokens.at(i) << endl;
 	    fileToRead.close();
@@ -88,56 +88,56 @@ void VEF::loadFromObj(char* filePath){
 
 	  int vertexId = stoi(vertexToken.at(0))-1;//Indices in .obj start at 1
 	  int normalId = (stoi(vertexToken.at(2))-1)*3;
-	  
+
 	  if(this->getVertices()->at(vertexId).normalSet == false){// This vertex normals has not been set yet
 	    cout << "vertex normals not set yet  " << endl;
-	    
+
 	    this->getVertices()->at(vertexId).normal[0] = tmpNormals.at(normalId);
 	    this->getVertices()->at(vertexId).normal[1] = tmpNormals.at(normalId+1);
 	    this->getVertices()->at(vertexId).normal[2] = tmpNormals.at(normalId+2);
-	    
+
 	    vertexIds[i-1] = vertexId;
 
 	    this->getVertices()->at(vertexId).normalSet = true;
 	  }
 	  else{
-	    
+
 	    cout << "vertex normals already set  " << endl;
 
 	    if(this->getVertices()->at(vertexId).normal[0] != tmpNormals.at(normalId) ||
 	       this->getVertices()->at(vertexId).normal[1] != tmpNormals.at(normalId+1) ||
 	       this->getVertices()->at(vertexId).normal[2] != tmpNormals.at(normalId+2)){
 
-	      cout << "vertex normals different   " << endl;		
+	      cout << "vertex normals different   " << endl;
 	      //We have to duplicate the vertex
-		
+
 	      double x = this->getVertices()->at(vertexId).position[0];
 	      double y = this->getVertices()->at(vertexId).position[1];
 	      double z = this->getVertices()->at(vertexId).position[2];
-		
+
 	      int newVertexId = this->addVertex(x, y, z);
-		
+
 	      this->getVertices()->at(newVertexId).normal[0] = tmpNormals.at(normalId);
 	      this->getVertices()->at(newVertexId).normal[1] = tmpNormals.at(normalId+1);
 	      this->getVertices()->at(newVertexId).normal[2] = tmpNormals.at(normalId+2);
-		
+
 	      vertexIds[i-1] = newVertexId;
 	      this->getVertices()->at(newVertexId).normalSet = true;
 	    }
 	    else{//The vertex with the same normal already exists
-	      cout << "vertex normals identical   " << endl;		
+	      cout << "vertex normals identical   " << endl;
 	      vertexIds[i-1] = vertexId;
 	    }
-	    
+
 	  }
-	  
+
 	}
-	  
+
 	if(convertIntoTriangleFace){
 	  for(int k = 1 ; k < nbVertex-1 ; k++){
 	    this->addFace(vertexIds[0],
 			  vertexIds[k],
-			  vertexIds[k+1]);	      
+			  vertexIds[k+1]);
 	  }
 	}
 	else{
@@ -149,22 +149,22 @@ void VEF::loadFromObj(char* filePath){
 	free(vertexIds);
       }
     }//end while
-    
+
     fileToRead.close();
   }
   else {
-    // file could not be opened 
+    // file could not be opened
     cerr << "The file : " << filePath <<" could not be opened" << endl;
     return;
   }
-  
+
 }
 
 void VEF::exportToObj(char* exportFilePath){
 
   if(_vertices.size() == 0)
     return;
-  
+
   ofstream output;
   output.open(exportFilePath);
 
@@ -174,11 +174,11 @@ void VEF::exportToObj(char* exportFilePath){
   for(auto v : _vertices){
     output << "v " << v.position[0] << " " << v.position[1] << " " << v.position[2] << endl;
   }
-  
+
   for(auto v : _vertices){
     output << "vn " << v.normal[0] << " " << v.normal[1] << " " << v.normal[2] << endl;
   }
-  
+
   for(int f = 0 ; f < _faces.size() ; f+=3){
     unsigned int v1 = _faces.at(f)+1;
     unsigned int v2 = _faces.at(f+1)+1;
@@ -187,7 +187,7 @@ void VEF::exportToObj(char* exportFilePath){
     output << "f " << v1 << "//" << v1 << " " << v2 << "//" << v2 << " " << v3 << "//" << v3 << endl;
   }
 
-  output.close(); 
+  output.close();
 }
 
 void VEF::draw(QOpenGLShaderProgram* shader){
@@ -195,13 +195,13 @@ void VEF::draw(QOpenGLShaderProgram* shader){
 
   if(!_initialized)
     initVAO();
-  
-  QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();  
+
+  QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();
 
   _vertexArray.bind();
   _indexBuffer->bind();
-  
-  int vertex_loc = shader->attributeLocation("vtx_position"); 
+
+  int vertex_loc = shader->attributeLocation("vtx_position");
   if(vertex_loc>=0) {
     shader->setAttributeBuffer(vertex_loc, GL_FLOAT, offsetof(VEF::Vertex,position), 3, sizeof(VEF::Vertex));
     shader->enableAttributeArray(vertex_loc);
@@ -211,7 +211,7 @@ void VEF::draw(QOpenGLShaderProgram* shader){
   if(color_loc>=0) {
     shader->setAttributeBuffer(color_loc, GL_FLOAT, offsetof(VEF::Vertex,color), 4, sizeof(VEF::Vertex));
     shader->enableAttributeArray(color_loc);
-  }  
+  }
 
   glDrawElements(GL_TRIANGLES, _faces.size(), GL_UNSIGNED_INT, 0);
   _indexBuffer->release();

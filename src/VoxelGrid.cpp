@@ -34,7 +34,7 @@ VoxelGrid::VoxelGrid(unsigned int h, unsigned int w, unsigned int d, const unsig
 	  alpha = 0.;
 	else
 	  alpha = 0.1;
-	
+
 	// std::cout << "test" << std::endl;
 	VEF::Vertex v;
 	//we create all the vertices
@@ -64,7 +64,7 @@ VoxelGrid::VoxelGrid(unsigned int h, unsigned int w, unsigned int d, const unsig
 	v = VEF::Vertex(i+0.5f, j-0.5f, k-0.5f, currentValue, currentValue, currentValue, alpha);
 	current.vertices[Voxel::Corner::BRR] = this->addVertex(v);
 	//*/
-	
+
 	//TFL
 	v = VEF::Vertex(j-0.5, -i+0.5, -k+0.5, r, g, b, alpha);
 	current.vertices[Voxel::Corner::TFL] = this->addVertex(v);
@@ -210,18 +210,18 @@ VoxelGrid::~VoxelGrid() {
 }
 
 // void VoxelGrid::draw(QOpenGLShaderProgram* shader){
-  
+
 //   std::cout << "VOXELGRID DRAW" << std::endl;
 
 //   if(!_initialized)
 //    initVAO();
-  
-//   QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();  
+
+//   QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();
 
 //   _vertexArray.bind();
 //   _indexBuffer->bind();
-  
-//   int vertex_loc = shader->attributeLocation("vtx_position"); 
+
+//   int vertex_loc = shader->attributeLocation("vtx_position");
 //   if(vertex_loc>=0) {
 //     shader->setAttributeBuffer(vertex_loc, GL_FLOAT, offsetof(VEF::Vertex,position), 3, sizeof(VEF::Vertex));
 //     shader->enableAttributeArray(vertex_loc);
@@ -231,11 +231,11 @@ VoxelGrid::~VoxelGrid() {
 //   if(color_loc>=0) {
 //     shader->setAttributeBuffer(color_loc, GL_FLOAT, offsetof(VEF::Vertex,color), 4, sizeof(VEF::Vertex));
 //     shader->enableAttributeArray(color_loc);
-//   }  
+//   }
 
 //   glDrawElements(GL_TRIANGLES, _faces.size(), GL_UNSIGNED_INT, 0);
 //   _indexBuffer->release();
-//   _vertexArray.release();  
+//   _vertexArray.release();
 // }
 
 void VoxelGrid::initVAO() {
@@ -272,9 +272,9 @@ void VoxelGrid::initVAO() {
   _indexBuffer->bind();
   _indexBuffer->setUsagePattern(QOpenGLBuffer::StaticDraw);
   _indexBuffer->allocate(&(_faces[0]), sizeof(unsigned int)*_faces.size());
-    
+
   _vertexArray.create();
-  
+
   _initialized = true;
 
 }
