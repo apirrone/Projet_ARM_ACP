@@ -25,29 +25,30 @@ vector<string> split(const string &s, char delim) {
 void VEF::loadFromObj(char* filePath){
   string line;
   ifstream fileToRead(filePath);  
-
+  int ln = 0;
   if (fileToRead.is_open()) {
 
     vector<float*> tmpNormals;
 
     while(getline(fileToRead, line)){
-      char firstChar = line.at(0);
-
-      if(firstChar == '#') // Ignore comments
+      line = regex_replace(line, regex("\\s+"), " ");
+      ln++;
+      if(line.size() == 0 || line[0] == '#') // Ignore comments
 	continue;
+
       
-
       vector<string> tokens = split(line, ' ');
-
+      //std::cout << "str (" << ln << ") : " << line << endl;
+      //for(int i=0; i<tokens.size(); ++i)
+      //std::cout << "tok " << tokens[i] << std::endl;
       if(tokens.at(0).compare("v") == 0){
 	double x = stod(tokens.at(1));
 	double y = stod(tokens.at(2));
 	double z = stod(tokens.at(3));
-	cout << "x : " << x << ", y : " << y << ", z : " << z << std::endl;
 	this->addVertex(x, y, z);
       }
       
-      
+
       if(tokens.at(0).compare("vn") == 0){
 	float x = stod(tokens.at(1));
 	float y = stod(tokens.at(2));
@@ -61,7 +62,6 @@ void VEF::loadFromObj(char* filePath){
       }
 
       if(tokens.at(0).compare("f") == 0){
-	  
 	vector<string> vertexToken;
 	  
 	bool convertIntoTriangleFace = false;
@@ -128,7 +128,6 @@ void VEF::loadFromObj(char* filePath){
 
 	  
 	if(convertIntoTriangleFace){
-	  cout << "coucou" << endl;
 	  for(int k = 0 ; k < nbVertex-1 ; k++){
 	    this->addFace(vertexIds[0],
 			  vertexIds[k],
@@ -152,11 +151,11 @@ void VEF::loadFromObj(char* filePath){
   }
   //*/
   
-
+  /*
   std::cout << "VEF vertices : " << std::endl;
   for(int i=0; i < _vertices.size(); ++i)
     std::cout << "\tv" << i << " " << _vertices[i].toString();
-
+  //*/
 }
 
 void VEF::exportToObj(char* exportFilePath){
