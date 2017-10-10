@@ -28,52 +28,52 @@ int main(int argc, char *argv[]) {
 
 
   //TEST OBJ
-  
-  // VEF* testObj;
-  // testObj->loadFromObj(argv[1]);
-  // QApplication app(argc, argv);
-  
-  // MainWindow window(*testObj);
-  // window.resize(1300,1300);
-  // window.show();
-  
-  // cout << "FIN" << endl;
-  
-  // return app.exec();
- 
-  //TEST OBJ
 
-
-  PGM3D_Holder test = PGM3D_Holder(argv[1]);
-  
-  int w = test.getWidth();
-  int h = test.getHeight();
-  int d = test.getDepth();
-  
-  const unsigned char * data = test.getData();
-  
-#ifdef DEBUG
-  
-  cout << "Test : \n\t - w : " << w << endl
-       << "\t - h : " << h << endl
-       << "\t - d : " << d << endl
-       << "\t - max : " << test.getMaxValue() << endl;
-  
-  for(int i = 0; i < w*h*d; ++i)
-    cout << "\t - data[" << i << "] = " << (int)data[i] << endl;
-  
-#endif
-
-  VoxelGrid * grid = new VoxelGrid(h,w,d,data);
-  cout << "DEBUT" << endl;
-  
+  VEF* testObj = new VEF();
+  testObj->loadFromObj(argv[1]);
   QApplication app(argc, argv);
   
-  MainWindow window(*grid);
+  MainWindow window(*testObj);
   window.resize(1300,1300);
   window.show();
   
   cout << "FIN" << endl;
   
   return app.exec();
+ 
+  //TEST OBJ
+
+
+//   PGM3D_Holder test = PGM3D_Holder(argv[1]);
+  
+//   int w = test.getWidth();
+//   int h = test.getHeight();
+//   int d = test.getDepth();
+  
+//   const unsigned char * data = test.getData();
+  
+// #ifdef DEBUG
+  
+//   cout << "Test : \n\t - w : " << w << endl
+//        << "\t - h : " << h << endl
+//        << "\t - d : " << d << endl
+//        << "\t - max : " << test.getMaxValue() << endl;
+  
+//   for(int i = 0; i < w*h*d; ++i)
+//     cout << "\t - data[" << i << "] = " << (int)data[i] << endl;
+  
+// #endif
+
+//   VoxelGrid * grid = new VoxelGrid(h,w,d,data);
+//   cout << "DEBUT" << endl;
+  
+//   QApplication app(argc, argv);
+  
+//   MainWindow window(*grid);
+//   window.resize(1300,1300);
+//   window.show();
+  
+//   cout << "FIN" << endl;
+  
+//   return app.exec();
 }

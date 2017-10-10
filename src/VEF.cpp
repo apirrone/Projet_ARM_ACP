@@ -23,7 +23,33 @@ vector<string> split(const string &s, char delim) {
 }
 
 void VEF::loadFromObj(char* filePath){
+  //DEBUG
+
+  _vertices.clear();
+  Vertex v1, v2, v3;
+  v1.position[0] = -0.1;
+  v1.position[1] = 0.1;
+  v1.position[2] = -5.;
   
+  v2.position[0] = -0.1;
+  v2.position[1] = -0.1;
+  v2.position[2] = -5.;
+  
+  v3.position[0] = 0.1;
+  v3.position[1] = 0.1;
+  v3.position[2] = -5.;
+  
+  _vertices.push_back(v1); 
+  _vertices.push_back(v2);
+  _vertices.push_back(v3);
+  
+  _faces.clear();
+  _faces.push_back(0);
+  _faces.push_back(1);
+  _faces.push_back(2);
+  return ;
+  //
+
   string line;
   ifstream fileToRead(filePath);  
 
@@ -152,8 +178,8 @@ void VEF::exportToObj(char* exportFilePath){
 }
 
 void VEF::draw(QOpenGLShaderProgram* shader){
+  std::cout << "DRAW VEF" << std::endl;
 
-  // std::cout << "VOXELGRID DRAW" << std::endl;
   if(!_initialized)
     initVAO();
   
@@ -176,7 +202,8 @@ void VEF::draw(QOpenGLShaderProgram* shader){
 
   glDrawElements(GL_TRIANGLES, _faces.size(), GL_UNSIGNED_INT, 0);
   _indexBuffer->release();
-  _vertexArray.release();  
+  _vertexArray.release();
+
 }
 
 void VEF::initVAO() {

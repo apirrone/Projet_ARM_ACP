@@ -12,7 +12,7 @@ public :
   VoxelGrid(unsigned int h, unsigned int w, unsigned int d, const unsigned char* data);
   ~VoxelGrid();
   
-  void draw(QOpenGLShaderProgram* shader);
+  // void draw(QOpenGLShaderProgram* shader);
 
   unsigned int getW();
   unsigned int getH();

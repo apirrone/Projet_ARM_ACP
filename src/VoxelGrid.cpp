@@ -209,33 +209,34 @@ VoxelGrid::~VoxelGrid() {
   //_vertexArrayId.destroy();
 }
 
-void VoxelGrid::draw(QOpenGLShaderProgram* shader){
-
-  // std::cout << "VOXELGRID DRAW" << std::endl;
-  if(!_initialized)
-   initVAO();
+// void VoxelGrid::draw(QOpenGLShaderProgram* shader){
   
-  QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();  
+//   std::cout << "VOXELGRID DRAW" << std::endl;
 
-  _vertexArray.bind();
-  _indexBuffer->bind();
+//   if(!_initialized)
+//    initVAO();
   
-  int vertex_loc = shader->attributeLocation("vtx_position"); 
-  if(vertex_loc>=0) {
-    shader->setAttributeBuffer(vertex_loc, GL_FLOAT, offsetof(VEF::Vertex,position), 3, sizeof(VEF::Vertex));
-    shader->enableAttributeArray(vertex_loc);
-  }
+//   QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();  
 
-  int color_loc = shader->attributeLocation("vtx_color");
-  if(color_loc>=0) {
-    shader->setAttributeBuffer(color_loc, GL_FLOAT, offsetof(VEF::Vertex,color), 4, sizeof(VEF::Vertex));
-    shader->enableAttributeArray(color_loc);
-  }  
+//   _vertexArray.bind();
+//   _indexBuffer->bind();
+  
+//   int vertex_loc = shader->attributeLocation("vtx_position"); 
+//   if(vertex_loc>=0) {
+//     shader->setAttributeBuffer(vertex_loc, GL_FLOAT, offsetof(VEF::Vertex,position), 3, sizeof(VEF::Vertex));
+//     shader->enableAttributeArray(vertex_loc);
+//   }
 
-  glDrawElements(GL_TRIANGLES, _faces.size(), GL_UNSIGNED_INT, 0);
-  _indexBuffer->release();
-  _vertexArray.release();  
-}
+//   int color_loc = shader->attributeLocation("vtx_color");
+//   if(color_loc>=0) {
+//     shader->setAttributeBuffer(color_loc, GL_FLOAT, offsetof(VEF::Vertex,color), 4, sizeof(VEF::Vertex));
+//     shader->enableAttributeArray(color_loc);
+//   }  
+
+//   glDrawElements(GL_TRIANGLES, _faces.size(), GL_UNSIGNED_INT, 0);
+//   _indexBuffer->release();
+//   _vertexArray.release();  
+// }
 
 void VoxelGrid::initVAO() {
   /*
