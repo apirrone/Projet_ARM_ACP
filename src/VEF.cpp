@@ -57,18 +57,21 @@ void VEF::loadFromObj(char* filePath){
   if (fileToRead.is_open()) {
 
     vector<float*> tmpNormals;
-    
+
     while(getline(fileToRead, line)){
       char firstChar = line.at(0);
+
+      if(firstChar == '#') // Ignore comments
+	continue;
       
-      if(firstChar != '#') // Ignore comments
-	break;
+
       vector<string> tokens = split(line, ' ');
-	
+
       if(tokens.at(0).compare("v") == 0){
 	double x = stod(tokens.at(1));
 	double y = stod(tokens.at(2));
 	double z = stod(tokens.at(3));
+	cout << "x : " << x << ", y : " << y << ", z : " << z << std::endl;
 	this->addVertex(x, y, z);
       }
       
@@ -185,7 +188,7 @@ void VEF::exportToObj(char* exportFilePath){
 }
 
 void VEF::draw(QOpenGLShaderProgram* shader){
-  std::cout << "DRAW VEF" << std::endl;
+  // std::cout << "DRAW VEF" << std::endl;
 
   if(!_initialized)
     initVAO();
