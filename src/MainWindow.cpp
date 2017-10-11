@@ -21,9 +21,9 @@ MainWindow::MainWindow(QWidget *parent) :
   createMenu();
   setWindowTitle(tr("Visiobrain"));
 
-  VEF * v = new VEF();
-  v->loadFromObj("../data/hand.OBJ");
-  viewer->setVEF(*v);
+  // VEF * v = new VEF();
+  // v->loadFromObj("../data/scrat.obj");
+  // viewer->setVEF(*v);
 
   this->setCentralWidget(viewer);
 }

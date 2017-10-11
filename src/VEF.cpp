@@ -40,6 +40,7 @@ VEF::~VEF() {
 }
 
 void VEF::loadFromObj(std::string filePath){
+  std::setlocale(LC_ALL, "C"); // IMPORTANT !!!!
   string line;
   ifstream fileToRead(filePath);
 
@@ -52,13 +53,14 @@ void VEF::loadFromObj(std::string filePath){
 
     while(getline(fileToRead, line)){
 
+      
       line = regex_replace(line, regex("\\s+"), " ");
 
       if(line.size() == 0 || line[0] == '#') // Ignore comments
-	       continue;
-
+	continue;
+      
       vector<string> tokens = split(line, ' ');
-
+      
       if(tokens.at(0).compare("v") == 0){
 	// cout << "ADD VERTEX " << endl;
 	double x = stod(tokens.at(1));
@@ -68,6 +70,7 @@ void VEF::loadFromObj(std::string filePath){
       }
       else if(tokens.at(0).compare("vn") == 0){
 	// cout << "ADD NORMAL " << endl;
+
 	float x = stod(tokens.at(1));
 	float y = stod(tokens.at(2));
 	float z = stod(tokens.at(3));
@@ -93,7 +96,6 @@ void VEF::loadFromObj(std::string filePath){
 	else
 	  vertexIds = (int*)malloc(3*sizeof(int));
 
-
 	for(int i = 1 ; i < tokens.size() ; i++){
 
 	  vertexToken = split(tokens.at(i), '/');
@@ -106,9 +108,9 @@ void VEF::loadFromObj(std::string filePath){
 
 	  int vertexId = stoi(vertexToken.at(0))-1;//Indices in .obj start at 1
 	  int normalId = (stoi(vertexToken.at(2))-1)*3;
-
+	  
 	  if(this->getVertices()->at(vertexId).normalSet == false){// This vertex normals has not been set yet
-	    //cout << "vertex normals not set yet  " << endl;
+	    
 	    this->getVertices()->at(vertexId).normal[0] = tmpNormals.at(normalId);
 	    this->getVertices()->at(vertexId).normal[1] = tmpNormals.at(normalId+1);
 	    this->getVertices()->at(vertexId).normal[2] = tmpNormals.at(normalId+2);
@@ -119,13 +121,10 @@ void VEF::loadFromObj(std::string filePath){
 	  }
 	  else{
 
-	    cout << "vertex normals already set  " << normalId << endl;
-
 	    if(this->getVertices()->at(vertexId).normal[0] != tmpNormals.at(normalId) ||
 	       this->getVertices()->at(vertexId).normal[1] != tmpNormals.at(normalId+1) ||
 	       this->getVertices()->at(vertexId).normal[2] != tmpNormals.at(normalId+2)){
 
-	      cout << "vertex normals different   " << endl;
 	      //We have to duplicate the vertex
 
 	      double x = this->getVertices()->at(vertexId).position[0];
@@ -133,7 +132,7 @@ void VEF::loadFromObj(std::string filePath){
 	      double z = this->getVertices()->at(vertexId).position[2];
 
 	      int newVertexId = this->addVertex(x, y, z);
-
+	      
 	      this->getVertices()->at(newVertexId).normal[0] = tmpNormals.at(normalId);
 	      this->getVertices()->at(newVertexId).normal[1] = tmpNormals.at(normalId+1);
 	      this->getVertices()->at(newVertexId).normal[2] = tmpNormals.at(normalId+2);
@@ -142,7 +141,6 @@ void VEF::loadFromObj(std::string filePath){
 	      this->getVertices()->at(newVertexId).normalSet = true;
 	    }
 	    else{//The vertex with the same normal already exists
-	      //cout << "vertex normals identical   " << endl;
 	      vertexIds[i-1] = vertexId;
 	    }
 

@@ -32,7 +32,6 @@ int main(int argc, char *argv[]) {
 
     if(extension.compare("obj")  == 0 || extension.compare("OBJ") == 0){
       file->loadFromObj(argv[1]);
-      file->loadFromObj(argv[1]);
       //file->exportToObj("TestExport.obj");
     }
     else if(extension.compare("pgm3d") == 0){
@@ -65,6 +64,8 @@ int main(int argc, char *argv[]) {
   else if (argc == 1) {
     QApplication app(argc, argv);
     MainWindow window(NULL);
+    // MainWindow window;
+    // window = MainWindow();
 
     window.resize(1300,1300);
     window.show();
