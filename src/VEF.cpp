@@ -17,7 +17,7 @@ vector<string> split(const string &s, char delim) {
   
   while (getline(ss, item, delim))
     tokens.push_back(item);
-  
+
   return tokens;
   
 }
@@ -41,14 +41,14 @@ void VEF::loadFromObj(char* filePath){
       
       if(tokens.at(0).compare("v") == 0){
 
-	cout << "ADD VERTEX " << endl;
+	// cout << "ADD VERTEX " << endl;
 	double x = stod(tokens.at(1));
 	double y = stod(tokens.at(2));
 	double z = stod(tokens.at(3));
 	this->addVertex(x, y, z);
       } 
       else if(tokens.at(0).compare("vn") == 0){
-	cout << "ADD NORMAL " << endl;
+	// cout << "ADD NORMAL " << endl;
 	float x = stod(tokens.at(1));
 	float y = stod(tokens.at(2));
 	float z = stod(tokens.at(3));
@@ -58,7 +58,7 @@ void VEF::loadFromObj(char* filePath){
 	tmpNormals.push_back(z); 
       }
       else if(tokens.at(0).compare("f") == 0){
-	cout << "ADD FACE " << endl;
+	// cout << "ADD FACE " << endl;
 	
 	vector<string> vertexToken;
 
