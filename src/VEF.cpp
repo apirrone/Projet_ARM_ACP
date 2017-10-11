@@ -25,9 +25,26 @@ vector<string> split(const string &s, char delim) {
 VEF::VEF()
   : _position(QVector3D(0,0,0)), _initialized(false), _updateWorldMat(true) {}
 
+VEF::~VEF() {
+  if(_vertexBuffer != NULL){
+    _vertexBuffer->destroy();
+    delete _vertexBuffer;
+  }
+  if(_indexBuffer != NULL){
+    _indexBuffer->destroy();
+    delete _indexBuffer;
+  }
+
+  _vertexArray.destroy();
+  
+}
+
 void VEF::loadFromObj(std::string filePath){
   string line;
   ifstream fileToRead(filePath);
+
+  _vertices.clear();
+  _faces.clear();
 
   if (fileToRead.is_open()) {
 
@@ -44,14 +61,14 @@ void VEF::loadFromObj(std::string filePath){
 
       if(tokens.at(0).compare("v") == 0){
 
-	cout << "ADD VERTEX " << endl;
+	//cout << "ADD VERTEX " << endl;
 	double x = stod(tokens.at(1));
 	double y = stod(tokens.at(2));
 	double z = stod(tokens.at(3));
 	this->addVertex(x, y, z);
       }
       else if(tokens.at(0).compare("vn") == 0){
-	cout << "ADD NORMAL " << endl;
+	//cout << "ADD NORMAL " << endl;
 	float x = stod(tokens.at(1));
 	float y = stod(tokens.at(2));
 	float z = stod(tokens.at(3));
@@ -61,7 +78,7 @@ void VEF::loadFromObj(std::string filePath){
 	tmpNormals.push_back(z);
       }
       else if(tokens.at(0).compare("f") == 0){
-	cout << "ADD FACE " << endl;
+	//cout << "ADD FACE " << endl;
 
 	vector<string> vertexToken;
 
@@ -93,8 +110,7 @@ void VEF::loadFromObj(std::string filePath){
 	  int normalId = (stoi(vertexToken.at(2))-1)*3;
 
 	  if(this->getVertices()->at(vertexId).normalSet == false){// This vertex normals has not been set yet
-	    cout << "vertex normals not set yet  " << endl;
-
+	    //cout << "vertex normals not set yet  " << endl;
 	    this->getVertices()->at(vertexId).normal[0] = tmpNormals.at(normalId);
 	    this->getVertices()->at(vertexId).normal[1] = tmpNormals.at(normalId+1);
 	    this->getVertices()->at(vertexId).normal[2] = tmpNormals.at(normalId+2);
@@ -105,7 +121,7 @@ void VEF::loadFromObj(std::string filePath){
 	  }
 	  else{
 
-	    cout << "vertex normals already set  " << endl;
+	    cout << "vertex normals already set  " << normalId << endl;
 
 	    if(this->getVertices()->at(vertexId).normal[0] != tmpNormals.at(normalId) ||
 	       this->getVertices()->at(vertexId).normal[1] != tmpNormals.at(normalId+1) ||
@@ -128,7 +144,7 @@ void VEF::loadFromObj(std::string filePath){
 	      this->getVertices()->at(newVertexId).normalSet = true;
 	    }
 	    else{//The vertex with the same normal already exists
-	      cout << "vertex normals identical   " << endl;
+	      //cout << "vertex normals identical   " << endl;
 	      vertexIds[i-1] = vertexId;
 	    }
 
@@ -194,7 +210,7 @@ void VEF::exportToObj(char* exportFilePath){
 }
 
 void VEF::draw(QOpenGLShaderProgram* shader){
-  // std::cout << "DRAW VEF" << std::endl;
+  //std::cout << "DRAW VEF" << std::endl;
 
   if(!_initialized)
     initVAO();
@@ -203,8 +219,8 @@ void VEF::draw(QOpenGLShaderProgram* shader){
   QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();
 
   shader->setUniformValue(shader->uniformLocation("world_mat"), this->worldMatrix());
-  
   _vertexArray.bind();
+  _vertexBuffer->bind();
   _indexBuffer->bind();
 
   int vertex_loc = shader->attributeLocation("vtx_position");
@@ -220,12 +236,20 @@ void VEF::draw(QOpenGLShaderProgram* shader){
   }
 
   glDrawElements(GL_TRIANGLES, _faces.size(), GL_UNSIGNED_INT, 0);
+
+  if(vertex_loc)
+    shader->disableAttributeArray(vertex_loc);
+  if(color_loc)
+    shader->disableAttributeArray(color_loc);
+    
   _indexBuffer->release();
+  _vertexBuffer->release();
   _vertexArray.release();
 
 }
 
 void VEF::initVAO() {
+  std::cout <<"INIT VAO"<< std::endl;
   _vertexBuffer = new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
   _vertexBuffer->create();
   _vertexBuffer->bind();
@@ -238,6 +262,11 @@ void VEF::initVAO() {
   _indexBuffer->allocate(&(_faces[0]), sizeof(unsigned int)*_faces.size());
   _vertexArray.create();
   _initialized = true;
+  _indexBuffer->release();
+  _vertexBuffer->release();
+
+  //for(int i = 0; i < _vertices.size(); ++i)
+  //std::cout << "vert " << i << " " << _vertices[i].toString() << std::endl;
 
 }
 

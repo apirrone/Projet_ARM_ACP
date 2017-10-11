@@ -14,7 +14,7 @@ Viewer::Viewer(QWidget *parent)
 
   _prevPos = QVector2D(0, 0);
   _timer.start(0, this);
-  _vef = new VEF();
+  _vef = NULL;//new VEF();
 }
 
 Viewer::Viewer(VEF& grid, QWidget *parent)
@@ -41,10 +41,11 @@ Viewer::~Viewer(){
   delete _shader;
 }
 
-void Viewer::setVEF(VEF * vef) {
+void Viewer::setVEF(VEF& vef) {
+  std::cout << "3DViewer set VEF" << std::endl;
   if(_vef != NULL)
     delete _vef;
-  _vef = vef;
+  _vef = &vef;
 }
 
 QSize Viewer::minimumSizeHint() const{
@@ -74,7 +75,7 @@ void Viewer::initializeGL(){
   _shader->bind();
 
   _camera.initCamera(300, 0, 0, QVector3D(0., 0., 0.), this->width(), this->height(), 45.);  
-
+  _shader->release();
   //_trackball.setCamera(&_camera);
 }
 
@@ -86,8 +87,8 @@ void Viewer::paintGL(){
   _shader->bind();
   _shader->setUniformValue(_shader->uniformLocation("proj_mat"), _camera.projectionMatrix());
   _shader->setUniformValue(_shader->uniformLocation("view_mat"), _camera.viewMatrix());
-
-  _vef->draw(_shader);
+  if(_vef)
+    _vef->draw(_shader);
   _shader->release();
 }
 

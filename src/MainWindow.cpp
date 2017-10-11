@@ -15,11 +15,17 @@ MainWindow::MainWindow(QWidget *parent) :
   ui->setupUi(this);
 
   viewer = new Viewer(this);
-  this->setCentralWidget(viewer);
+
 
   createActions();
   createMenu();
   setWindowTitle(tr("Visiobrain"));
+
+  VEF * v = new VEF();
+  v->loadFromObj("../data/hand.OBJ");
+  viewer->setVEF(*v);
+
+  this->setCentralWidget(viewer);
 }
 
 MainWindow::MainWindow(VEF& voxels, QWidget *parent) :
@@ -34,6 +40,9 @@ MainWindow::MainWindow(VEF& voxels, QWidget *parent) :
   createActions();
   createMenu();
   setWindowTitle(tr("Visiobrain"));
+
+
+  
 }
 
 MainWindow::~MainWindow()
@@ -48,32 +57,37 @@ void MainWindow::keyPressEvent(QKeyEvent *e){
 
 void MainWindow::createActions() {
 
-    openAction = new QAction(tr("&Open"), this);
-    openAction->setStatusTip(tr("Open a file from your computer"));
-    connect(openAction, SIGNAL(triggered()), this, SLOT(open()));
+  openAction = new QAction(tr("&Open"), this);
+  openAction->setStatusTip(tr("Open a file from your computer"));
+  connect(openAction, SIGNAL(triggered()), this, SLOT(open()));
 
-    exportAsAction = new QAction(tr("&Export as OBJ"), this);
-    exportAsAction->setStatusTip(tr("Export this model as OBJ file"));
-    connect(exportAsAction, SIGNAL(triggered()), this, SLOT(exportAs()));
+  exportAsAction = new QAction(tr("&Export as OBJ"), this);
+  exportAsAction->setStatusTip(tr("Export this model as OBJ file"));
+  connect(exportAsAction, SIGNAL(triggered()), this, SLOT(exportAs()));
 
-    exitAction = new QAction(tr("&Exit"), this);
-    exitAction->setStatusTip(tr("Exit the program"));
-    connect(exitAction, SIGNAL(triggered()), this, SLOT(exit()));
+  exitAction = new QAction(tr("&Exit"), this);
+  exitAction->setStatusTip(tr("Exit the program"));
+  connect(exitAction, SIGNAL(triggered()), this, SLOT(exit()));
 }
 
 void MainWindow::createMenu() {
 
-    fileMenu = menuBar()->addMenu(tr("&File"));
-    fileMenu->addAction(openAction);
-    fileMenu->addAction(exportAsAction);
-    fileMenu->addSeparator();
-    fileMenu->addAction(exitAction);
+  fileMenu = menuBar()->addMenu(tr("&File"));
+  fileMenu->addAction(openAction);
+  fileMenu->addAction(exportAsAction);
+  fileMenu->addSeparator();
+  fileMenu->addAction(exitAction);
 }
 
 void MainWindow::open() {
 
   std::cout << "Open called" << '\n';
-  QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),"../data", tr("3D files (*.obj *pgm3d)"));
+  // QFileDialog fd(this);
+  // fd.setOption(QFileDialog::DontUseNativeDialog, true);
+  //fd.exec();
+  
+  QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),"../data", tr("3D files (*.obj *pgm3d)"), Q_NULLPTR, QFileDialog::Options(QFileDialog::DontUseNativeDialog));
+  ///*
   std::cout << "opened : " << fileName.toStdString() << '\n';
   QFileInfo fileInfo(fileName);
   QString fileExtension = fileInfo.suffix();
@@ -83,7 +97,7 @@ void MainWindow::open() {
     {
       VEF * v = new VEF();
       v->loadFromObj(fileName.toStdString());
-      viewer->setVEF(v);
+      viewer->setVEF(*v);
     }
   else if(fileExtension.toStdString() == "pgm3d" || fileExtension.toStdString() == "PGM3D")
     {
@@ -96,10 +110,10 @@ void MainWindow::open() {
       const unsigned char * data = test.getData();
 
       VEF * v = new VoxelGrid(h,w,d,data);
-      viewer->setVEF(v);
+      viewer->setVEF(*v);
       
     }
-
+  //*/
 }
 
 void MainWindow::exportAs() {

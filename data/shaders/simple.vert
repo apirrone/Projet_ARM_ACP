@@ -11,6 +11,6 @@ out vec4 v_color;
 
 void main()
 {
-  gl_Position = proj_mat*view_mat*world_mat*vec4(vtx_position.x, vtx_position.y, vtx_position.z, 1.0);
+  gl_Position = proj_mat*view_mat/*world_mat*/*vec4(vtx_position.x, vtx_position.y, vtx_position.z, 1.0);
   v_color = vtx_color;
 }

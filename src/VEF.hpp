@@ -59,7 +59,7 @@ public:
   };
 
   VEF();
-
+  ~VEF();
   void loadFromObj(std::string filePath);
   void exportToObj(char* exportFilePath);
 
