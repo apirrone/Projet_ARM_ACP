@@ -5,6 +5,7 @@
 #include "MainWindow.hpp"
 #include "ui_MainWindow.h"
 #include "3DViewer.hpp"
+#include "PGM3D_Holder.hpp"
 #include <iostream>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -13,9 +14,9 @@ MainWindow::MainWindow(QWidget *parent) :
 {
   ui->setupUi(this);
 
-  /*viewer = new Viewer(this);
+  viewer = new Viewer(this);
   this->setCentralWidget(viewer);
-*/
+
   createActions();
   createMenu();
   setWindowTitle(tr("Visiobrain"));
@@ -78,6 +79,26 @@ void MainWindow::open() {
   QString fileExtension = fileInfo.suffix();
   std::cout << "file extension : " << fileExtension.toStdString() << '\n';
 
+  if(fileExtension.toStdString() == "obj" || fileExtension.toStdString() == "OBJ")//TODO tolower
+    {
+      VEF * v = new VEF();
+      v->loadFromObj(fileName.toStdString());
+      viewer->setVEF(v);
+    }
+  else if(fileExtension.toStdString() == "pgm3d" || fileExtension.toStdString() == "PGM3D")
+    {
+      PGM3D_Holder test = PGM3D_Holder(fileName.toStdString().c_str());
+
+      int w = test.getWidth();
+      int h = test.getHeight();
+      int d = test.getDepth();
+
+      const unsigned char * data = test.getData();
+
+      VEF * v = new VoxelGrid(h,w,d,data);
+      viewer->setVEF(v);
+      
+    }
 
 }
 

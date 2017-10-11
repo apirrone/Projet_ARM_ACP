@@ -17,9 +17,11 @@ class Viewer : public QOpenGLWidget
   Q_OBJECT
 
 public:
-  //explicit Viewer(QWidget *parent = 0);
+  explicit Viewer(QWidget *parent = 0);
   explicit Viewer(VEF& grid, QWidget *parent = 0);
   ~Viewer();
+
+  void setVEF(VEF * vef);
 
   void eventFromParent(QKeyEvent *e);
 protected:
@@ -34,9 +36,9 @@ protected:
   void mouseMoveEvent(QMouseEvent *e);
   void mousePressEvent(QMouseEvent *e);
   void mouseReleaseEvent(QMouseEvent *e);
-
+  
 private:
-  VEF& _vef;//TODO Semble poser problème, check cast vers VoxelGrid dans le constructeur
+  VEF * _vef;//TODO Semble poser problème, check cast vers VoxelGrid dans le constructeur
   QOpenGLShaderProgram * _shader;
 
   QOpenGLVertexArrayObject _object;

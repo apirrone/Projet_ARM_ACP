@@ -25,7 +25,7 @@ vector<string> split(const string &s, char delim) {
 VEF::VEF()
   : _position(QVector3D(0,0,0)), _initialized(false), _updateWorldMat(true) {}
 
-void VEF::loadFromObj(char* filePath){
+void VEF::loadFromObj(std::string filePath){
   string line;
   ifstream fileToRead(filePath);
 

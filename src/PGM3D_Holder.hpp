@@ -4,7 +4,7 @@
 class PGM3D_Holder {
 
 public:
-  PGM3D_Holder(char* filePath);
+  PGM3D_Holder(const char * filePath);
   ~PGM3D_Holder();
 
   int getWidth() const;

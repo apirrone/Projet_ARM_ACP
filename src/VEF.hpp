@@ -60,7 +60,7 @@ public:
 
   VEF();
 
-  void loadFromObj(char* filePath);
+  void loadFromObj(std::string filePath);
   void exportToObj(char* exportFilePath);
 
   // getters & setters

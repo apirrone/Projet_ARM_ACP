@@ -3,7 +3,7 @@
 #include <iostream>
 #include <QOpenGLFunctions>
 #include <QOpenGLContext>
-/*
+
 Viewer::Viewer(QWidget *parent)
   : QOpenGLWidget(parent)
 {
@@ -14,11 +14,12 @@ Viewer::Viewer(QWidget *parent)
 
   _prevPos = QVector2D(0, 0);
   _timer.start(0, this);
+  _vef = new VEF();
 }
-*/
+
 Viewer::Viewer(VEF& grid, QWidget *parent)
   : QOpenGLWidget(parent),
-    _vef(grid)
+    _vef(&grid)
 {
   QSurfaceFormat format;
 
@@ -29,15 +30,21 @@ Viewer::Viewer(VEF& grid, QWidget *parent)
   _prevPos = QVector2D(0, 0);
   _timer.start(0, this);
 
-  // unsigned int w = _vef.getW();
-  // unsigned int h = _vef.getH();
-  // unsigned int d = _vef.getD();
+  // unsigned int w = _vef->getW();
+  // unsigned int h = _vef->getH();
+  // unsigned int d = _vef->getD();
   // std::cout << "this->width() : " << this->width()  << std::endl;
   // _camera = Camera(QVector3D(-32., -32., -143), QVector3D(w/2., h/2., d/2.), this->width(), this->height());
 }
 
 Viewer::~Viewer(){
   delete _shader;
+}
+
+void Viewer::setVEF(VEF * vef) {
+  if(_vef != NULL)
+    delete _vef;
+  _vef = vef;
 }
 
 QSize Viewer::minimumSizeHint() const{
@@ -80,7 +87,7 @@ void Viewer::paintGL(){
   _shader->setUniformValue(_shader->uniformLocation("proj_mat"), _camera.projectionMatrix());
   _shader->setUniformValue(_shader->uniformLocation("view_mat"), _camera.viewMatrix());
 
-  _vef.draw(_shader);
+  _vef->draw(_shader);
   _shader->release();
 }
 
@@ -135,17 +142,17 @@ void Viewer::eventFromParent(QKeyEvent *e){
     close();
     
   else if (e->key() == Qt::Key_Right)
-    _vef.translate(QVector3D(1,0,0)*0.5);
+    _vef->translate(QVector3D(1,0,0)*0.5);
   else if (e->key() == Qt::Key_Left)
-    _vef.translate(QVector3D(-1,0,0)*0.5);
+    _vef->translate(QVector3D(-1,0,0)*0.5);
   else if (e->key() == Qt::Key_Up)
-    _vef.translate(QVector3D(0,1,0)*0.5);
+    _vef->translate(QVector3D(0,1,0)*0.5);
   else if (e->key() == Qt::Key_Down)
-    _vef.translate(QVector3D(0,-1,0)*0.5);
+    _vef->translate(QVector3D(0,-1,0)*0.5);
   else if (e->key() == Qt::Key_P)
-    _vef.translate(QVector3D(0,0,1)*0.5);
+    _vef->translate(QVector3D(0,0,1)*0.5);
   else if (e->key() == Qt::Key_M)
-    _vef.translate(QVector3D(0,0,-1)*0.5);
+    _vef->translate(QVector3D(0,0,-1)*0.5);
   
   else if (e->key() == Qt::Key_A){
     // _camera.rotateAroundTarget(2, QVector3D(0, 1, 0));

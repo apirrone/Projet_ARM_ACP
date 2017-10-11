@@ -29,6 +29,7 @@ protected:
 
 
 private:
+  //TODO METTRE DES UNDERSCORES
   Ui::MainWindow *ui;
   Viewer* viewer;
   QMenu* fileMenu;
