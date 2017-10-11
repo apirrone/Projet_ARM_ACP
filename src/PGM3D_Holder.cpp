@@ -6,7 +6,7 @@
 
 using namespace std;
 
-PGM3D_Holder::PGM3D_Holder(char* filePath) {
+PGM3D_Holder::PGM3D_Holder(const char* filePath) {
 
   string line;
   ifstream fileToRead(filePath);

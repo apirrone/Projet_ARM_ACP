@@ -10,7 +10,7 @@
 class VEF {
 
 public:
-  
+
   struct Vertex {
     float position[3];
     float normal[3];
@@ -25,7 +25,7 @@ public:
       color[2] = 0.8;
       color[3] = 0.3;
       normalSet = false;
-      
+
     }
     Vertex(double x, double y, double z) {
       position[0] = x;
@@ -34,7 +34,7 @@ public:
       color[0] = 0.8;
       color[1] = 0.8;
       color[2] = 0.8;
-      color[3] = 0.3; 
+      color[3] = 0.3;
       normalSet = false;
     }
 
@@ -57,10 +57,12 @@ public:
       return ss.str();
     }
   };
-  
-  void loadFromObj(char* filePath);
+
+  VEF();
+  ~VEF();
+  void loadFromObj(std::string filePath);
   void exportToObj(char* exportFilePath);
-  
+
   // getters & setters
   std::vector<Vertex>* getVertices();
   std::vector<unsigned int>* getEdges();
@@ -70,26 +72,30 @@ public:
   int addVertex(double x, double y, double z);
   int addEdge(int p1, int p2);
   int addFace(int e1, int e2, int e3);
-  
+
   virtual void draw(QOpenGLShaderProgram* shader);
 
-  unsigned int getW();
-  unsigned int getH();
-  unsigned int getD();
+  void translate(QVector3D t);
+
+  QMatrix4x4 worldMatrix();
 
 protected:
   std::vector<Vertex> _vertices;
   std::vector<unsigned int> _edges;
   std::vector<unsigned int> _faces;
-  
+
   void initVAO();
-  
+
   bool _initialized;//true if VAO has been initialized
   QOpenGLVertexArrayObject _vertexArray;
   QOpenGLBuffer* _vertexBuffer;
-  QOpenGLBuffer* _indexBuffer; 
+  QOpenGLBuffer* _indexBuffer;
 
-  unsigned int _w, _h, _d, _minValue, _maxValue, _displayMinValue, _displayMaxValue;
+  bool _updateWorldMat;
+  QMatrix4x4 _worldMat;
+  QVector3D _position;
+  
+  
 };
 
 #endif // VEF_HPP
