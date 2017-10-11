@@ -3,7 +3,19 @@
 #include <iostream>
 #include <QOpenGLFunctions>
 #include <QOpenGLContext>
+/*
+Viewer::Viewer(QWidget *parent)
+  : QOpenGLWidget(parent)
+{
+  QSurfaceFormat format;
+  format.setVersion(3, 3);
 
+  this->setFormat(format);
+
+  _prevPos = QVector2D(0, 0);
+  _timer.start(0, this);
+}
+*/
 Viewer::Viewer(VEF& grid, QWidget *parent)
   : QOpenGLWidget(parent),
     _vef(grid)
@@ -54,8 +66,8 @@ void Viewer::initializeGL(){
   _shader->link();
   _shader->bind();
 
-  //_camera.initCamera(300, 0, 0, QVector3D(-1.*w/2, 1.*h/2, d/2), this->width(), this->height(), 45.);  
   _camera.initCamera(300, 0, 0, QVector3D(0., 0., 0.), this->width(), this->height(), 45.);  
+
   //_trackball.setCamera(&_camera);
 }
 
@@ -67,7 +79,7 @@ void Viewer::paintGL(){
   _shader->bind();
   _shader->setUniformValue(_shader->uniformLocation("proj_mat"), _camera.projectionMatrix());
   _shader->setUniformValue(_shader->uniformLocation("view_mat"), _camera.viewMatrix());
-  
+
   _vef.draw(_shader);
   _shader->release();
 }

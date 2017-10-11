@@ -7,15 +7,32 @@
 #include "3DViewer.hpp"
 #include <iostream>
 
+MainWindow::MainWindow(QWidget *parent) :
+  QMainWindow(parent),
+  ui(new Ui::MainWindow)
+{
+  ui->setupUi(this);
+
+  /*viewer = new Viewer(this);
+  this->setCentralWidget(viewer);
+*/
+  createActions();
+  createMenu();
+  setWindowTitle(tr("Visiobrain"));
+}
+
 MainWindow::MainWindow(VEF& voxels, QWidget *parent) :
   QMainWindow(parent),
   ui(new Ui::MainWindow)
-  // viewer(parent)
 {
   ui->setupUi(this);
 
   viewer = new Viewer(voxels, this);
   this->setCentralWidget(viewer);
+
+  createActions();
+  createMenu();
+  setWindowTitle(tr("Visiobrain"));
 }
 
 MainWindow::~MainWindow()
@@ -26,27 +43,50 @@ MainWindow::~MainWindow()
 void MainWindow::keyPressEvent(QKeyEvent *e){
 
   viewer->eventFromParent(e);
-  
-  // std::cout << "coucou"<< std::endl;
-  // if (e->key() == Qt::Key_Escape)
-  // 		 close();
-  // 	       else if (e->key() == Qt::Key_Right)
-  // 		 camera.translateCamera(QVector3D(-1, 0, 0));
-  // 	       else if (e->key() == Qt::Key_Left)
-  // 		 camera.translateCamera(QVector3D(1, 0, 0));
-  // 	       else if (e->key() == Qt::Key_Up)
-  // 		 camera.translateCamera(QVector3D(0, -1, 0));
-  // 	       else if (e->key() == Qt::Key_Down)
-  // 		 camera.translateCamera(QVector3D(0, 1, 0));
-  // 	       else if (e->key() == Qt::Key_P)
-  // 		 camera.translateCamera(QVector3D(0, 0, 1));
-  // 	       else if (e->key() == Qt::Key_L)
-  // 		 camera.translateCamera(QVector3D(0, 0, -1));
-  // 	       else if (e->key() == Qt::Key_A)
-  // 		 camera.rotateAroundTarget(2, QVector3D(0, 1, 0));
-  // 	       else if (e->key() == Qt::Key_E)
-  // 		 camera.rotateAroundTarget(-2, QVector3D(0, 1, 0));
-  // 	       else 
-  // 		 QWidget::keyPressEvent(e);
-  // update();
+}
+
+void MainWindow::createActions() {
+
+    openAction = new QAction(tr("&Open"), this);
+    openAction->setStatusTip(tr("Open a file from your computer"));
+    connect(openAction, SIGNAL(triggered()), this, SLOT(open()));
+
+    exportAsAction = new QAction(tr("&Export as OBJ"), this);
+    exportAsAction->setStatusTip(tr("Export this model as OBJ file"));
+    connect(exportAsAction, SIGNAL(triggered()), this, SLOT(exportAs()));
+
+    exitAction = new QAction(tr("&Exit"), this);
+    exitAction->setStatusTip(tr("Exit the program"));
+    connect(exitAction, SIGNAL(triggered()), this, SLOT(exit()));
+}
+
+void MainWindow::createMenu() {
+
+    fileMenu = menuBar()->addMenu(tr("&File"));
+    fileMenu->addAction(openAction);
+    fileMenu->addAction(exportAsAction);
+    fileMenu->addSeparator();
+    fileMenu->addAction(exitAction);
+}
+
+void MainWindow::open() {
+
+  std::cout << "Open called" << '\n';
+  QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),"../data", tr("3D files (*.obj *pgm3d)"));
+  std::cout << "opened : " << fileName.toStdString() << '\n';
+  QFileInfo fileInfo(fileName);
+  QString fileExtension = fileInfo.suffix();
+  std::cout << "file extension : " << fileExtension.toStdString() << '\n';
+
+
+}
+
+void MainWindow::exportAs() {
+
+  std::cout << "export As" << '\n';
+}
+
+void MainWindow::exit() {
+
+  this->close();
 }

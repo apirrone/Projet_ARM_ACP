@@ -187,7 +187,6 @@ VoxelGrid::~VoxelGrid() {
   //_vertexArrayId.destroy();
 }
 
-
 void VoxelGrid::initVAO() {
   _vertexBuffer = new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
   _vertexBuffer->create();
@@ -200,9 +199,9 @@ void VoxelGrid::initVAO() {
   _indexBuffer->bind();
   _indexBuffer->setUsagePattern(QOpenGLBuffer::StaticDraw);
   _indexBuffer->allocate(&(_faces[0]), sizeof(unsigned int)*_faces.size());
-    
+
   _vertexArray.create();
-  
+
   _initialized = true;
 
 }

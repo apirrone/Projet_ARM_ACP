@@ -10,8 +10,7 @@
 class VEF {
 
 public:
-  
-  
+
   struct Vertex {
     float position[3];
     float normal[3];
@@ -26,7 +25,7 @@ public:
       color[2] = 0.8;
       color[3] = 0.3;
       normalSet = false;
-      
+
     }
     Vertex(double x, double y, double z) {
       position[0] = x;
@@ -35,7 +34,7 @@ public:
       color[0] = 0.8;
       color[1] = 0.8;
       color[2] = 0.8;
-      color[3] = 0.3; 
+      color[3] = 0.3;
       normalSet = false;
     }
 
@@ -60,10 +59,10 @@ public:
   };
 
   VEF();
-  
+
   void loadFromObj(char* filePath);
   void exportToObj(char* exportFilePath);
-  
+
   // getters & setters
   std::vector<Vertex>* getVertices();
   std::vector<unsigned int>* getEdges();
@@ -73,7 +72,7 @@ public:
   int addVertex(double x, double y, double z);
   int addEdge(int p1, int p2);
   int addFace(int e1, int e2, int e3);
-  
+
   virtual void draw(QOpenGLShaderProgram* shader);
 
   void translate(QVector3D t);
@@ -84,9 +83,9 @@ protected:
   std::vector<Vertex> _vertices;
   std::vector<unsigned int> _edges;
   std::vector<unsigned int> _faces;
-  
+
   void initVAO();
-  
+
   bool _initialized;//true if VAO has been initialized
   QOpenGLVertexArrayObject _vertexArray;
   QOpenGLBuffer* _vertexBuffer;
