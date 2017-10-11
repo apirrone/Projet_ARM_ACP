@@ -10,7 +10,7 @@
 class VEF {
 
 public:
-
+  
   
   struct Vertex {
     float position[3];
@@ -58,6 +58,8 @@ public:
       return ss.str();
     }
   };
+
+  VEF();
   
   void loadFromObj(char* filePath);
   void exportToObj(char* exportFilePath);
@@ -74,9 +76,9 @@ public:
   
   virtual void draw(QOpenGLShaderProgram* shader);
 
-  unsigned int getW();
-  unsigned int getH();
-  unsigned int getD();
+  void translate(QVector3D t);
+
+  QMatrix4x4 worldMatrix();
 
 protected:
   std::vector<Vertex> _vertices;
@@ -88,9 +90,13 @@ protected:
   bool _initialized;//true if VAO has been initialized
   QOpenGLVertexArrayObject _vertexArray;
   QOpenGLBuffer* _vertexBuffer;
-  QOpenGLBuffer* _indexBuffer; 
+  QOpenGLBuffer* _indexBuffer;
 
-  unsigned int _w, _h, _d, _minValue, _maxValue, _displayMinValue, _displayMaxValue;
+  bool _updateWorldMat;
+  QMatrix4x4 _worldMat;
+  QVector3D _position;
+  
+  
 };
 
 #endif // VEF_HPP

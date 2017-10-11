@@ -22,6 +22,9 @@ vector<string> split(const string &s, char delim) {
   
 }
 
+VEF::VEF()
+  : _position(QVector3D(0,0,0)), _initialized(false), _updateWorldMat(true) {}
+
 void VEF::loadFromObj(char* filePath){
   string line;
   ifstream fileToRead(filePath);  
@@ -168,8 +171,10 @@ void VEF::draw(QOpenGLShaderProgram* shader){
   if(!_initialized)
     initVAO();
   
-  QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();  
+  QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();
 
+  shader->setUniformValue(shader->uniformLocation("world_mat"), this->worldMatrix());
+  
   _vertexArray.bind();
   _indexBuffer->bind();
   
@@ -254,14 +259,15 @@ int VEF::addFace(int e1, int e2, int e3) {
   return id;
 }
 
-unsigned int VEF::getW(){
-  return _w;
+void VEF::translate(QVector3D t) {
+  _updateWorldMat = true;
+  _position += t;
 }
 
-unsigned int VEF::getH(){
-  return _h;
-}
-
-unsigned int VEF::getD(){
-  return _d;
+QMatrix4x4 VEF::worldMatrix() {
+  if(!_updateWorldMat)
+    return _worldMat;
+  _worldMat.setToIdentity();
+  _worldMat.translate(_position);
+  return _worldMat;
 }

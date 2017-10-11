@@ -54,16 +54,8 @@ void Viewer::initializeGL(){
   _shader->link();
   _shader->bind();
 
-  unsigned int w = _vef.getW();
-  unsigned int h = _vef.getH();
-  unsigned int d = _vef.getD();
-
-  std::cout << "w : " << w  << std::endl;
-  std::cout << "h : " << h  << std::endl;
-  std::cout << "d : " << d  << std::endl;
-  
   //_camera.initCamera(300, 0, 0, QVector3D(-1.*w/2, 1.*h/2, d/2), this->width(), this->height(), 45.);  
-  _camera.initCamera(300, 0, 0, QVector3D(0, 0, 0), this->width(), this->height(), 45.);  
+  _camera.initCamera(300, 0, 0, QVector3D(0., 0., 0.), this->width(), this->height(), 45.);  
   //_trackball.setCamera(&_camera);
 }
 
@@ -129,20 +121,20 @@ void Viewer::eventFromParent(QKeyEvent *e){
 
   if (e->key() == Qt::Key_Escape)
     close();
-  /*
+    
   else if (e->key() == Qt::Key_Right)
-    //_camera.translateCamera(QVector3D(-1, 0, 0));
+    _vef.translate(QVector3D(1,0,0)*0.5);
   else if (e->key() == Qt::Key_Left)
-    //_camera.translateCamera(QVector3D(1, 0, 0));
+    _vef.translate(QVector3D(-1,0,0)*0.5);
   else if (e->key() == Qt::Key_Up)
-    //_camera.translateCamera(QVector3D(0, -1, 0));
+    _vef.translate(QVector3D(0,1,0)*0.5);
   else if (e->key() == Qt::Key_Down)
-    //_camera.translateCamera(QVector3D(0, 1, 0));
+    _vef.translate(QVector3D(0,-1,0)*0.5);
   else if (e->key() == Qt::Key_P)
-    //_camera.translateCamera(QVector3D(0, 0, 1));
-  else if (e->key() == Qt::Key_L)
-    //_camera.translateCamera(QVector3D(0, 0, -1));
-    */
+    _vef.translate(QVector3D(0,0,1)*0.5);
+  else if (e->key() == Qt::Key_M)
+    _vef.translate(QVector3D(0,0,-1)*0.5);
+  
   else if (e->key() == Qt::Key_A){
     // _camera.rotateAroundTarget(2, QVector3D(0, 1, 0));
     _camera.zoom(0.95);

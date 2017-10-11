@@ -67,12 +67,13 @@ QMatrix4x4 SatelliteCamera::viewMatrix() {
     return _viewMat;
   std::cout << "dist : " << _distToTarget << " lat : " << _latitude << " lon : " << _longitude << std::endl;
   _viewMat.setToIdentity();
-  //_viewMat.lookAt(QVector3D(0.,0.,143), QVector3D(0,0,0), QVector3D(0.,1.,0.));
-  _viewMat.lookAt(QVector3D(0.,0.,0.), QVector3D(0,0,-1), QVector3D(0.,1.,0.));
-  _viewMat.translate(-_distToTarget * QVector3D(0,0,1));
-  _viewMat.rotate(_latitude, QVector3D(1,0,0));
-  _viewMat.rotate(_longitude, QVector3D(0,1,0));
+  //_viewMat.lookAt(QVector3D(0.,0.,1), QVector3D(0,0,0), QVector3D(0.,1.,0.));
+  //_viewMat.lookAt(QVector3D(0.,0.,50), QVector3D(0,0,-1), QVector3D(0.,1.,0.));
   _viewMat.translate(_target);
+  _viewMat.rotate(_longitude, QVector3D(0,1,0));
+  _viewMat.rotate(_latitude, QVector3D(1,0,0));
+  _viewMat.translate(_distToTarget * QVector3D(0,0,1));
+  _viewMat = _viewMat.inverted();
   _updateViewMat = false;
   return _viewMat;
 }

@@ -6,6 +6,9 @@
 
 VoxelGrid::VoxelGrid(unsigned int h, unsigned int w, unsigned int d, const unsigned char* data)
   : _w(w), _h(h), _d(d) {
+
+  _position = QVector3D(-1.*_w/2, 1.*_h/2, 1.*_d/2);
+  
   unsigned int size = h*w*d;
   //créer tableau de voxels avec h w d
   _voxels = new Voxel[size];
@@ -19,7 +22,7 @@ VoxelGrid::VoxelGrid(unsigned int h, unsigned int w, unsigned int d, const unsig
     if(data[i] < minVal)
       minVal = data[i];
   }
-  float r1 = 99., g1 = 0., b1 = 0., r2 = 0., g2 = 0., b2 = 99.;
+  float r1 = 99., g1 = 0.8, b1 = 0., a1 = 0.6, r2 = 0., g2 = 0., b2 = 99., a2 = 0.1;
 
   for(int i=0; i<h; ++i)
     for(int j=0; j<w; ++j)
@@ -30,40 +33,15 @@ VoxelGrid::VoxelGrid(unsigned int h, unsigned int w, unsigned int d, const unsig
 	r = r1 + ((currentValue-minVal)/(maxVal-minVal)) * (r2-r1);
 	g = g1 + ((currentValue-minVal)/(maxVal-minVal)) * (g2-g1);
 	b = b1 + ((currentValue-minVal)/(maxVal-minVal)) * (b2-b1);
+	alpha = a1 + ((currentValue-minVal)/(maxVal-minVal)) * (a2-a1);
 	if(currentValue == 0)
 	  alpha = 0.;
-	else
-	  alpha = 0.1;
+	//else
+	  //alpha = 0.1;
 	
 	// std::cout << "test" << std::endl;
 	VEF::Vertex v;
 	//we create all the vertices
-	/*
-	//TFL
-	v = VEF::Vertex(i-0.5f, j+0.5f, k+0.5f, currentValue, currentValue, currentValue, alpha);
-	current.vertices[Voxel::Corner::TFL] = this->addVertex(v);
-	//TFR
-	v = VEF::Vertex(i+0.5f, j+0.5f, k+0.5f, currentValue, currentValue, currentValue, alpha);
-	current.vertices[Voxel::Corner::TFR] = this->addVertex(v);
-	//TRL
-	v = VEF::Vertex(i-0.5f, j+0.5f, k-0.5f, currentValue, currentValue, currentValue, alpha);
-	current.vertices[Voxel::Corner::TRL] = this->addVertex(v);
-	//TRR
-	v = VEF::Vertex(i+0.5f, j+0.5f, k-0.5f, currentValue, currentValue, currentValue, alpha);
-	current.vertices[Voxel::Corner::TRR] = this->addVertex(v);
-	//BFL
-	v = VEF::Vertex(i-0.5f, j-0.5f, k+0.5f, currentValue, currentValue, currentValue, alpha);
-	current.vertices[Voxel::Corner::BFL] = this->addVertex(v);
-	//BFR
-	v = VEF::Vertex(i+0.5f, j-0.5f, k+0.5f, currentValue, currentValue, currentValue, alpha);
-	current.vertices[Voxel::Corner::BFR] = this->addVertex(v);
-	//BRL
-	v = VEF::Vertex(i-0.5f, j-0.5f, k-0.5f, currentValue, currentValue, currentValue, alpha);
-	current.vertices[Voxel::Corner::BRL] = this->addVertex(v);
-	//BRR
-	v = VEF::Vertex(i+0.5f, j-0.5f, k-0.5f, currentValue, currentValue, currentValue, alpha);
-	current.vertices[Voxel::Corner::BRR] = this->addVertex(v);
-	//*/
 	
 	//TFL
 	v = VEF::Vertex(j-0.5, -i+0.5, -k+0.5, r, g, b, alpha);
@@ -209,58 +187,8 @@ VoxelGrid::~VoxelGrid() {
   //_vertexArrayId.destroy();
 }
 
-// void VoxelGrid::draw(QOpenGLShaderProgram* shader){
-  
-//   std::cout << "VOXELGRID DRAW" << std::endl;
-
-//   if(!_initialized)
-//    initVAO();
-  
-//   QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();  
-
-//   _vertexArray.bind();
-//   _indexBuffer->bind();
-  
-//   int vertex_loc = shader->attributeLocation("vtx_position"); 
-//   if(vertex_loc>=0) {
-//     shader->setAttributeBuffer(vertex_loc, GL_FLOAT, offsetof(VEF::Vertex,position), 3, sizeof(VEF::Vertex));
-//     shader->enableAttributeArray(vertex_loc);
-//   }
-
-//   int color_loc = shader->attributeLocation("vtx_color");
-//   if(color_loc>=0) {
-//     shader->setAttributeBuffer(color_loc, GL_FLOAT, offsetof(VEF::Vertex,color), 4, sizeof(VEF::Vertex));
-//     shader->enableAttributeArray(color_loc);
-//   }  
-
-//   glDrawElements(GL_TRIANGLES, _faces.size(), GL_UNSIGNED_INT, 0);
-//   _indexBuffer->release();
-//   _vertexArray.release();  
-// }
 
 void VoxelGrid::initVAO() {
-  /*
-  VEF::Vertex v1, v2, v3;
-  v1.position[0] = -1;
-  v1.position[1] = -1;
-  v1.position[2] = -5;
-
-  v2.position[0] = 1;
-  v2.position[1] = -1;
-  v2.position[2] = -5;
-
-  v3.position[0] = 1;
-  v3.position[1] = 1;
-  v3.position[2] = -5;
-  _vertices.clear();
-  _vertices.push_back(v1);
-  _vertices.push_back(v2);
-  _vertices.push_back(v3);
-  _faces.clear();
-  _faces.push_back(0);
-  _faces.push_back(1);
-  _faces.push_back(2);
-  */
   _vertexBuffer = new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
   _vertexBuffer->create();
   _vertexBuffer->bind();
