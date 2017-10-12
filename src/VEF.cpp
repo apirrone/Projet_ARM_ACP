@@ -43,12 +43,13 @@ void VEF::loadFromObj(std::string filePath){
   std::setlocale(LC_ALL, "C"); // IMPORTANT !!!!
   string line;
   ifstream fileToRead(filePath);
-
+  int ln = 0;
+  double miny = 1000., maxy=-1000.;
   _vertices.clear();
   _faces.clear();
 
   if (fileToRead.is_open()) {
-
+    vector<Vertex> tmpVertices;
     vector<float> tmpNormals;
 
     while(getline(fileToRead, line)){
@@ -63,10 +64,20 @@ void VEF::loadFromObj(std::string filePath){
       
       if(tokens.at(0).compare("v") == 0){
 	// cout << "ADD VERTEX " << endl;
+	//cout << line << endl;
+
 	double x = stod(tokens.at(1));
 	double y = stod(tokens.at(2));
 	double z = stod(tokens.at(3));
-	this->addVertex(x, y, z);
+	Vertex v = Vertex(x,y,z);
+	if(y < miny)
+	  miny = y;
+	if(y > maxy)
+	  maxy = y;
+	//cerr << "v " << x << " " << y << " " << z << endl;
+	//this->addVertex(x, y, z);
+	ln++;
+	tmpVertices.push_back(v);
       }
       else if(tokens.at(0).compare("vn") == 0){
 	// cout << "ADD NORMAL " << endl;
@@ -81,6 +92,7 @@ void VEF::loadFromObj(std::string filePath){
       }
       else if(tokens.at(0).compare("f") == 0){
 	// cout << "ADD FACE " << endl;
+	//std::cout << line << std::endl;
 	vector<string> vertexToken;
 
 	bool convertIntoTriangleFace = false;
@@ -95,9 +107,9 @@ void VEF::loadFromObj(std::string filePath){
 	  vertexIds = (int*)malloc((nbVertex)*sizeof(int));
 	else
 	  vertexIds = (int*)malloc(3*sizeof(int));
-
+	//std::cerr << "f ";
 	for(int i = 1 ; i < tokens.size() ; i++){
-
+	  
 	  vertexToken = split(tokens.at(i), '/');
 
 	  if(vertexToken.size() != 3){
@@ -105,10 +117,11 @@ void VEF::loadFromObj(std::string filePath){
 	    fileToRead.close();
 	    return;
 	  }
+	  //std::cerr << stoi(vertexToken[0]) << "//" << stoi(vertexToken[2]) << " ";
 
 	  int vertexId = stoi(vertexToken.at(0))-1;//Indices in .obj start at 1
 	  int normalId = (stoi(vertexToken.at(2))-1)*3;
-	  
+	  /*
 	  if(this->getVertices()->at(vertexId).normalSet == false){// This vertex normals has not been set yet
 	    
 	    this->getVertices()->at(vertexId).normal[0] = tmpNormals.at(normalId);
@@ -145,9 +158,15 @@ void VEF::loadFromObj(std::string filePath){
 	    }
 
 	  }
-
+	  */
+	
+	  
+	  Vertex v = tmpVertices[vertexId];
+	  v.normal[0] = tmpNormals[normalId];
+	  v.normal[1] = tmpNormals[normalId+1];
+	  v.normal[2] = tmpNormals[normalId+2];
+	  vertexIds[i-1] = this->addVertex(v);
 	}
-
 	if(convertIntoTriangleFace){
 	  for(int k = 1 ; k < nbVertex-1 ; k++){
 	    this->addFace(vertexIds[0],
@@ -172,7 +191,16 @@ void VEF::loadFromObj(std::string filePath){
     cerr << "The file : " << filePath <<" could not be opened" << endl;
     return;
   }
-
+  //std::cout << ln << std::endl;
+  double miny2 = 1000., maxy2 = -1000.;
+  for(int i = 0; i<_vertices.size(); ++i){
+    double y = _vertices[i].position[1];
+    if(y < miny2)
+      miny2 = y;
+    if(y > maxy2)
+      maxy2 = y;
+  }
+  std::cout << miny << " " << maxy<< " " << miny2 << " " << maxy2 << std::endl;
 }
 
 void VEF::exportToObj(char* exportFilePath){
