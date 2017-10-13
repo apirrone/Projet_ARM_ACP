@@ -266,6 +266,10 @@ void VEF::initVAO() {
 
 }
 
+void VEF::loadSurface_mesh(){
+  //TODO not yet implemented
+}
+
 // getters
 std::vector<VEF::Vertex>* VEF::getVertices() {
   return &_vertices;

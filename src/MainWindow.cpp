@@ -92,7 +92,7 @@ void MainWindow::open() {
   QFileInfo fileInfo(fileName);
   QString fileExtension = fileInfo.suffix();
   std::cout << "file extension : " << fileExtension.toStdString() << '\n';
-
+  
   if(fileExtension.toStdString() == "obj" || fileExtension.toStdString() == "OBJ")//TODO tolower
     {
       VEF * v = new VEF();

@@ -77,7 +77,7 @@ public:
 
   void translate(QVector3D t);
 
-  QMatrix4x4 worldMatrix();
+  QMatrix4x4 worldMatrix(); 
 
 protected:
   std::vector<Vertex> _vertices;
@@ -85,7 +85,8 @@ protected:
   std::vector<unsigned int> _faces;
 
   void initVAO();
-
+  void loadSurface_mesh();//TODO protected ou public ? 
+  
   bool _initialized;//true if VAO has been initialized
   QOpenGLVertexArrayObject _vertexArray;
   QOpenGLBuffer* _vertexBuffer;
@@ -95,7 +96,7 @@ protected:
   QMatrix4x4 _worldMat;
   QVector3D _position;
 
-  
+  surface_mesh::Surface_mesh _halfEdge; 
   
 };
 

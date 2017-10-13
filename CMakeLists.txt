@@ -21,6 +21,7 @@ file(
 )
 
 include_directories(ext/)
+include_directories(assets/)
 
 # Executable + source_files
 add_executable(
