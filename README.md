@@ -6,15 +6,14 @@ Versions Cremi :
 - QT 5.7.1
 - cmake 3.7.2
 
-To build :
-from the folder you want your build to be in :
-- cmake "path-to-the-folder-with-CMakeLists.txt"
-- make
-- ./VisioBrain
+To build, either : 
+	- Execute install.sh
+	- Create a folder (ex : "build"), execute "cmake .." inside that folder, then execute "make"
+	
+To execute the program : 
+	- ./VisioBrain
+	- ./VisioBrain <path to file to open>
 
 # TODO 
-
-- Create class containing image3D data (transforms the data of pgm3D_holder in voxel)
-- Create qt window with opengl widget to display
 
 

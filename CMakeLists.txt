@@ -20,6 +20,8 @@ file(
   src/*
 )
 
+include_directories(ext/)
+
 # Executable + source_files
 add_executable(
   VisioBrain

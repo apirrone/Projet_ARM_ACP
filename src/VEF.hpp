@@ -4,7 +4,7 @@
 #include <vector>
 #include <sstream>
 #include <QtOpenGL>
-
+#include <surface_mesh/surface_mesh.h>
 
 // Base class for object composed of vertices, edges and faces
 class VEF {
@@ -94,6 +94,7 @@ protected:
   bool _updateWorldMat;
   QMatrix4x4 _worldMat;
   QVector3D _position;
+
   
   
 };
