@@ -11,8 +11,9 @@ Viewer::Viewer(QWidget *parent)
   format.setVersion(3, 3);
 
   this->setFormat(format);
-
-  _prevPos = QVector2D(0, 0);
+  
+  _track = false;
+  _prevPos = QVector2D(0, 0); 
   _timer.start(0, this);
   _vef = NULL;//new VEF();
 }
@@ -27,6 +28,7 @@ Viewer::Viewer(VEF& grid, QWidget *parent)
 
   this->setFormat(format);
 
+  _track = false;
   _prevPos = QVector2D(0, 0);
   _timer.start(0, this);
 
@@ -76,7 +78,7 @@ void Viewer::initializeGL(){
 
   _camera.initCamera(300, 0, 0, QVector3D(0., 0., 0.), this->width(), this->height(), 45.);
   _shader->release();
-  //_trackball.setCamera(&_camera);
+  _track = false;
 }
 
 void Viewer::paintGL(){
@@ -99,41 +101,39 @@ void Viewer::resizeGL(int width, int height){
   //_camera.updateProjectionMatrix(width, height);
 }
 
+//Weird, mousepressEvent is called when starting the application (?)
 void Viewer::mousePressEvent(QMouseEvent *e){
-  //  _trackball.start();
-  //_trackball.track(_prevPos);
+
+  // if(e->buttons() == Qt::LeftButton){
+  //   std::cout << "LEFT BUTTON PRESSED" << std::endl;
+  _track = true;
+  // }
 }
 
 void Viewer::mouseReleaseEvent(QMouseEvent *e){
-  //_trackball.stop();
+  // if(e->buttons() == Qt::LeftButton){
+  //   std::cout << "LEFT BUTTON RELEASED" << std::endl;
+  _track = false;
+  // }
 
 }
 
 void Viewer::mouseMoveEvent(QMouseEvent *e){
-  //_trackball.track(QVector2D(e->localPos()));
-
-  // QVector2D diff = QVector2D(e->localPos()) - _prevPos;
-  // QVector3D n = QVector3D(diff.y(), diff.x(), 0.0).normalized();
-
-  // qreal acc = diff.length() / 500.0;
-
-
-  // _rotationAxis = (_rotationAxis * _angularSpeed + n * acc).normalized();
-
-  // _angularSpeed += acc;
-
+  
+  if(_track){
+    QVector2D diff = QVector2D(e->localPos()) - _prevPos;
+    _camera.rotateLongitude((-diff.x())/10);
+    _camera.rotateLatitude((-diff.y())/10);
+  }
+  
   _prevPos = QVector2D(e->localPos());
 }
 
-void Viewer::timerEvent(QTimerEvent *){
-  // angularSpeed *= 0.97;
+void Viewer::wheelEvent(QWheelEvent *e){
+  (e->delta() > 0) ? _camera.zoom(1.15) : _camera.zoom(0.85);
+}
 
-  // if (angularSpeed < 0.02) {
-  //   angularSpeed = 0.0;
-  // } else {
-  //   _camera.rotateAroundTarget(angularSpeed, rotationAxis);
-  //   updat();
-  // }
+void Viewer::timerEvent(QTimerEvent *){
   update();//TODO ne pas faire ca, update que quand il y a besoin
 }
 

@@ -10,7 +10,6 @@
 #include "VoxelGrid.hpp"
 #include "VEF.hpp"
 #include "SatelliteCamera.hpp"
-#include "Trackball.hpp"
 
 class Viewer : public QOpenGLWidget
 {
@@ -34,6 +33,7 @@ protected:
 
   void timerEvent(QTimerEvent *);
   void mouseMoveEvent(QMouseEvent *e);
+  void wheelEvent(QWheelEvent *e);
   void mousePressEvent(QMouseEvent *e);
   void mouseReleaseEvent(QMouseEvent *e);
   
@@ -48,6 +48,7 @@ private:
   std::vector<VEF::Vertex> _vertices;
   std::vector<unsigned int> _faces;
 
+  bool _track;
   QVector2D _prevPos;
   float _angularSpeed;
   QVector3D _rotationAxis;
@@ -55,8 +56,6 @@ private:
   SatelliteCamera _camera;
 
   QBasicTimer _timer;
-
-  //Trackball _trackball;
 };
 
 #endif // VIEWER_HPP

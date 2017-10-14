@@ -83,7 +83,6 @@ VoxelGrid::VoxelGrid(unsigned int h, unsigned int w, unsigned int d, const unsig
 
 	//check left
 	if(left == NULL || left->value != current.value) {
-    std::cout << "addface left" << '\n';
 	  this->addFace(current.vertices[Voxel::Corner::TFL],
 			current.vertices[Voxel::Corner::TRL],
 			current.vertices[Voxel::Corner::BRL]);
@@ -94,7 +93,6 @@ VoxelGrid::VoxelGrid(unsigned int h, unsigned int w, unsigned int d, const unsig
 
 	//check right
 	if(right == NULL || right->value != current.value) {
-    std::cout << "addface right" << '\n';
 	  this->addFace(current.vertices[Voxel::Corner::TRR],
 			current.vertices[Voxel::Corner::TFR],
 			current.vertices[Voxel::Corner::BFR]);
@@ -104,7 +102,6 @@ VoxelGrid::VoxelGrid(unsigned int h, unsigned int w, unsigned int d, const unsig
 	}
 	//check top
 	if(top == NULL || top->value != current.value) {
-    std::cout << "addface top" << '\n';
 	  this->addFace(current.vertices[Voxel::Corner::TRR],
 			current.vertices[Voxel::Corner::TRL],
 			current.vertices[Voxel::Corner::TFL]);
@@ -114,7 +111,6 @@ VoxelGrid::VoxelGrid(unsigned int h, unsigned int w, unsigned int d, const unsig
 	}
 	//check bot
 	if(bot == NULL || bot->value != current.value) {
-    std::cout << "addface bot" << '\n';
 	  this->addFace(current.vertices[Voxel::Corner::BFR],
 			current.vertices[Voxel::Corner::BFL],
 			current.vertices[Voxel::Corner::BRL]);
@@ -124,7 +120,6 @@ VoxelGrid::VoxelGrid(unsigned int h, unsigned int w, unsigned int d, const unsig
 	}
 	//check front
 	if(front == NULL || front->value != current.value) {
-    std::cout << "addface front" << '\n';
 	  this->addFace(current.vertices[Voxel::Corner::TFR],
 			current.vertices[Voxel::Corner::TFL],
 			current.vertices[Voxel::Corner::BFL]);
@@ -135,7 +130,6 @@ VoxelGrid::VoxelGrid(unsigned int h, unsigned int w, unsigned int d, const unsig
 
 	//check rear
 	if(rear == NULL || rear->value != current.value) {
-    std::cout << "addface rire" << '\n';
 	  this->addFace(current.vertices[Voxel::Corner::TRL],
 			current.vertices[Voxel::Corner::TRR],
 			current.vertices[Voxel::Corner::BRR]);
