@@ -284,8 +284,24 @@ void VEF::initVAO() {
 
 }
 
-void VEF::loadSurface_mesh(){
-  //TODO not yet implemented
+void VEF::loadSurfaceMesh() {
+  _surfaceMesh.clear();
+  vector<surface_mesh::Surface_mesh::Vertex> vertexId;
+  for(int i = 0; i<_vertices.size(); ++i) {
+    Vertex& v = _vertices[i];
+    surface_mesh::Surface_mesh::Vertex vid = _surfaceMesh.add_vertex(surface_mesh::Point(v.position[0], v.position[1], v.position[2]));
+    vertexId.push_back(vid);
+  }
+
+  for(int i = 0; i<_faces.size(); i+=3) {
+    surface_mesh::Surface_mesh::Vertex v1, v2, v3;
+    v1 = vertexId[_faces[i]];
+    v2 = vertexId[_faces[i+1]];
+    v3 = vertexId[_faces[i+2]];
+    _surfaceMesh.add_triangle(v1, v2, v3);
+  }
+
+  _surfaceMesh.write("testExportOFF.off");
 }
 
 // getters

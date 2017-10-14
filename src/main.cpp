@@ -32,6 +32,7 @@ int main(int argc, char *argv[]) {
 
     if(extension.compare("obj")  == 0 || extension.compare("OBJ") == 0){
       file->loadFromObj(argv[1]);
+      file->loadSurfaceMesh();
       file->exportToObj("TestExport.obj");
     }
     else if(extension.compare("pgm3d") == 0){
@@ -44,7 +45,8 @@ int main(int argc, char *argv[]) {
       const unsigned char * data = test.getData();
 
       file = new VoxelGrid(h,w,d,data);
-      //file->exportToObj("TestExportVoxel.obj");
+      file->exportToObj("TestExportVoxel.obj");
+      file->loadSurfaceMesh();
     }
     else{
       cerr << "File extension : ." << extension <<" is not supported" << endl;

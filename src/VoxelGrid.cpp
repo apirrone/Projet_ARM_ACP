@@ -28,10 +28,12 @@ VoxelGrid::VoxelGrid(unsigned int h, unsigned int w, unsigned int d, const unsig
   for(int i=0; i<h; ++i)
     for(int j=0; j<w; ++j)
       for(int k=0; k<d; ++k) {
-        std::cout << "/* message */" << '\n';
+        //std::cout << "/* message */" << '\n';
 	Voxel& current = _voxels[i*_w*_d + j*_d + k];
 	double currentValue = _voxels[i*_w*_d + j*_d + k].value;
-  std::cout << "VOXELGRID : current value = " << currentValue << '\n';
+	if(currentValue == 0)
+	  continue;
+	//std::cout << "VOXELGRID : current value = " << currentValue << '\n';
 	float r, g, b, alpha;
 	//r = r1 + ((currentValue-minVal)/(maxVal-minVal)) * (r2-r1);
 	//g = g1 + ((currentValue-minVal)/(maxVal-minVal)) * (g2-g1);
