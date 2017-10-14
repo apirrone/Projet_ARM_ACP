@@ -4,6 +4,8 @@
 #include <string.h>
 #include <regex>
 #include <sstream>
+#include <map>
+#include <set>
 
 #include "VEF.hpp"
 
@@ -36,7 +38,7 @@ VEF::~VEF() {
   }
 
   _vertexArray.destroy();
-  
+
 }
 
 void VEF::loadFromObj(std::string filePath){
@@ -49,142 +51,130 @@ void VEF::loadFromObj(std::string filePath){
   _faces.clear();
 
   if (fileToRead.is_open()) {
-    vector<Vertex> tmpVertices;
-    vector<float> tmpNormals;
+    size_t maxVerts = 4;
+    unsigned int* faceVertices = new unsigned int[maxVerts];
+    map<std::pair<unsigned int, unsigned int>, unsigned int> objVertices;
+    vector<float> objPositions;
+    vector<float> objNormals;
+
+    Vertex v;
 
     while(getline(fileToRead, line)){
 
-      
       line = regex_replace(line, regex("\\s+"), " ");
 
-      if(line.size() == 0 || line[0] == '#') // Ignore comments
-	continue;
-      
-      vector<string> tokens = split(line, ' ');
-      
-      if(tokens.at(0).compare("v") == 0){
-	// cout << "ADD VERTEX " << endl;
-	//cout << line << endl;
+      if(line.size() == 0)
+        continue;
 
-	double x = stod(tokens.at(1));
-	double y = stod(tokens.at(2));
-	double z = stod(tokens.at(3));
-	Vertex v = Vertex(x,y,z);
-	if(y < miny)
-	  miny = y;
-	if(y > maxy)
-	  maxy = y;
-	//cerr << "v " << x << " " << y << " " << z << endl;
-	//this->addVertex(x, y, z);
-	ln++;
-	tmpVertices.push_back(v);
+      vector<string> tokens = split(line, ' ');
+
+      if(tokens.at(0).compare("v") == 0){
+
+      	double x = stod(tokens.at(1));
+      	double y = stod(tokens.at(2));
+      	double z = stod(tokens.at(3));
+
+        objPositions.push_back(x);
+        objPositions.push_back(y);
+        objPositions.push_back(z);
       }
       else if(tokens.at(0).compare("vn") == 0){
-	// cout << "ADD NORMAL " << endl;
 
-	float x = stod(tokens.at(1));
-	float y = stod(tokens.at(2));
-	float z = stod(tokens.at(3));
+      	float x = stod(tokens.at(1));
+      	float y = stod(tokens.at(2));
+      	float z = stod(tokens.at(3));
 
-	tmpNormals.push_back(x);
-	tmpNormals.push_back(y);
-	tmpNormals.push_back(z);
+      	objNormals.push_back(x);
+      	objNormals.push_back(y);
+      	objNormals.push_back(z);
       }
       else if(tokens.at(0).compare("f") == 0){
 	// cout << "ADD FACE " << endl;
 	//std::cout << line << std::endl;
 	vector<string> vertexToken;
 
-	bool convertIntoTriangleFace = false;
+	//bool convertIntoTriangleFace = false;
 
 	int nbVertex = tokens.size()-1;//not taking into account the f at beggining
-	if(nbVertex > 3)//Triangle face
-	  convertIntoTriangleFace = true;
+	//if(nbVertex > 3)//Triangle face
+	//  convertIntoTriangleFace = true;
+  if (nbVertex > maxVerts) {
+    maxVerts *= 2;
+    delete[] faceVertices;
+    faceVertices = new unsigned int[maxVerts];
+  }
 
-	int *vertexIds;
+	//int *vertexIds;
 
-	if(convertIntoTriangleFace)
+	/*if(convertIntoTriangleFace)
 	  vertexIds = (int*)malloc((nbVertex)*sizeof(int));
 	else
 	  vertexIds = (int*)malloc(3*sizeof(int));
-	//std::cerr << "f ";
+	//std::cerr << "f ";*/
 	for(int i = 1 ; i < tokens.size() ; i++){
-	  
+
 	  vertexToken = split(tokens.at(i), '/');
 
-	  if(vertexToken.size() != 3){
+    bool hasNormals = false;
+    if(vertexToken.size() < 1 || vertexToken.size() > 3){
 	    cerr << "Incorrect face definition : " << tokens.at(i) << endl;
 	    fileToRead.close();
 	    return;
 	  }
-	  //std::cerr << stoi(vertexToken[0]) << "//" << stoi(vertexToken[2]) << " ";
+    else if (vertexToken.size() == 3) {
+      hasNormals = true;
+    }
 
-	  int vertexId = stoi(vertexToken.at(0))-1;//Indices in .obj start at 1
-	  int normalId = (stoi(vertexToken.at(2))-1)*3;
-	  /*
-	  if(this->getVertices()->at(vertexId).normalSet == false){// This vertex normals has not been set yet
-	    
-	    this->getVertices()->at(vertexId).normal[0] = tmpNormals.at(normalId);
-	    this->getVertices()->at(vertexId).normal[1] = tmpNormals.at(normalId+1);
-	    this->getVertices()->at(vertexId).normal[2] = tmpNormals.at(normalId+2);
 
-	    vertexIds[i-1] = vertexId;
 
-	    this->getVertices()->at(vertexId).normalSet = true;
-	  }
-	  else{
+	  int vertexId = stoi(vertexToken.at(0));//Indices in .obj start at 1
+    int normalId;
 
-	    if(this->getVertices()->at(vertexId).normal[0] != tmpNormals.at(normalId) ||
-	       this->getVertices()->at(vertexId).normal[1] != tmpNormals.at(normalId+1) ||
-	       this->getVertices()->at(vertexId).normal[2] != tmpNormals.at(normalId+2)){
+	  if(hasNormals)
+      normalId = stoi(vertexToken.at(2));
+    else
+      normalId = 0;
 
-	      //We have to duplicate the vertex
+    unsigned int vID;
+    if (vID = objVertices.find(std::pair<unsigned int, unsigned int>(vertexId, normalId)) != objVertices.end()) {
+      // no need to create a new vertex
+      faceVertices[i-1] = vID;
+    }
+    else {
+      // we create a new vertex
+      float vX = objPositions[(vertexId-1)*3];
+      float vY = objPositions[(vertexId-1)*3+1];
+      float vZ = objPositions[(vertexId-1)*3+2];
 
-	      double x = this->getVertices()->at(vertexId).position[0];
-	      double y = this->getVertices()->at(vertexId).position[1];
-	      double z = this->getVertices()->at(vertexId).position[2];
+      v.position[0] = vX;
+      v.position[1] = vY;
+      v.position[2] = vZ;
 
-	      int newVertexId = this->addVertex(x, y, z);
-	      
-	      this->getVertices()->at(newVertexId).normal[0] = tmpNormals.at(normalId);
-	      this->getVertices()->at(newVertexId).normal[1] = tmpNormals.at(normalId+1);
-	      this->getVertices()->at(newVertexId).normal[2] = tmpNormals.at(normalId+2);
-
-	      vertexIds[i-1] = newVertexId;
-	      this->getVertices()->at(newVertexId).normalSet = true;
-	    }
-	    else{//The vertex with the same normal already exists
-	      vertexIds[i-1] = vertexId;
-	    }
-
-	  }
-	  */
-	
-	  
-	  Vertex v = tmpVertices[vertexId];
-	  v.normal[0] = tmpNormals[normalId];
-	  v.normal[1] = tmpNormals[normalId+1];
-	  v.normal[2] = tmpNormals[normalId+2];
-	  vertexIds[i-1] = this->addVertex(v);
-	}
-	if(convertIntoTriangleFace){
-	  for(int k = 1 ; k < nbVertex-1 ; k++){
-	    this->addFace(vertexIds[0],
-			  vertexIds[k],
-			  vertexIds[k+1]);
-	  }
-	}
-	else{
-	  this->addFace(vertexIds[0],
-			vertexIds[1],
-			vertexIds[2]);
-	}
-
-	free(vertexIds);
+      if(hasNormals) {
+        v.normal[0] = objNormals[(normalId-1)*3];
+        v.normal[1] = objNormals[(normalId-1)*3+1];
+        v.normal[2] = objNormals[(normalId-1)*3+2];
+        v.normalSet = true;
       }
-    }//end while
+      else
+        v.normalSet = false;
+
+
+      faceVertices[i-1] = this->addVertex(v);
+    }
+  } // end for
+  for(int k = 1 ; k < nbVertex-1 ; k++){
+    this->addFace(faceVertices[0],
+		  faceVertices[k],
+		  faceVertices[k+1]);
+  }
+} // end face builder
+  }//end while
 
     fileToRead.close();
+
+    // clean
+    delete[] faceVertices;
   }
   else {
     // file could not be opened
@@ -238,7 +228,7 @@ void VEF::draw(QOpenGLShaderProgram* shader){
 
   if(!_initialized)
     initVAO();
-  
+
 
   QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();
 
@@ -265,7 +255,7 @@ void VEF::draw(QOpenGLShaderProgram* shader){
     shader->disableAttributeArray(vertex_loc);
   if(color_loc)
     shader->disableAttributeArray(color_loc);
-    
+
   _indexBuffer->release();
   _vertexBuffer->release();
   _vertexArray.release();
@@ -315,7 +305,7 @@ int VEF::addVertex(const VEF::Vertex& v) {
   return id;
 }
 
-int VEF::addVertex(double x, double y, double z) {
+int VEF::addVertex(float x, float y, float z) {
   int id = _vertices.size();
   _vertices.push_back(Vertex(x, y, z));
   return id;
