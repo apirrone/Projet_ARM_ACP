@@ -11,29 +11,39 @@ VoxelGrid::VoxelGrid(unsigned int h, unsigned int w, unsigned int d, const unsig
   std::cout << "h,w,d" << _h << " " << _w << " " << _d << '\n';
 
   unsigned int size = h*w*d;
+  
   //créer tableau de voxels avec h w d
   _voxels = new Voxel[size];
+  
   unsigned int maxVal, minVal;
+  
   if(size > 0)
     maxVal = minVal = data[0];
+  
   for(int i=0; i<h*w*d; ++i) {
+    
     _voxels[i].value = data[i];
+    
     if(data[i] > maxVal)
       maxVal = data[i];
+    
     if(data[i] < minVal)
       minVal = data[i];
+    
   }
+  
   float r1 = 99., g1 = 0.8, b1 = 0., a1 = 0.6, r2 = 0., g2 = 0., b2 = 99., a2 = 0.1;
 
   for(int i=0; i<h; ++i)
     for(int j=0; j<w; ++j)
       for(int k=0; k<d; ++k) {
-        //std::cout << "/* message */" << '\n';
+
 	Voxel& current = _voxels[i*_w*_d + j*_d + k];
 	double currentValue = _voxels[i*_w*_d + j*_d + k].value;
+	
 	if(currentValue == 0)
 	  continue;
-	//std::cout << "VOXELGRID : current value = " << currentValue << '\n';
+	
 	float r, g, b, alpha;
 	//r = r1 + ((currentValue-minVal)/(maxVal-minVal)) * (r2-r1);
 	//g = g1 + ((currentValue-minVal)/(maxVal-minVal)) * (g2-g1);
@@ -43,8 +53,8 @@ VoxelGrid::VoxelGrid(unsigned int h, unsigned int w, unsigned int d, const unsig
 	  alpha = 0.;
 	else
 	  alpha = 0.1;
-    r = g = b = 0.8;
-	// std::cout << "test" << std::endl;
+	r = g = b = 0.8;
+
 	VEF::Vertex v;
 	//we create all the vertices
 
@@ -72,8 +82,9 @@ VoxelGrid::VoxelGrid(unsigned int h, unsigned int w, unsigned int d, const unsig
 	//BRR
 	v = VEF::Vertex(j+0.5, -i-0.5, -k-0.5, r, g, b, alpha);
 	current.vertices[Voxel::Corner::BRR] = this->addVertex(v);
+	
 	//retrieve neighborhood
-	Voxel * top, * bot, * left, * right, * front, * rear;
+	Voxel * top, * bot, * left, * right, * front, * rear; 
 	top = getTopVoxel(i,j,k);
 	bot = getBottomVoxel(i,j,k);
 	left = getLeftVoxel(i,j,k);
@@ -97,8 +108,8 @@ VoxelGrid::VoxelGrid(unsigned int h, unsigned int w, unsigned int d, const unsig
 			current.vertices[Voxel::Corner::TFR],
 			current.vertices[Voxel::Corner::BFR]);
 	  this->addFace(current.vertices[Voxel::Corner::TRR],
-		       current.vertices[Voxel::Corner::BFR],
-		       current.vertices[Voxel::Corner::BRR]);
+			current.vertices[Voxel::Corner::BFR],
+			current.vertices[Voxel::Corner::BRR]);
 	}
 	//check top
 	if(top == NULL || top->value != current.value) {
@@ -106,8 +117,8 @@ VoxelGrid::VoxelGrid(unsigned int h, unsigned int w, unsigned int d, const unsig
 			current.vertices[Voxel::Corner::TRL],
 			current.vertices[Voxel::Corner::TFL]);
 	  this->addFace(current.vertices[Voxel::Corner::TRR],
-		       current.vertices[Voxel::Corner::TFL],
-		       current.vertices[Voxel::Corner::TFR]);
+			current.vertices[Voxel::Corner::TFL],
+			current.vertices[Voxel::Corner::TFR]);
 	}
 	//check bot
 	if(bot == NULL || bot->value != current.value) {
@@ -192,6 +203,7 @@ VoxelGrid::~VoxelGrid() {
 }
 
 void VoxelGrid::initVAO() {
+  
   _vertexBuffer = new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
   _vertexBuffer->create();
   _vertexBuffer->bind();

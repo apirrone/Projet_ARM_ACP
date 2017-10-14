@@ -12,10 +12,12 @@ class VEF {
 public:
 
   struct Vertex {
+    
     float position[3];
     float normal[3];
     float color[4];
     bool normalSet;
+    
     Vertex() {
       position[0] = 0.;
       position[1] = 0.;
@@ -79,7 +81,7 @@ public:
 
   QMatrix4x4 worldMatrix();
 
-  void loadSurfaceMesh();//TODO protected ou public ? 
+  void loadSurfaceMesh();
 
 protected:
   std::vector<Vertex> _vertices;

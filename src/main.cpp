@@ -63,12 +63,12 @@ int main(int argc, char *argv[]) {
 
     return app.exec();
   }
+  
   // open without any file loaded
   else if (argc == 1) {
+    
     QApplication app(argc, argv);
     MainWindow window(NULL);
-    // MainWindow window;
-    // window = MainWindow();
 
     window.resize(1300,1300);
     window.show();
@@ -76,8 +76,10 @@ int main(int argc, char *argv[]) {
     return app.exec();
   }
   else {
+    
     usage(argv[0]);
     return EXIT_FAILURE;
+    
   }
 
 }

@@ -11,9 +11,7 @@ class VoxelGrid : public VEF {
 public :
   VoxelGrid(unsigned int h, unsigned int w, unsigned int d, const unsigned char* data);
   ~VoxelGrid();
-
-  // void draw(QOpenGLShaderProgram* shader);
-
+  
   unsigned int getW();
   unsigned int getH();
   unsigned int getD();
@@ -21,12 +19,15 @@ public :
 private :
 
   struct Voxel {
+    
     //XYZ
     //X : T = TOP, B = BOTTOM
     //Y : F = FRONT, R = REAR
     //Z : L = LEFT, R = RIGHT
     enum Corner{TFL = 0, TFR = 1, TRL = 2, TRR = 3, BFL = 4, BFR = 5, BRL = 6, BRR = 7};
+    
     int vertices[8];
+    
     double value;
 
     Voxel() : value(0) {
@@ -34,6 +35,7 @@ private :
 	vertices[i] = -1;
       }
     }
+    
   };
 
   Voxel* getTopVoxel(int, int, int);
@@ -44,6 +46,7 @@ private :
   Voxel* getRearVoxel(int, int, int);
 
   bool _initialized;//true if VAO has been initialized
+  
   QOpenGLVertexArrayObject _vertexArray;
   QOpenGLBuffer* _vertexBuffer;
   QOpenGLBuffer* _indexBuffer;

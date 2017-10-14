@@ -31,12 +31,7 @@ Viewer::Viewer(VEF& grid, QWidget *parent)
   _track = false;
   _prevPos = QVector2D(0, 0);
   _timer.start(0, this);
-
-  // unsigned int w = _vef->getW();
-  // unsigned int h = _vef->getH();
-  // unsigned int d = _vef->getD();
-  // std::cout << "this->width() : " << this->width()  << std::endl;
-  // _camera = Camera(QVector3D(-32., -32., -143), QVector3D(w/2., h/2., d/2.), this->width(), this->height());
+  
 }
 
 Viewer::~Viewer(){
@@ -134,7 +129,7 @@ void Viewer::wheelEvent(QWheelEvent *e){
 }
 
 void Viewer::timerEvent(QTimerEvent *){
-  update();//TODO ne pas faire ca, update que quand il y a besoin
+  update();
 }
 
 void Viewer::eventFromParent(QKeyEvent *e){
@@ -154,24 +149,18 @@ void Viewer::eventFromParent(QKeyEvent *e){
     _vef->translate(QVector3D(0,0,1)*0.5);
   else if (e->key() == Qt::Key_M)
     _vef->translate(QVector3D(0,0,-1)*0.5);
-
-  else if (e->key() == Qt::Key_A){
-    // _camera.rotateAroundTarget(2, QVector3D(0, 1, 0));
+  else if (e->key() == Qt::Key_A)
     _camera.zoom(0.95);
-  }else if (e->key() == Qt::Key_E){
-    //_camera.rotateAroundTarget(-2, QVector3D(0, 1, 0));
+  else if (e->key() == Qt::Key_E)
     _camera.zoom(1.05);
-  }else if (e->key() == Qt::Key_Z){
-    //_camera.zoom(1);
+  else if (e->key() == Qt::Key_Z)
     _camera.rotateLatitude(1);
-  }else if (e->key() == Qt::Key_S){
-    //_camera.zoom(-1);
+  else if (e->key() == Qt::Key_S)
     _camera.rotateLatitude(-1);
-  }else if (e->key() == Qt::Key_Q){
+  else if (e->key() == Qt::Key_Q)
     _camera.rotateLongitude(1);
-  }else if (e->key() == Qt::Key_D){
+  else if (e->key() == Qt::Key_D)
     _camera.rotateLongitude(-1);
-  }
   else
     QWidget::keyPressEvent(e);
 

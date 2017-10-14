@@ -94,37 +94,30 @@ PGM3D_Holder::PGM3D_Holder(const char* filePath) {
 
 }
 
-PGM3D_Holder::~PGM3D_Holder()
-{
+PGM3D_Holder::~PGM3D_Holder(){
   delete[] _data;
 }
 
-int PGM3D_Holder::getWidth() const
-{
+int PGM3D_Holder::getWidth() const{
   return _width;
 }
 
-int PGM3D_Holder::getHeight() const
-{
+int PGM3D_Holder::getHeight() const{
   return _height;
 }
 
-int PGM3D_Holder::getDepth() const
-{
+int PGM3D_Holder::getDepth() const{
   return _depth;
 }
 
-int PGM3D_Holder::getMaxValue() const
-{
+int PGM3D_Holder::getMaxValue() const{
   return _maxValue;
 }
 
-const unsigned char* PGM3D_Holder::getData() const
-{
+const unsigned char* PGM3D_Holder::getData() const{
   return _data;
 }
 
-unsigned char PGM3D_Holder::getValue(int x, int y, int z) const
-{
+unsigned char PGM3D_Holder::getValue(int x, int y, int z) const{
   return _data[(x*_width+y)*_depth+z];
 }

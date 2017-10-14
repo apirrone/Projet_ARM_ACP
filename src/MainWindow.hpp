@@ -30,12 +30,12 @@ protected:
 
 private:
   //TODO METTRE DES UNDERSCORES
-  Ui::MainWindow *ui;
-  Viewer* viewer;
-  QMenu* fileMenu;
-  QAction* openAction;
-  QAction* exportAsAction;
-  QAction* exitAction;
+  Ui::MainWindow *_ui;
+  Viewer* _viewer;
+  QMenu* _fileMenu;
+  QAction* _openAction;
+  QAction* _exportAsAction;
+  QAction* _exitAction;
 
   void createMenu();
   void createActions();
