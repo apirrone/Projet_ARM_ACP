@@ -62,8 +62,8 @@ void Viewer::initializeGL(){
 
   std::cout << "init" << std::endl;
   f->glClearColor(0.6, 0.2, 0.2, 1.0);
-  //f->glEnable(GL_CULL_FACE);
-  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  f->glEnable(GL_CULL_FACE);
+  //glPolygonMode(GL_FRONT, GL_FILL/*collins*/);
   f->glEnable(GL_BLEND);
   f->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -74,7 +74,7 @@ void Viewer::initializeGL(){
   _shader->link();
   _shader->bind();
 
-  _camera.initCamera(300, 0, 0, QVector3D(0., 0., 0.), this->width(), this->height(), 45.);  
+  _camera.initCamera(300, 0, 0, QVector3D(0., 0., 0.), this->width(), this->height(), 45.);
   _shader->release();
   //_trackball.setCamera(&_camera);
 }
@@ -141,7 +141,7 @@ void Viewer::eventFromParent(QKeyEvent *e){
 
   if (e->key() == Qt::Key_Escape)
     close();
-    
+
   else if (e->key() == Qt::Key_Right)
     _vef->translate(QVector3D(1,0,0)*0.5);
   else if (e->key() == Qt::Key_Left)
@@ -154,7 +154,7 @@ void Viewer::eventFromParent(QKeyEvent *e){
     _vef->translate(QVector3D(0,0,1)*0.5);
   else if (e->key() == Qt::Key_M)
     _vef->translate(QVector3D(0,0,-1)*0.5);
-  
+
   else if (e->key() == Qt::Key_A){
     // _camera.rotateAroundTarget(2, QVector3D(0, 1, 0));
     _camera.zoom(0.95);

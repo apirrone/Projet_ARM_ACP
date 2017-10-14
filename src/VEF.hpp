@@ -27,7 +27,7 @@ public:
       normalSet = false;
 
     }
-    Vertex(double x, double y, double z) {
+    Vertex(float x, float y, float z) {
       position[0] = x;
       position[1] = y;
       position[2] = z;
@@ -38,7 +38,7 @@ public:
       normalSet = false;
     }
 
-    Vertex(double x, double y, double z, float r, float g, float b, float a) {
+    Vertex(float x, float y, float z, float r, float g, float b, float a) {
       position[0] = x;
       position[1] = y;
       position[2] = z;
@@ -69,7 +69,7 @@ public:
   std::vector<unsigned int>* getFaces();
 
   int addVertex(const Vertex& v);
-  int addVertex(double x, double y, double z);
+  int addVertex(float x, float y, float z);
   int addEdge(int p1, int p2);
   int addFace(int e1, int e2, int e3);
 
@@ -97,7 +97,6 @@ protected:
   QVector3D _position;
 
   surface_mesh::Surface_mesh _halfEdge; 
-  
 };
 
 #endif // VEF_HPP
