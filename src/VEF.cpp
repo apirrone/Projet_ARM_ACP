@@ -2,7 +2,6 @@
 #include <fstream>
 #include <iostream>
 #include <string.h>
-#include <regex>
 #include <sstream>
 #include <map>
 #include <set>
@@ -41,6 +40,25 @@ VEF::~VEF() {
 
 }
 
+void removeMultipleSpaces(string& s){  
+  char p;
+  
+  for(int i = 0 ; i < s.size() ; i++){
+    
+    p = s[i];
+    int iStart = i;
+
+    while(p == ' ' && p != '\0'){
+      i++;
+      p = s[i];
+    }
+
+    if(i - iStart > 1)
+      s.erase(iStart, (i - iStart)-1); 
+
+  } 
+}
+
 void VEF::loadFromObj(std::string filePath){
   std::setlocale(LC_ALL, "C"); // IMPORTANT !!!!
   string line;
@@ -61,32 +79,32 @@ void VEF::loadFromObj(std::string filePath){
 
     while(getline(fileToRead, line)){
 
-      line = regex_replace(line, regex("\\s+"), " ");
+      removeMultipleSpaces(line);
 
       if(line.size() == 0)
-        continue;
+	continue;
 
       vector<string> tokens = split(line, ' ');
 
       if(tokens.at(0).compare("v") == 0){
 
-      	double x = stod(tokens.at(1));
-      	double y = stod(tokens.at(2));
-      	double z = stod(tokens.at(3));
+	double x = stod(tokens.at(1));
+	double y = stod(tokens.at(2));
+	double z = stod(tokens.at(3));
 
-        objPositions.push_back(x);
-        objPositions.push_back(y);
-        objPositions.push_back(z);
+	objPositions.push_back(x);
+	objPositions.push_back(y);
+	objPositions.push_back(z);
       }
       else if(tokens.at(0).compare("vn") == 0){
 
-      	float x = stod(tokens.at(1));
-      	float y = stod(tokens.at(2));
-      	float z = stod(tokens.at(3));
+	float x = stod(tokens.at(1));
+	float y = stod(tokens.at(2));
+	float z = stod(tokens.at(3));
 
-      	objNormals.push_back(x);
-      	objNormals.push_back(y);
-      	objNormals.push_back(z);
+	objNormals.push_back(x);
+	objNormals.push_back(y);
+	objNormals.push_back(z);
       }
       else if(tokens.at(0).compare("f") == 0){
 	// cout << "ADD FACE " << endl;
@@ -98,78 +116,78 @@ void VEF::loadFromObj(std::string filePath){
 	int nbVertex = tokens.size()-1;//not taking into account the f at beggining
 	//if(nbVertex > 3)//Triangle face
 	//  convertIntoTriangleFace = true;
-  if (nbVertex > maxVerts) {
-    maxVerts *= 2;
-    delete[] faceVertices;
-    faceVertices = new unsigned int[maxVerts];
-  }
+	if (nbVertex > maxVerts) {
+	  maxVerts *= 2;
+	  delete[] faceVertices;
+	  faceVertices = new unsigned int[maxVerts];
+	}
 
 	//int *vertexIds;
 
 	/*if(convertIntoTriangleFace)
 	  vertexIds = (int*)malloc((nbVertex)*sizeof(int));
-	else
+	  else
 	  vertexIds = (int*)malloc(3*sizeof(int));
-	//std::cerr << "f ";*/
+	  //std::cerr << "f ";*/
 	for(int i = 1 ; i < tokens.size() ; i++){
 
 	  vertexToken = split(tokens.at(i), '/');
 
-    bool hasNormals = false;
-    if(vertexToken.size() < 1 || vertexToken.size() > 3){
+	  bool hasNormals = false;
+	  if(vertexToken.size() < 1 || vertexToken.size() > 3){
 	    cerr << "Incorrect face definition : " << tokens.at(i) << endl;
 	    fileToRead.close();
 	    return;
 	  }
-    else if (vertexToken.size() == 3) {
-      hasNormals = true;
-    }
+	  else if (vertexToken.size() == 3) {
+	    hasNormals = true;
+	  }
 
 
 
 	  int vertexId = stoi(vertexToken.at(0));//Indices in .obj start at 1
-    int normalId;
+	  int normalId;
 
 	  if(hasNormals)
-      normalId = stoi(vertexToken.at(2));
-    else
-      normalId = 0;
+	    normalId = stoi(vertexToken.at(2));
+	  else
+	    normalId = 0;
 
-    unsigned int vID;
-    if (vID = objVertices.find(std::pair<unsigned int, unsigned int>(vertexId, normalId)) != objVertices.end()) {
-      // no need to create a new vertex
-      faceVertices[i-1] = vID;
-    }
-    else {
-      // we create a new vertex
-      float vX = objPositions[(vertexId-1)*3];
-      float vY = objPositions[(vertexId-1)*3+1];
-      float vZ = objPositions[(vertexId-1)*3+2];
+	  unsigned int vID;
+	  if (vID = objVertices.find(std::pair<unsigned int, unsigned int>(vertexId, normalId)) != objVertices.end()) {
+	    // no need to create a new vertex
+	    faceVertices[i-1] = vID;
+	  }
+	  else {
+	    // we create a new vertex
+	    float vX = objPositions[(vertexId-1)*3];
+	    float vY = objPositions[(vertexId-1)*3+1];
+	    float vZ = objPositions[(vertexId-1)*3+2];
 
-      v.position[0] = vX;
-      v.position[1] = vY;
-      v.position[2] = vZ;
+	    v.position[0] = vX;
+	    v.position[1] = vY;
+	    v.position[2] = vZ;
 
-      if(hasNormals) {
-        v.normal[0] = objNormals[(normalId-1)*3];
-        v.normal[1] = objNormals[(normalId-1)*3+1];
-        v.normal[2] = objNormals[(normalId-1)*3+2];
-        v.normalSet = true;
-      }
-      else
-        v.normalSet = false;
+	    if(hasNormals) {
+	      v.normal[0] = objNormals[(normalId-1)*3];
+	      v.normal[1] = objNormals[(normalId-1)*3+1];
+	      v.normal[2] = objNormals[(normalId-1)*3+2];
+	      v.normalSet = true;
+	    }
+	    else
+	      v.normalSet = false;
 
 
-      faceVertices[i-1] = this->addVertex(v);
-    }
-  } // end for
-  for(int k = 1 ; k < nbVertex-1 ; k++){
-    this->addFace(faceVertices[0],
-		  faceVertices[k],
-		  faceVertices[k+1]);
-  }
-} // end face builder
-  }//end while
+	    faceVertices[i-1] = this->addVertex(v);
+	  }
+	} // end for
+	for(int k = 1 ; k < nbVertex-1 ; k++){
+	  this->addFace(faceVertices[0],
+			faceVertices[k],
+			faceVertices[k+1]);
+	}
+      } // end face builder
+    }//end while
 
     fileToRead.close();
 
@@ -190,7 +208,7 @@ void VEF::loadFromObj(std::string filePath){
     if(y > maxy2)
       maxy2 = y;
   }
-  std::cout << miny << " " << maxy<< " " << miny2 << " " << maxy2 << std::endl;
+  // std::cout << miny << " " << maxy<< " " << miny2 << " " << maxy2 << std::endl;
 }
 
 void VEF::exportToObj(char* exportFilePath){
