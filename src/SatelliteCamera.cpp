@@ -86,4 +86,12 @@ void SatelliteCamera::setViewPort(float width, float height) {
 void SatelliteCamera::setFOV(float fov) {
   _fov = fov;
   _updateProjMat = true;
-}  
+}
+
+float SatelliteCamera::getLongitude(){
+  return _longitude;
+}
+
+float SatelliteCamera::getLatitude(){
+  return _latitude;
+}

@@ -50,6 +50,7 @@ private:
   std::vector<unsigned int> _faces;
 
   bool _track;
+  bool _move;
   QVector2D _prevPos;
   float _angularSpeed;
   QVector3D _rotationAxis;

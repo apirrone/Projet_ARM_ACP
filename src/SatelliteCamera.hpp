@@ -26,6 +26,9 @@ public:
   QMatrix4x4 viewMatrix();
   void setViewPort(float width, float height);
   void setFOV(float FOV);
+
+  float getLongitude();
+  float getLatitude();
   
 private:
   bool _updateProjMat;

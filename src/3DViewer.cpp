@@ -13,6 +13,7 @@ Viewer::Viewer(QWidget *parent)
   this->setFormat(format);
 
   _track = false;
+  _move = false;
   _prevPos = QVector2D(0, 0);
   _timer.start(0, this);
   _vef = NULL;//new VEF();
@@ -29,6 +30,7 @@ Viewer::Viewer(VEF& grid, QWidget *parent)
   this->setFormat(format);
 
   _track = false;
+  _move = false;
   _prevPos = QVector2D(0, 0);
   _timer.start(0, this);
 
@@ -78,6 +80,7 @@ void Viewer::initializeGL(){
   _camera.initCamera(300, 0, 0, QVector3D(0., 0., 0.), this->width(), this->height(), 45.);
   _shader->release();
   _track = false;
+  _move = false;
 }
 
 void Viewer::paintGL(){
@@ -103,19 +106,21 @@ void Viewer::resizeGL(int width, int height){
 //Weird, mousepressEvent is called when starting the application (?)
 void Viewer::mousePressEvent(QMouseEvent *e){
 
-  // if(e->buttons() == Qt::LeftButton){
-  //   std::cout << "LEFT BUTTON PRESSED" << std::endl;
-  _track = true;
-  _prevPos = QVector2D(e->localPos());
-  // }
+  if(e->buttons() == Qt::LeftButton){
+    _track = true;
+    _prevPos = QVector2D(e->localPos());
+  }
+  else if(e->buttons() == Qt::MidButton){
+    _move = true;    
+    _prevPos = QVector2D(e->localPos());
+  }
+  else
+    e->ignore();
 }
 
 void Viewer::mouseReleaseEvent(QMouseEvent *e){
-  // if(e->buttons() == Qt::LeftButton){
-  //   std::cout << "LEFT BUTTON RELEASED" << std::endl;
   _track = false;
-  // }
-
+  _move = false;
 }
 
 void Viewer::mouseMoveEvent(QMouseEvent *e){
@@ -125,6 +130,18 @@ void Viewer::mouseMoveEvent(QMouseEvent *e){
     _camera.rotateLongitude((-diff.x())/10);
     _camera.rotateLatitude((-diff.y())/10);
   }
+  else if (_move){
+    QVector2D diff = QVector2D(e->localPos()) - _prevPos;
+
+
+    // QVector3D axis = QVector3D(1, 0, 0)*(1-(_camera.getLongitude()/90.))*diff.x() + QVector3D(0, 0, -1)*(_camera.getLongitude()/90.)*diff.x() + QVector3D(0, 1, 0)*0;
+    // std::cout << "axis : " << axis.x() << " " << axis.y() << " " << axis.z() << std::endl;
+    
+    // _vef->translate(axis*0.005);
+    _vef->translate(QVector3D(diff.x(),-diff.y(),0)*0.005);
+  }
+  else
+    e->ignore();
 
   _prevPos = QVector2D(e->localPos());
 }
