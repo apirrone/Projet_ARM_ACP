@@ -18,10 +18,12 @@ file(
   GLOB_RECURSE
   source_files
   src/*
+  include/*
 )
 
 include_directories(ext/)
 include_directories(assets/)
+include_directories(include/)
 
 # Executable + source_files
 add_executable(
