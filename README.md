@@ -1,7 +1,7 @@
 # Projet_ARM_ACP
 ## M2 Project Acquisition Reconstruction Modélisation
 
-To build, either : 
+To build, **either** : 
 - Execute install.sh
 - Create a folder (ex : "build"), execute "cmake .." inside that folder, then execute "make"
 	
