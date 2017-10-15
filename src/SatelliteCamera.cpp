@@ -58,20 +58,18 @@ void SatelliteCamera::setTarget(QVector3D target) {
 QMatrix4x4 SatelliteCamera::projectionMatrix() {
   if(!_updateProjMat)
     return _projectionMat;
-  
-  std::cout << "fov : " << _fov << " w : " << _vpWidth << " h : " << _vpHeight << " near : " << _near << " far : " << _far << std::endl;
+
   _projectionMat.setToIdentity();
   _projectionMat.perspective(_fov, _vpWidth/_vpHeight, _near, _far);
   _updateProjMat = false;
-  
+
   return _projectionMat;
 }
 
 QMatrix4x4 SatelliteCamera::viewMatrix() {
   if(!_updateViewMat)
     return _viewMat;
-  
-  std::cout << "dist : " << _distToTarget << " lat : " << _latitude << " lon : " << _longitude << std::endl;
+
   _viewMat.setToIdentity();
 
   _viewMat.translate(_target);
@@ -80,7 +78,7 @@ QMatrix4x4 SatelliteCamera::viewMatrix() {
   _viewMat.translate(_distToTarget * QVector3D(0,0,1));
   _viewMat = _viewMat.inverted();
   _updateViewMat = false;
-  
+
   return _viewMat;
 }
 

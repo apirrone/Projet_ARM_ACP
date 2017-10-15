@@ -11,27 +11,27 @@ VoxelGrid::VoxelGrid(unsigned int h, unsigned int w, unsigned int d, const unsig
   std::cout << "h,w,d" << _h << " " << _w << " " << _d << '\n';
 
   unsigned int size = h*w*d;
-  
+
   //créer tableau de voxels avec h w d
   _voxels = new Voxel[size];
-  
+
   unsigned int maxVal, minVal;
-  
+
   if(size > 0)
     maxVal = minVal = data[0];
-  
+
   for(int i=0; i<h*w*d; ++i) {
-    
+
     _voxels[i].value = data[i];
-    
+
     if(data[i] > maxVal)
       maxVal = data[i];
-    
+
     if(data[i] < minVal)
       minVal = data[i];
-    
+
   }
-  
+
   float r1 = 99., g1 = 0.8, b1 = 0., a1 = 0.6, r2 = 0., g2 = 0., b2 = 99., a2 = 0.1;
 
   for(int i=0; i<h; ++i)
@@ -40,15 +40,11 @@ VoxelGrid::VoxelGrid(unsigned int h, unsigned int w, unsigned int d, const unsig
 
 	Voxel& current = _voxels[i*_w*_d + j*_d + k];
 	double currentValue = _voxels[i*_w*_d + j*_d + k].value;
-	
+
 	if(currentValue == 0)
 	  continue;
-	
+
 	float r, g, b, alpha;
-	//r = r1 + ((currentValue-minVal)/(maxVal-minVal)) * (r2-r1);
-	//g = g1 + ((currentValue-minVal)/(maxVal-minVal)) * (g2-g1);
-	//b = b1 + ((currentValue-minVal)/(maxVal-minVal)) * (b2-b1);
-	//alpha = a1 + ((currentValue-minVal)/(maxVal-minVal)) * (a2-a1);
 	if(currentValue == 0)
 	  alpha = 0.;
 	else
@@ -82,9 +78,9 @@ VoxelGrid::VoxelGrid(unsigned int h, unsigned int w, unsigned int d, const unsig
 	//BRR
 	v = VEF::Vertex(j+0.5, -i-0.5, -k-0.5, r, g, b, alpha);
 	current.vertices[Voxel::Corner::BRR] = this->addVertex(v);
-	
+
 	//retrieve neighborhood
-	Voxel * top, * bot, * left, * right, * front, * rear; 
+	Voxel * top, * bot, * left, * right, * front, * rear;
 	top = getTopVoxel(i,j,k);
 	bot = getBottomVoxel(i,j,k);
 	left = getLeftVoxel(i,j,k);
@@ -195,15 +191,14 @@ VoxelGrid::Voxel* VoxelGrid::getRearVoxel(int i, int j, int k) {
 }
 
 VoxelGrid::~VoxelGrid() {
-  //free _voxels
+  delete[] _voxels;
 
-
-  //_vertexBufferId.destroy();
-  //_vertexArrayId.destroy();
+  _vertexBuffer->destroy();
+  _vertexArray.destroy();
 }
 
 void VoxelGrid::initVAO() {
-  
+
   _vertexBuffer = new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
   _vertexBuffer->create();
   _vertexBuffer->bind();

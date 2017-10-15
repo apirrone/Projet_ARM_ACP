@@ -6,6 +6,8 @@
 
 #include <QtOpenGL>
 
+// this camera is designed to just rotate around or zoom to a specific target. We use latitude and longitude to rotate it.
+// and the distance to the target to zoom in and out.
 class SatelliteCamera
 {
 
@@ -29,7 +31,7 @@ public:
 
   float getLongitude();
   float getLatitude();
-  
+
 private:
   bool _updateProjMat;
   QMatrix4x4 _projectionMat;

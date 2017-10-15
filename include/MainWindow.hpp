@@ -15,6 +15,7 @@ namespace Ui {
   class MainWindow;
 }
 
+// The main window for the application, it holds the menu as well as the viewer that will render the models.
 class MainWindow : public QMainWindow
 {
   Q_OBJECT

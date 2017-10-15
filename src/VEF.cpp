@@ -83,7 +83,7 @@ void VEF::loadFromObj(std::string filePath){
     vector<float> objNormals;
 
     Vertex v;
-    
+
     //Parse file line by line
     while(getline(fileToRead, line)){
 

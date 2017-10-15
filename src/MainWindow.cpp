@@ -76,10 +76,8 @@ void MainWindow::open() {
 
   QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),"../data", tr("3D files (*.obj *pgm3d)"), Q_NULLPTR, QFileDialog::Options(QFileDialog::DontUseNativeDialog));
 
-  std::cout << "opened : " << fileName.toStdString() << '\n';
   QFileInfo fileInfo(fileName);
   QString fileExtension = fileInfo.suffix();
-  std::cout << "file extension : " << fileExtension.toStdString() << '\n';
 
   if(fileExtension.toStdString() == "obj" || fileExtension.toStdString() == "OBJ"){//TODO tolower
     VEF * v = new VEF();
@@ -96,9 +94,7 @@ void MainWindow::open() {
     const unsigned char * data = test.getData();
 
     VEF * v = new VoxelGrid(h,w,d,data);
-    std::cout << "v : " << v << '\n';
     _viewer->setVEF(*v);
-
   }
 }
 
@@ -107,7 +103,6 @@ void MainWindow::exportAsObj() {
   QString fileName = QFileDialog::getSaveFileName(this,
         tr("Save model as obj"), "../data",
         tr("3D model (*.obj)"));
-  std::cout << "export to " << fileName.toStdString() << '\n';
 
   _viewer->getVEF()->exportToObj(fileName.toStdString());
 }

@@ -64,7 +64,6 @@ void Viewer::initializeGL(){
 
   f->glClearColor(0.6, 0.2, 0.2, 1.0);
   f->glEnable(GL_CULL_FACE);
-  //glPolygonMode(GL_FRONT, GL_FILL/*collins*/);
   f->glEnable(GL_BLEND);
   f->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -98,7 +97,6 @@ void Viewer::resizeGL(int width, int height){
   QOpenGLFunctions * f = QOpenGLContext::currentContext()->functions();
   f->glViewport( 0, 0, (GLint)width, (GLint)height );
   _camera.setViewPort(width, height);
-  //_camera.updateProjectionMatrix(width, height);
 }
 
 void Viewer::mousePressEvent(QMouseEvent *e){
@@ -108,7 +106,7 @@ void Viewer::mousePressEvent(QMouseEvent *e){
     _prevPos = QVector2D(e->localPos());
   }
   else if(e->buttons() == Qt::MidButton){
-    _move = true;    
+    _move = true;
     _prevPos = QVector2D(e->localPos());
   }
   else
@@ -130,11 +128,6 @@ void Viewer::mouseMoveEvent(QMouseEvent *e){
   else if (_move){
     QVector2D diff = QVector2D(e->localPos()) - _prevPos;
 
-
-    // QVector3D axis = QVector3D(1, 0, 0)*(1-(_camera.getLongitude()/90.))*diff.x() + QVector3D(0, 0, -1)*(_camera.getLongitude()/90.)*diff.x() + QVector3D(0, 1, 0)*0;
-    // std::cout << "axis : " << axis.x() << " " << axis.y() << " " << axis.z() << std::endl;
-    
-    // _vef->translate(axis*0.005);
     _vef->translate(QVector3D(diff.x(),-diff.y(),0)*0.005);
   }
   else
