@@ -55,7 +55,6 @@ int main(int argc, char *argv[]) {
 
     MainWindow window(*file);
 
-    // TODO remove, duplicated
     window.resize(1300,1300);
     window.show();
 

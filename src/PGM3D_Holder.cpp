@@ -61,11 +61,17 @@ PGM3D_Holder::PGM3D_Holder(const char* filePath) {
     // Then load the data in _data
     i = 0;
     while(getline(fileToRead, line)){
+      
       size_t prev = 0, pos, end = min(line.find_first_of("#", 0), line.size());
+      
       while(prev < end){
+	
 	pos = min(line.find_first_not_of("0123456789-", prev), end);
+	
 	if(i<size){
+	  
 	  int val = stoi(line.substr(prev, pos-prev));
+	  
 	  if(val >= 0 && val <= _maxValue)
 	    _data[i] = val;
 	  else{
@@ -73,17 +79,23 @@ PGM3D_Holder::PGM3D_Holder(const char* filePath) {
 	    fileToRead.close();
 	    return;
 	  }
+	  
 	}
 	else{
+	  
 	  cerr << "Too many values." << endl;
 	  fileToRead.close();
 	  return;
+	  
 	}
+	
 	prev = pos+1;
 	i++;
-      }
-    }
-
+	
+      }//end while prev<end
+      
+    }//end while getLine
+    
     fileToRead.close();
   }
   else {

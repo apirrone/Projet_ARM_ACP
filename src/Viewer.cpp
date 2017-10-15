@@ -41,7 +41,6 @@ Viewer::~Viewer(){
 }
 
 void Viewer::setVEF(VEF& vef) {
-  std::cout << "Viewer set VEF" << std::endl;
   if(_vef != NULL)
     delete _vef;
   _vef = &vef;
@@ -63,7 +62,6 @@ void Viewer::initializeGL(){
 
   QOpenGLFunctions * f = QOpenGLContext::currentContext()->functions();
 
-  std::cout << "init" << std::endl;
   f->glClearColor(0.6, 0.2, 0.2, 1.0);
   f->glEnable(GL_CULL_FACE);
   //glPolygonMode(GL_FRONT, GL_FILL/*collins*/);
@@ -103,7 +101,6 @@ void Viewer::resizeGL(int width, int height){
   //_camera.updateProjectionMatrix(width, height);
 }
 
-//Weird, mousepressEvent is called when starting the application (?)
 void Viewer::mousePressEvent(QMouseEvent *e){
 
   if(e->buttons() == Qt::LeftButton){
@@ -154,6 +151,7 @@ void Viewer::timerEvent(QTimerEvent *){
   update();
 }
 
+//Events received from MainWindow
 void Viewer::eventFromParent(QKeyEvent *e){
 
   if (e->key() == Qt::Key_Escape)
