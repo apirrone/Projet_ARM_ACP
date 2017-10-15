@@ -23,6 +23,7 @@ public:
   void setVEF(VEF& vef);
 
   void eventFromParent(QKeyEvent *e);
+  VEF* getVEF();
 protected:
   void initializeGL();
   void paintGL();
@@ -36,7 +37,7 @@ protected:
   void wheelEvent(QWheelEvent *e);
   void mousePressEvent(QMouseEvent *e);
   void mouseReleaseEvent(QMouseEvent *e);
-  
+
 private:
   VEF * _vef;
   QOpenGLShaderProgram * _shader;

@@ -40,11 +40,11 @@ VEF::~VEF() {
 
 }
 
-void removeMultipleSpaces(string& s){  
+void removeMultipleSpaces(string& s){
   char p;
-  
+
   for(int i = 0 ; i < s.size() ; i++){
-    
+
     p = s[i];
     int iStart = i;
 
@@ -54,29 +54,29 @@ void removeMultipleSpaces(string& s){
     }
 
     if(i - iStart > 1)
-      s.erase(iStart, (i - iStart)-1); 
+      s.erase(iStart, (i - iStart)-1);
 
-  } 
+  }
 }
 
 void VEF::loadFromObj(std::string filePath){
-  
+
   std::setlocale(LC_ALL, "C"); // IMPORTANT !!!!
-  
-  string line; 
+
+  string line;
   ifstream fileToRead(filePath);
-  
+
   int ln = 0;
   double miny = 1000., maxy=-1000.;
-  
+
   _vertices.clear();
   _faces.clear();
 
   if (fileToRead.is_open()) {
-    
+
     size_t maxVerts = 4;
     unsigned int* faceVertices = new unsigned int[maxVerts];
-    
+
     map<std::pair<unsigned int, unsigned int>, unsigned int> objVertices;
     vector<float> objPositions;
     vector<float> objNormals;
@@ -116,13 +116,13 @@ void VEF::loadFromObj(std::string filePath){
 	vector<string> vertexToken;
 
 	int nbVertex = tokens.size()-1;//not taking into account the f at beggining
-	
+
 	if (nbVertex > maxVerts) {
 	  maxVerts *= 2;
 	  delete[] faceVertices;
 	  faceVertices = new unsigned int[maxVerts];
 	}
-	
+
 	for(int i = 1 ; i < tokens.size() ; i++){
 
 	  vertexToken = split(tokens.at(i), '/');
@@ -173,45 +173,45 @@ void VEF::loadFromObj(std::string filePath){
 	    faceVertices[i-1] = this->addVertex(v);
 	  }
 	} // end for
-	
+
 	for(int k = 1 ; k < nbVertex-1 ; k++){
 	  this->addFace(faceVertices[0],
 			faceVertices[k],
 			faceVertices[k+1]);
 	}
-	
+
       } // end face builder
-      
+
     }//end while
 
     fileToRead.close();
 
     // clean
     delete[] faceVertices;
-    
+
   }
   else {
     // file could not be opened
     cerr << "The file : " << filePath <<" could not be opened" << endl;
     return;
   }
-  
+
   double miny2 = 1000., maxy2 = -1000.;
-  
+
   for(int i = 0; i<_vertices.size(); ++i){
-    
+
     double y = _vertices[i].position[1];
-    
+
     if(y < miny2)
       miny2 = y;
     if(y > maxy2)
       maxy2 = y;
-    
+
   }
 
 }
 
-void VEF::exportToObj(char* exportFilePath){
+void VEF::exportToObj(std::string exportFilePath){
 
   if(_vertices.size() == 0)
     return;
@@ -224,18 +224,18 @@ void VEF::exportToObj(char* exportFilePath){
 
   for(auto v : _vertices)
     output << "v " << v.position[0] << " " << v.position[1] << " " << v.position[2] << endl;
-  
+
   for(auto v : _vertices)
-    output << "vn " << v.normal[0] << " " << v.normal[1] << " " << v.normal[2] << endl; 
-  
+    output << "vn " << v.normal[0] << " " << v.normal[1] << " " << v.normal[2] << endl;
+
   for(int f = 0 ; f < _faces.size() ; f+=3){
     unsigned int v1 = _faces.at(f)+1;
     unsigned int v2 = _faces.at(f+1)+1;
     unsigned int v3 = _faces.at(f+2)+1;
-    
+
     output << "f " << v1 << "//" << v1 << " " << v2 << "//" << v2 << " " << v3 << "//" << v3 << endl;
   }
-  
+
   output.close();
 }
 
@@ -293,32 +293,32 @@ void VEF::initVAO() {
   _vertexBuffer->release();
 }
 
-void VEF::loadSurfaceMesh() {  
+void VEF::loadSurfaceMesh() {
   _surfaceMesh.clear();
-  
+
   vector<surface_mesh::Surface_mesh::Vertex> vertexId;
-  
+
   for(int i = 0; i<_vertices.size(); ++i) {
-    
-    Vertex& v = _vertices[i]; 
-    surface_mesh::Surface_mesh::Vertex vid = _surfaceMesh.add_vertex(surface_mesh::Point(v.position[0], v.position[1], v.position[2])); 
+
+    Vertex& v = _vertices[i];
+    surface_mesh::Surface_mesh::Vertex vid = _surfaceMesh.add_vertex(surface_mesh::Point(v.position[0], v.position[1], v.position[2]));
     vertexId.push_back(vid);
-    
+
   }
 
   for(int i = 0; i<_faces.size(); i+=3) {
-    
+
     surface_mesh::Surface_mesh::Vertex v1, v2, v3;
-    
+
     v1 = vertexId[_faces[i]];
     v2 = vertexId[_faces[i+1]];
     v3 = vertexId[_faces[i+2]];
-    
+
     _surfaceMesh.add_triangle(v1, v2, v3);
-    
+
   }
 
-  _surfaceMesh.write("testExportOFF.off"); 
+  _surfaceMesh.write("testExportOFF.off");
 }
 
 // getters

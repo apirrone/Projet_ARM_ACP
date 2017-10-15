@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
   createActions();
   createMenu();
   setWindowTitle(tr("Visiobrain"));
-  
+
   this->setCentralWidget(_viewer);
 }
 
@@ -54,9 +54,9 @@ void MainWindow::createActions() {
   _openAction->setStatusTip(tr("Open a file from your computer"));
   connect(_openAction, SIGNAL(triggered()), this, SLOT(open()));
 
-  _exportAsAction = new QAction(tr("&Export as OBJ"), this);
-  _exportAsAction->setStatusTip(tr("Export this model as OBJ file"));
-  connect(_exportAsAction, SIGNAL(triggered()), this, SLOT(exportAs()));
+  _exportAsObjAction = new QAction(tr("&Export as OBJ"), this);
+  _exportAsObjAction->setStatusTip(tr("Export this model as OBJ file"));
+  connect(_exportAsObjAction, SIGNAL(triggered()), this, SLOT(exportAsObj()));
 
   _exitAction = new QAction(tr("&Exit"), this);
   _exitAction->setStatusTip(tr("Exit the program"));
@@ -67,20 +67,21 @@ void MainWindow::createMenu() {
 
   _fileMenu = menuBar()->addMenu(tr("&File"));
   _fileMenu->addAction(_openAction);
-  _fileMenu->addAction(_exportAsAction);
+  _fileMenu->addAction(_exportAsObjAction);
   _fileMenu->addSeparator();
   _fileMenu->addAction(_exitAction);
 }
 
+// Handles the opening of a 3D file
 void MainWindow::open() {
-  
+
   QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"),"../data", tr("3D files (*.obj *pgm3d)"), Q_NULLPTR, QFileDialog::Options(QFileDialog::DontUseNativeDialog));
 
   std::cout << "opened : " << fileName.toStdString() << '\n';
   QFileInfo fileInfo(fileName);
   QString fileExtension = fileInfo.suffix();
   std::cout << "file extension : " << fileExtension.toStdString() << '\n';
-  
+
   if(fileExtension.toStdString() == "obj" || fileExtension.toStdString() == "OBJ"){//TODO tolower
     VEF * v = new VEF();
     v->loadFromObj(fileName.toStdString());
@@ -88,24 +89,28 @@ void MainWindow::open() {
   }
   else if(fileExtension.toStdString() == "pgm3d" || fileExtension.toStdString() == "PGM3D"){
     PGM3D_Holder test = PGM3D_Holder(fileName.toStdString().c_str());
-    
+
     int w = test.getWidth();
     int h = test.getHeight();
     int d = test.getDepth();
-    
+
     const unsigned char * data = test.getData();
-    
+
     VEF * v = new VoxelGrid(h,w,d,data);
+    std::cout << "v : " << v << '\n';
     _viewer->setVEF(*v);
-    
+
   }
 }
 
-void MainWindow::exportAs() {
+void MainWindow::exportAsObj() {
 
-  
-  
-  std::cout << "export As" << '\n';
+  QString fileName = QFileDialog::getSaveFileName(this,
+        tr("Save model as obj"), "../data",
+        tr("3D model (*.obj)"));
+  std::cout << "export to " << fileName.toStdString() << '\n';
+
+  _viewer->getVEF()->exportToObj(fileName.toStdString());
 }
 
 void MainWindow::exit() {

@@ -11,9 +11,9 @@ Viewer::Viewer(QWidget *parent)
   format.setVersion(3, 3);
 
   this->setFormat(format);
-  
+
   _track = false;
-  _prevPos = QVector2D(0, 0); 
+  _prevPos = QVector2D(0, 0);
   _timer.start(0, this);
   _vef = NULL;//new VEF();
 }
@@ -31,7 +31,7 @@ Viewer::Viewer(VEF& grid, QWidget *parent)
   _track = false;
   _prevPos = QVector2D(0, 0);
   _timer.start(0, this);
-  
+
 }
 
 Viewer::~Viewer(){
@@ -43,6 +43,10 @@ void Viewer::setVEF(VEF& vef) {
   if(_vef != NULL)
     delete _vef;
   _vef = &vef;
+}
+
+VEF* Viewer::getVEF() {
+  return _vef;
 }
 
 QSize Viewer::minimumSizeHint() const{
@@ -102,6 +106,7 @@ void Viewer::mousePressEvent(QMouseEvent *e){
   // if(e->buttons() == Qt::LeftButton){
   //   std::cout << "LEFT BUTTON PRESSED" << std::endl;
   _track = true;
+  _prevPos = QVector2D(e->localPos());
   // }
 }
 
@@ -114,13 +119,13 @@ void Viewer::mouseReleaseEvent(QMouseEvent *e){
 }
 
 void Viewer::mouseMoveEvent(QMouseEvent *e){
-  
+
   if(_track){
     QVector2D diff = QVector2D(e->localPos()) - _prevPos;
     _camera.rotateLongitude((-diff.x())/10);
     _camera.rotateLatitude((-diff.y())/10);
   }
-  
+
   _prevPos = QVector2D(e->localPos());
 }
 

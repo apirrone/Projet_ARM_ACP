@@ -12,12 +12,12 @@ class VEF {
 public:
 
   struct Vertex {
-    
+
     float position[3];
     float normal[3];
     float color[4];
     bool normalSet;
-    
+
     Vertex() {
       position[0] = 0.;
       position[1] = 0.;
@@ -63,7 +63,7 @@ public:
   VEF();
   ~VEF();
   void loadFromObj(std::string filePath);
-  void exportToObj(char* exportFilePath);
+  void exportToObj(std::string exportFilePath);
 
   // getters & setters
   std::vector<Vertex>* getVertices();
@@ -89,8 +89,8 @@ protected:
   std::vector<unsigned int> _faces;
 
   void initVAO();
-  
-  
+
+
   bool _initialized;//true if VAO has been initialized
   QOpenGLVertexArrayObject _vertexArray;
   QOpenGLBuffer* _vertexBuffer;
@@ -100,7 +100,7 @@ protected:
   QMatrix4x4 _worldMat;
   QVector3D _position;
 
-  surface_mesh::Surface_mesh _surfaceMesh; 
+  surface_mesh::Surface_mesh _surfaceMesh;
 };
 
 #endif // VEF_HPP

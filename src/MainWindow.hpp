@@ -34,7 +34,7 @@ private:
   Viewer* _viewer;
   QMenu* _fileMenu;
   QAction* _openAction;
-  QAction* _exportAsAction;
+  QAction* _exportAsObjAction;
   QAction* _exitAction;
 
   void createMenu();
@@ -42,7 +42,7 @@ private:
 
 private slots:
   void open();
-  void exportAs();
+  void exportAsObj();
   void exit();
 
 };
