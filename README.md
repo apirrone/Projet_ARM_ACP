@@ -22,9 +22,6 @@ Our software is organized as follows :
 - **VoxelGrid.hpp/.cpp** : Class for holding voxel type data. Extends *VEF*, so can draw itself too.
 - **PGM3D_Holder.hpp/.cpp** : Class for holding raw *.pgm3D* data. This raw data can then be used to construct a *VoxelGrid*.
 - **SatelliteCamera.hpp/.cpp** : Camera implementation to easily rotate around a target point in space and still be looking at it.
-
-D'ailleurs, je suis assez pour qu'on fasse un dossier include avec tous les .hpp, ça sera plus facile pour le prof de se familiariser avec l'architecture en regardant que les .hpp
-
   
 
 
