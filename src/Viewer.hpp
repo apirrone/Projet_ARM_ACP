@@ -46,9 +46,6 @@ private:
   QOpenGLBuffer _vertexBufferId;
   QOpenGLBuffer* _faceBuffer;
 
-  std::vector<VEF::Vertex> _vertices;
-  std::vector<unsigned int> _faces;
-
   bool _track;
   bool _move;
   QVector2D _prevPos;

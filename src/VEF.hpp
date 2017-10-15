@@ -90,7 +90,6 @@ protected:
 
   void initVAO();
 
-
   bool _initialized;//true if VAO has been initialized
   QOpenGLVertexArrayObject _vertexArray;
   QOpenGLBuffer* _vertexBuffer;
