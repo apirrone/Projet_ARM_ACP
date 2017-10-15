@@ -15,6 +15,11 @@ You can then navigate using the mouse to rotate view (left click) or to zoom (mo
 
 Our software is organized as follows :
 
+- main.cpp : The entry point of the software, where we create the *QApplication*, the *MainWindow* and handle potential arguments passed to the program
+- MainWindow.hpp/.cpp : The Qt window, where we handle user interface actions, such as load a file, export a file and exit the program. This class contains a *Viewer* object
+  
+
+
 TODO : Expliquer structure du code (Diagramme?) 
 
 D'ailleurs, je suis assez pour qu'on fasse un dossier include avec tous les .hpp, ça sera plus facile pour le prof de se familiariser avec l'architecture en regardant que les .hpp

@@ -4,7 +4,7 @@
 
 #include "MainWindow.hpp"
 #include "ui_MainWindow.h"
-#include "3DViewer.hpp"
+// #include "3DViewer.hpp"
 #include "PGM3D_Holder.hpp"
 #include <iostream>
 

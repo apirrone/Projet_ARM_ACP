@@ -1,4 +1,4 @@
-#include "3DViewer.hpp"
+#include "Viewer.hpp"
 
 #include <iostream>
 #include <QOpenGLFunctions>
@@ -41,7 +41,7 @@ Viewer::~Viewer(){
 }
 
 void Viewer::setVEF(VEF& vef) {
-  std::cout << "3DViewer set VEF" << std::endl;
+  std::cout << "Viewer set VEF" << std::endl;
   if(_vef != NULL)
     delete _vef;
   _vef = &vef;

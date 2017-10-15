@@ -1,4 +1,4 @@
-//3DViewer.hpp
+//Viewer.hpp
 
 #ifndef VIEWER_HPP
 #define VIEWER_HPP

@@ -33,19 +33,17 @@ int main(int argc, char *argv[]) {
     if(extension.compare("obj")  == 0 || extension.compare("OBJ") == 0){
       file->loadFromObj(argv[1]);
       file->loadSurfaceMesh();
-      file->exportToObj("TestExport.obj");
     }
     else if(extension.compare("pgm3d") == 0){
-      PGM3D_Holder test = PGM3D_Holder(argv[1]);
+      PGM3D_Holder holder = PGM3D_Holder(argv[1]);
 
-      int w = test.getWidth();
-      int h = test.getHeight();
-      int d = test.getDepth();
+      int w = holder.getWidth();
+      int h = holder.getHeight();
+      int d = holder.getDepth();
 
-      const unsigned char * data = test.getData();
+      const unsigned char * data = holder.getData();
 
       file = new VoxelGrid(h,w,d,data);
-      file->exportToObj("TestExportVoxel.obj");
       file->loadSurfaceMesh();
     }
     else{

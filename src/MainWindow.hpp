@@ -7,7 +7,7 @@
 #include <QWidget>
 #include <QSlider>
 
-#include "3DViewer.hpp"
+#include "Viewer.hpp"
 #include "VoxelGrid.hpp"
 #include "VEF.hpp"
 
@@ -29,7 +29,6 @@ protected:
 
 
 private:
-  //TODO METTRE DES UNDERSCORES
   Ui::MainWindow *_ui;
   Viewer* _viewer;
   QMenu* _fileMenu;
