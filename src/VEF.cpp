@@ -327,6 +327,12 @@ void VEF::loadSurfaceMesh() {
   _surfaceMesh.write("testExportOFF.off");
 }
 
+void VEF::loadHalfEdges() {
+
+  //PolyhedronBuilder<HalfedgeDS> surface(this);
+  //_polyhedron.delegate(surface);*/
+}
+
 // getters
 std::vector<VEF::Vertex>* VEF::getVertices() {
   return &_vertices;

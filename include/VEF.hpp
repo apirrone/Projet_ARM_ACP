@@ -5,6 +5,14 @@
 #include <sstream>
 #include <QtOpenGL>
 #include <surface_mesh/surface_mesh.h>
+#include "PolyhedronBuilder.hpp"
+#include <CGAL/Simple_cartesian.h>
+#include <CGAL/Polyhedron_incremental_builder_3.h>
+#include <CGAL/Polyhedron_3.h>
+
+typedef CGAL::Simple_cartesian<double>     Kernel;
+typedef CGAL::Polyhedron_3<Kernel>         Polyhedron;
+typedef Polyhedron::HalfedgeDS             HalfedgeDS;
 
 // Base class for object composed of vertices, edges and faces
 class VEF {
@@ -82,6 +90,7 @@ public:
   QMatrix4x4 worldMatrix();
 
   void loadSurfaceMesh();
+  void loadHalfEdges();
 
 protected:
   std::vector<Vertex> _vertices;
@@ -100,6 +109,9 @@ protected:
   QVector3D _position;
 
   surface_mesh::Surface_mesh _surfaceMesh;
+
+  // TODO is the halfedge worth creating a new class ?
+  Polyhedron _polyhedron;
 };
 
 #endif // VEF_HPP
