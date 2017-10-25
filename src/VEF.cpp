@@ -327,10 +327,21 @@ void VEF::loadSurfaceMesh() {
   _surfaceMesh.write("testExportOFF.off");
 }
 
-void VEF::loadHalfEdges() {
+void VEF::loadHalfEdges(std::string filePath) {
 
-  //PolyhedronBuilder<HalfedgeDS> surface(this);
-  //_polyhedron.delegate(surface);*/
+  ifstream fileToRead(filePath);
+
+  PolyhedronBuilder<HalfedgeDS> P_scanned = PolyhedronBuilder<HalfedgeDS>(fileToRead);
+  _polyhedron.delegate(P_scanned);
+
+  std::cout << "is valid ? (combinatorial consistency ?)" << _polyhedron.is_valid() << '\n';
+  std::cout << "is closed ? " << _polyhedron.is_closed() <<'\n';
+  _polyhedron.normalize_border();
+  std::cout << "number of border halfedges : " << _polyhedron.size_of_border_halfedges() << '\n';
+
+  fileToRead.close();
+
+  std::cout << "End" << '\n';
 }
 
 // getters

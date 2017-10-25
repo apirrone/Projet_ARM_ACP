@@ -31,8 +31,8 @@ int main(int argc, char *argv[]) {
     VEF* file = new VEF();
 
     if(extension.compare("obj")  == 0 || extension.compare("OBJ") == 0){
-      file->loadFromObj(argv[1]);
-      file->loadSurfaceMesh();
+      //file->loadFromObj(argv[1]);
+      file->loadHalfEdges(argv[1]);
     }
     else if(extension.compare("pgm3d") == 0){
       PGM3D_Holder holder = PGM3D_Holder(argv[1]);
@@ -60,10 +60,10 @@ int main(int argc, char *argv[]) {
 
     return app.exec();
   }
-  
+
   // open without any file loaded
   else if (argc == 1) {
-    
+
     QApplication app(argc, argv);
     MainWindow window(NULL);
 
@@ -73,10 +73,10 @@ int main(int argc, char *argv[]) {
     return app.exec();
   }
   else {
-    
+
     usage(argv[0]);
     return EXIT_FAILURE;
-    
+
   }
 
 }
