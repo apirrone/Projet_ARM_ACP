@@ -5,6 +5,8 @@
 #include <sstream>
 #include <map>
 #include <set>
+#include <CGAL/IO/print_wavefront.h>
+#include <algorithm>
 
 #include "VEF.hpp"
 
@@ -247,6 +249,40 @@ void VEF::exportToObj(std::string exportFilePath){
   output.close();
 }
 
+void VEF::HalfedgeToVEF() {
+  std::cout << "Converting to VEF..." << '\n';
+  _vertices.clear();
+  _faces.clear();
+  _edges.clear();
+  Polyhedron::Vertex_iterator vi = _polyhedron.vertices_begin();
+
+  std::vector<Polyhedron::Point_3> pointVector;
+
+  for ( ; vi != _polyhedron.vertices_end(); ++vi) {
+    VEF::Vertex tmpVert(vi->point().x(),vi->point().y(),vi->point().z());
+    _vertices.push_back(tmpVert);
+    pointVector.push_back(vi->point());
+  }
+
+  Polyhedron::Facet_iterator fi = _polyhedron.facets_begin();
+  for ( ; fi != _polyhedron.facets_end(); ++fi) {
+    vector<int> vertIDs;
+    auto heH = fi->halfedge();
+    Polyhedron::Facet::Halfedge_around_facet_circulator itHDS = heH->facet_begin();
+
+  	do {
+      int currentID = std::find(pointVector.begin(), pointVector.end(), itHDS->vertex()->point()) - pointVector.begin();
+      vertIDs.push_back(currentID);
+    }
+    while (++itHDS != heH->facet_begin());
+    for(int k = 1 ; k < vertIDs.size()-1 ; k++){
+  	  this->addFace(vertIDs[0],
+  			vertIDs[k],
+  			vertIDs[k+1]);
+  	}
+  }
+}
+
 void VEF::draw(QOpenGLShaderProgram* shader){
 
   if(!_initialized)
@@ -341,7 +377,22 @@ void VEF::loadHalfEdges(std::string filePath) {
 
   fileToRead.close();
 
+  HalfedgeToVEF();
+
   std::cout << "End" << '\n';
+}
+
+void VEF::halfedgeToObj(std::string exportFilePath) {
+
+  ofstream output;
+  output.open(exportFilePath);
+
+  if (!output) {
+    cerr << "Error : Could not open the output file " << exportFilePath << endl;
+  }
+
+  CGAL::print_polyhedron_wavefront(output, _polyhedron);
+  output.close();
 }
 
 // getters

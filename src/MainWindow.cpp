@@ -104,7 +104,8 @@ void MainWindow::exportAsObj() {
         tr("Save model as obj"), "../data",
         tr("3D model (*.obj)"));
 
-  _viewer->getVEF()->exportToObj(fileName.toStdString());
+  //_viewer->getVEF()->exportToObj(fileName.toStdString());
+  _viewer->getVEF()->halfedgeToObj(fileName.toStdString());
 }
 
 void MainWindow::exit() {

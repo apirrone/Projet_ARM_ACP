@@ -72,6 +72,7 @@ public:
   ~VEF();
   void loadFromObj(std::string filePath);
   void exportToObj(std::string exportFilePath);
+  void HalfedgeToVEF();
 
   // getters & setters
   std::vector<Vertex>* getVertices();
@@ -91,7 +92,7 @@ public:
 
   void loadSurfaceMesh();
   void loadHalfEdges(std::string filePath);
-
+  void halfedgeToObj(std::string exportFilePath);
 protected:
   std::vector<Vertex> _vertices;
   std::vector<unsigned int> _edges;
