@@ -93,6 +93,8 @@ public:
   void loadSurfaceMesh();
   void loadHalfEdges(std::string filePath);
   void halfedgeToObj(std::string exportFilePath);
+  void fillHoles();
+
 protected:
   std::vector<Vertex> _vertices;
   std::vector<unsigned int> _edges;

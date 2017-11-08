@@ -376,7 +376,7 @@ void VEF::loadHalfEdges(std::string filePath) {
   std::cout << "number of border halfedges : " << _polyhedron.size_of_border_halfedges() << '\n';
 
   fileToRead.close();
-
+  fillHoles();
   HalfedgeToVEF();
 
   std::cout << "End" << '\n';
@@ -393,6 +393,64 @@ void VEF::halfedgeToObj(std::string exportFilePath) {
 
   CGAL::print_polyhedron_wavefront(output, _polyhedron);
   output.close();
+}
+
+void VEF::fillHoles() {
+
+  //Polyhedron::Halfedge_handle heh = _polyhedron.halfedges_begin();
+  Polyhedron::Halfedge_handle heh = _polyhedron.halfedges_begin();
+  Polyhedron::Halfedge_iterator he_it = heh;
+  int cpt = 0;
+
+  do {
+    if (he_it->is_border()) {
+      std::cout << "border" << '\n';
+      /* //Simple technique ?
+      _polyhedron.fill_hole(he_it);
+      _polyhedron.create_center_vertex(he_it);*/
+
+
+      cpt++;
+      CGAL::Vector_3<Kernel> vector(0.0,0.0,0.0);
+      double order = 0;
+      Polyhedron::Halfedge_iterator h = he_it;
+
+      do {
+        vector = vector + (h->vertex()->point() - CGAL::ORIGIN);
+        order = order+1;
+        h=h->next();
+      } while(h != he_it);
+
+      CGAL_assertion(order >= 3);
+      CGAL::Point_3<Kernel> center = CGAL::ORIGIN + (vector/order);
+      _polyhedron.fill_hole(he_it);
+      Polyhedron::Halfedge_handle newCenter = _polyhedron.create_center_vertex(he_it);
+      newCenter->vertex()->point() = center;
+      // create a plane with the current vertex and the next 2
+      /*CGAL::Plane_3<Kernel> currentPlane(he_it->vertex()->point(),
+                                        he_it->next()->vertex()->point(),
+                                        he_it->next()->next()->vertex()->point());
+      Polyhedron::Halfedge_handle startingHE = he_it;
+      // while we are on the same plane
+      std::cout << currentPlane.has_on(he_it->vertex()->point()) << '\n';
+      while (currentPlane.has_on(he_it->vertex()->point())) {
+        std::cout << "same plane" << '\n';
+        he_it++;
+      }
+      _polyhedron.add_facet_to_border(startingHE, he_it);*/
+    }
+    he_it++;
+
+  } while(he_it != _polyhedron.halfedges_end());
+
+  std::cout << "=========================================" << '\n';
+  std::cout << "AFTER FILL HOLE" << '\n';
+  std::cout << "=========================================" << '\n';
+
+  std::cout << "is valid ? (combinatorial consistency ?)" << _polyhedron.is_valid() << '\n';
+  std::cout << "is closed ? " << _polyhedron.is_closed() <<'\n';
+  _polyhedron.normalize_border();
+  std::cout << "number of border halfedges : " << _polyhedron.size_of_border_halfedges() << '\n';
 }
 
 // getters

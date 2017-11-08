@@ -66,6 +66,7 @@ void Viewer::initializeGL(){
   f->glEnable(GL_CULL_FACE);
   f->glEnable(GL_BLEND);
   f->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glPolygonMode(GL_FRONT, GL_LINE);
 
   //shader init
   _shader = new QOpenGLShaderProgram();
