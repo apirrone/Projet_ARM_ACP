@@ -60,6 +60,10 @@ void MainWindow::createActions() {
   _exitAction = new QAction(tr("&Exit"), this);
   _exitAction->setStatusTip(tr("Exit the program"));
   connect(_exitAction, SIGNAL(triggered()), this, SLOT(exit()));
+
+  _fillHoleAction = new QAction(tr("&Fill Holes"), this);
+  _fillHoleAction->setStatusTip(tr("Tries to fill the holes of this model"));
+  connect(_fillHoleAction, SIGNAL(triggered()), this, SLOT(fillHole()));
 }
 
 void MainWindow::createMenu() {
@@ -69,6 +73,9 @@ void MainWindow::createMenu() {
   _fileMenu->addAction(_exportAsObjAction);
   _fileMenu->addSeparator();
   _fileMenu->addAction(_exitAction);
+
+  _modelMenu = menuBar()->addMenu(tr("&Model"));
+  _modelMenu->addAction(_fillHoleAction);
 }
 
 // Handles the opening of a 3D file
@@ -81,7 +88,8 @@ void MainWindow::open() {
 
   if(fileExtension.toStdString() == "obj" || fileExtension.toStdString() == "OBJ"){//TODO tolower
     VEF * v = new VEF();
-    v->loadFromObj(fileName.toStdString());
+    //v->loadFromObj(fileName.toStdString());
+    v->loadHalfEdges(fileName.toStdString());
     _viewer->setVEF(*v);
   }
   else if(fileExtension.toStdString() == "pgm3d" || fileExtension.toStdString() == "PGM3D"){
@@ -106,6 +114,10 @@ void MainWindow::exportAsObj() {
 
   //_viewer->getVEF()->exportToObj(fileName.toStdString());
   _viewer->getVEF()->halfedgeToObj(fileName.toStdString());
+}
+
+void MainWindow::fillHole() {
+  _viewer->getVEF()->fillHoles();
 }
 
 void MainWindow::exit() {

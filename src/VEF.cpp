@@ -376,7 +376,6 @@ void VEF::loadHalfEdges(std::string filePath) {
   std::cout << "number of border halfedges : " << _polyhedron.size_of_border_halfedges() << '\n';
 
   fileToRead.close();
-  fillHoles();
   HalfedgeToVEF();
 
   std::cout << "End" << '\n';
@@ -397,7 +396,6 @@ void VEF::halfedgeToObj(std::string exportFilePath) {
 
 void VEF::fillHoles() {
 
-  //Polyhedron::Halfedge_handle heh = _polyhedron.halfedges_begin();
   Polyhedron::Halfedge_handle heh = _polyhedron.halfedges_begin();
   Polyhedron::Halfedge_iterator he_it = heh;
   int cpt = 0;
@@ -405,11 +403,6 @@ void VEF::fillHoles() {
   do {
     if (he_it->is_border()) {
       std::cout << "border" << '\n';
-      /* //Simple technique ?
-      _polyhedron.fill_hole(he_it);
-      _polyhedron.create_center_vertex(he_it);*/
-
-
       cpt++;
       CGAL::Vector_3<Kernel> vector(0.0,0.0,0.0);
       double order = 0;
@@ -426,18 +419,6 @@ void VEF::fillHoles() {
       _polyhedron.fill_hole(he_it);
       Polyhedron::Halfedge_handle newCenter = _polyhedron.create_center_vertex(he_it);
       newCenter->vertex()->point() = center;
-      // create a plane with the current vertex and the next 2
-      /*CGAL::Plane_3<Kernel> currentPlane(he_it->vertex()->point(),
-                                        he_it->next()->vertex()->point(),
-                                        he_it->next()->next()->vertex()->point());
-      Polyhedron::Halfedge_handle startingHE = he_it;
-      // while we are on the same plane
-      std::cout << currentPlane.has_on(he_it->vertex()->point()) << '\n';
-      while (currentPlane.has_on(he_it->vertex()->point())) {
-        std::cout << "same plane" << '\n';
-        he_it++;
-      }
-      _polyhedron.add_facet_to_border(startingHE, he_it);*/
     }
     he_it++;
 
@@ -451,6 +432,9 @@ void VEF::fillHoles() {
   std::cout << "is closed ? " << _polyhedron.is_closed() <<'\n';
   _polyhedron.normalize_border();
   std::cout << "number of border halfedges : " << _polyhedron.size_of_border_halfedges() << '\n';
+
+  HalfedgeToVEF();
+  _initialized = false;
 }
 
 // getters
