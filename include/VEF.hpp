@@ -9,6 +9,7 @@
 #include <CGAL/Simple_cartesian.h>
 #include <CGAL/Polyhedron_incremental_builder_3.h>
 #include <CGAL/Polyhedron_3.h>
+#include "ext/eigen3/Eigen/Eigen"
 
 typedef CGAL::Simple_cartesian<double> Kernel;
 typedef CGAL::Polyhedron_3<Kernel> Polyhedron;
@@ -21,9 +22,9 @@ public:
 
   struct Vertex {
 
-    float position[3];
-    float normal[3];
-    float color[4];
+    Eigen::Vector3f position;
+    Eigen::Vector3f normal;
+    Eigen::Vector4f color;
     bool normalSet;
 
     Vertex() {
@@ -59,6 +60,11 @@ public:
       normalSet = false;
     }
 
+    Vertex(Eigen::Vector3f pos, Eigen::Vector3f n) {
+      position = pos;
+      normal = n;
+    }
+
     std::string toString() {
       std::stringstream ss;
       ss << "Vertex : position (" << position[0]  << "," << position[1] << "," << position[2] << ")" <<std::endl
@@ -88,7 +94,7 @@ public:
 
   void translate(QVector3D t);
 
-  QMatrix4x4 worldMatrix();
+  virtual QMatrix4x4 worldMatrix();
 
   void loadSurfaceMesh();
   void loadHalfEdges(std::string filePath);
