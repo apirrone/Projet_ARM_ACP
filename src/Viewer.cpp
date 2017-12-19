@@ -63,10 +63,10 @@ void Viewer::initializeGL(){
   QOpenGLFunctions * f = QOpenGLContext::currentContext()->functions();
 
   f->glClearColor(0.6, 0.2, 0.2, 1.0);
-  f->glEnable(GL_CULL_FACE);
+  //f->glEnable(GL_CULL_FACE);
   f->glEnable(GL_BLEND);
   f->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
   //shader init
   _shader = new QOpenGLShaderProgram();
@@ -87,11 +87,54 @@ void Viewer::paintGL(){
   f->glClearColor(0.2, 0.2, 0.2, 1.0);
   f->glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
   _shader->bind();
+  f->glEnable(GL_DEPTH_TEST);
+  f->glDepthFunc(GL_LESS);
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   _shader->setUniformValue(_shader->uniformLocation("proj_mat"), _camera.projectionMatrix());
   _shader->setUniformValue(_shader->uniformLocation("view_mat"), _camera.viewMatrix());
-  if(_vef)
+  _shader->setUniformValue(_shader->uniformLocation("overrideColor"), false);
+  if(_vef){
+
+    f->glDisable(GL_DEPTH_TEST);
+
     _vef->draw(_shader);
+
+    f->glEnable(GL_DEPTH_TEST);
+
+    f->glColorMask(false,false,false,false);
+    _vef->draw(_shader);
+    f->glColorMask(true,true,true,true);
+
+
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    f->glDepthFunc(GL_LEQUAL);
+    _shader->setUniformValue(_shader->uniformLocation("overrideColor"), true);
+    _vef->draw(_shader);
+  }
   _shader->release();
+
+  /*
+  QOpenGLFunctions * f = QOpenGLContext::currentContext()->functions();
+  f->glClearColor(0.2, 0.2, 0.2, 1.0);
+  f->glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+  _shader->bind();
+  //f->glDisable(GL_DEPTH_TEST);
+   //f->glEnable(GL_BLEND);
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  _shader->setUniformValue(_shader->uniformLocation("proj_mat"), _camera.projectionMatrix());
+  _shader->setUniformValue(_shader->uniformLocation("view_mat"), _camera.viewMatrix());
+  _shader->setUniformValue(_shader->uniformLocation("overrideColor"), false);
+  if(_vef){
+    _vef->draw(_shader);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    f->glEnable(GL_DEPTH_TEST);
+    f->glDisable(GL_BLEND);
+    f->glDepthFunc(GL_LEQUAL);
+    _shader->setUniformValue(_shader->uniformLocation("overrideColor"), true);
+    _vef->draw(_shader);
+  }
+  _shader->release();
+  */
 }
 
 void Viewer::resizeGL(int width, int height){

@@ -109,9 +109,11 @@ void MainWindow::open() {
 void MainWindow::exportAsObj() {
 
   QString fileName = QFileDialog::getSaveFileName(this,
-        tr("Save model as obj"), "../data",
-        tr("3D model (*.obj)"));
-
+						  tr("Save model as obj"), "../data",
+						  tr("3D model (*.obj)"),
+						  Q_NULLPTR,
+						  QFileDialog::Options(QFileDialog::DontUseNativeDialog));
+  
   //_viewer->getVEF()->exportToObj(fileName.toStdString());
   _viewer->getVEF()->halfedgeToObj(fileName.toStdString());
 }
