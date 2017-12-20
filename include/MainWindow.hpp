@@ -33,11 +33,13 @@ private:
   Ui::MainWindow *_ui;
   Viewer* _viewer;
   QMenu* _fileMenu;
-  QMenu* _modelMenu;
+  QMenu* _fillHoleMenu;
   QAction* _openAction;
   QAction* _exportAsObjAction;
   QAction* _exitAction;
-  QAction* _fillHoleAction;
+  QAction* _fillHoleSimpleAction;
+  QAction* _fillHoleCenterAction;
+  QAction* _fillHoleEarClippingAction;
 
   void createMenu();
   void createActions();
@@ -46,7 +48,9 @@ private slots:
   void open();
   void exportAsObj();
   void exit();
-  void fillHole();
+  void fillHoleSimple();
+  void fillHoleCenter();
+  void fillHoleEarClipping();
 
 };
 

@@ -4,7 +4,6 @@
 
 #include "MainWindow.hpp"
 
-
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
@@ -65,7 +64,7 @@ int main(int argc, char *argv[]) {
   else if (argc == 1) {
 
     QApplication app(argc, argv);
-    MainWindow window(NULL);
+    MainWindow window;
 
     window.resize(1300,1300);
     window.show();

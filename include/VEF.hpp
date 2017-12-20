@@ -99,7 +99,13 @@ public:
   void loadSurfaceMesh();
   void loadHalfEdges(std::string filePath);
   void halfedgeToObj(std::string exportFilePath);
-  void fillHoles();
+
+  void fillHoleSimple();
+  void fillHoleCenter();
+  void fillHoleEarClipping();
+
+  bool isEar(Polyhedron::Halfedge_handle he, const std::vector<Polyhedron::Halfedge_handle>& reflexVerts);
+  bool isConvex(Polyhedron::Halfedge_handle he);
 
 protected:
   std::vector<Vertex> _vertices;

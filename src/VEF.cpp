@@ -8,6 +8,8 @@
 #include <CGAL/IO/print_wavefront.h>
 #include <algorithm>
 
+#include <CGAL/Exact_predicates_exact_constructions_kernel.h>
+#include <CGAL/intersections.h>
 #include "VEF.hpp"
 
 using namespace std;
@@ -394,7 +396,100 @@ void VEF::halfedgeToObj(std::string exportFilePath) {
     output.close();
 }
 
-void VEF::fillHoles() {
+// work in progress, some legacy code for future use
+void VEF::fillHoleEarClipping() {
+
+    std::cout << "NOT YET IMPLEMENTED \n" << '\n';
+
+    // Find the hole
+    Polyhedron::Halfedge_handle heh = _polyhedron.halfedges_begin();
+    Polyhedron::Halfedge_iterator he_it = heh;
+
+    do {
+        if (he_it->is_border()) {
+            //std::cout << "border" << '\n';
+            Polyhedron::Halfedge_handle hole_it = he_it;
+
+            std::vector<Polyhedron::Halfedge_handle> ears;
+            std::vector<Polyhedron::Halfedge_handle> convexVerts;
+            std::vector<Polyhedron::Halfedge_handle> reflexVerts;
+
+            // find the reflex vertices
+            do {
+              if (isConvex(hole_it)) {
+                convexVerts.push_back(hole_it);
+              }
+              else {
+                reflexVerts.push_back(hole_it);
+              }
+              hole_it = hole_it->next();
+            } while(hole_it != he_it);
+
+            //std::cout << "convex size " << convexVerts.size() << '\n';
+            //std::cout << "reflex size " << reflexVerts.size() << '\n';
+            // find intersections
+            for (int i = 0; i < convexVerts.size(); i++) {
+              if (isEar(he_it, reflexVerts)) {
+                //std::cout << "ses 1 aurey" << std::endl;
+              }
+            }
+        }
+        he_it++;
+
+    } while(he_it != _polyhedron.halfedges_end());
+
+    std::cout << "NOT YET IMPLEMENTED \n" << '\n';
+}
+
+bool VEF::isEar(Polyhedron::Halfedge_handle he, const std::vector<Polyhedron::Halfedge_handle>& reflexVerts) {
+
+  typedef CGAL::Exact_predicates_exact_constructions_kernel K;
+
+  Polyhedron::Point_3 currentConvex = he->vertex()->point();
+  Polyhedron::Point_3 nextConvex = he->next()->vertex()->point();
+  Polyhedron::Point_3 previousConvex = he->prev()->vertex()->point();
+  Kernel::Triangle_3 triangle(currentConvex, nextConvex, previousConvex);
+
+  for (int i = 0; i < reflexVerts.size(); i++) {
+
+    Polyhedron::Point_3 currentPoint = reflexVerts[i]->vertex()->point();
+    Polyhedron::Point_3 nextPoint = reflexVerts[i]->next()->vertex()->point();
+    Polyhedron::Point_3 previousPoint = reflexVerts[i]->prev()->vertex()->point();
+
+    if (CGAL::intersection(Kernel::Segment_3(currentPoint, previousPoint), triangle) || CGAL::intersection(Kernel::Segment_3(currentPoint, nextPoint), triangle)) {
+      //std::cout << "false" << '\n';
+      return false;
+    }
+  }
+  //std::cout << "true" << '\n';
+  return true;
+}
+
+bool VEF::isConvex(Polyhedron::Halfedge_handle he) {
+
+  // Create the 2 vectors
+  Eigen::Vector3f vec1, vec2;
+  Polyhedron::Point_3 currentPoint = he->vertex()->point();
+  Polyhedron::Point_3 nextPoint = he->next()->vertex()->point();
+  Polyhedron::Point_3 previousPoint = he->prev()->vertex()->point();
+
+  vec1 = Eigen::Vector3f(nextPoint[0]-currentPoint[0], nextPoint[1]-currentPoint[1], nextPoint[2]-currentPoint[2]);
+  vec2 = Eigen::Vector3f(previousPoint[0]-currentPoint[0], previousPoint[1]-currentPoint[1], previousPoint[2]-currentPoint[2]);
+  vec1.normalize();
+  vec2.normalize();
+
+  Eigen::Vector3f crossProd = vec1.cross(vec2);
+  float minCoeff = crossProd.minCoeff();
+  //std::cout << "sinTheta : " << sinTheta << '\n';
+  if (minCoeff > 0) {
+    //std::cout << "angle(true) : " << acos(vec1.dot(vec2))*180/M_PI << '\n';
+    return true;
+  }
+  //std::cout << "angle(false) : " << -acos(vec1.dot(vec2))*180/M_PI << '\n';
+  return false;
+}
+
+void VEF::fillHoleSimple() {
 
     Polyhedron::Halfedge_handle heh = _polyhedron.halfedges_begin();
     Polyhedron::Halfedge_iterator he_it = heh;
@@ -402,7 +497,34 @@ void VEF::fillHoles() {
 
     do {
         if (he_it->is_border()) {
-            std::cout << "border" << '\n';
+            cpt++;
+            _polyhedron.fill_hole(he_it);
+        }
+        he_it++;
+
+    } while(he_it != _polyhedron.halfedges_end());
+
+    std::cout << "=========================================" << '\n';
+    std::cout << "AFTER SIMPLE FILL HOLE" << '\n';
+    std::cout << "=========================================" << '\n';
+
+    std::cout << "is valid ? (combinatorial consistency ?)" << _polyhedron.is_valid() << '\n';
+    std::cout << "is closed ? " << _polyhedron.is_closed() <<'\n';
+    _polyhedron.normalize_border();
+    std::cout << "number of border halfedges : " << _polyhedron.size_of_border_halfedges() << '\n';
+
+    HalfedgeToVEF();
+    _initialized = false;
+}
+
+void VEF::fillHoleCenter() {
+
+    Polyhedron::Halfedge_handle heh = _polyhedron.halfedges_begin();
+    Polyhedron::Halfedge_iterator he_it = heh;
+    int cpt = 0;
+
+    do {
+        if (he_it->is_border()) {
             cpt++;
             CGAL::Vector_3<Kernel> vector(0.0,0.0,0.0);
             double order = 0;
@@ -425,7 +547,7 @@ void VEF::fillHoles() {
     } while(he_it != _polyhedron.halfedges_end());
 
     std::cout << "=========================================" << '\n';
-    std::cout << "AFTER FILL HOLE" << '\n';
+    std::cout << "AFTER ENTER FILL HOLE" << '\n';
     std::cout << "=========================================" << '\n';
 
     std::cout << "is valid ? (combinatorial consistency ?)" << _polyhedron.is_valid() << '\n';

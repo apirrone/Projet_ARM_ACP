@@ -61,9 +61,17 @@ void MainWindow::createActions() {
   _exitAction->setStatusTip(tr("Exit the program"));
   connect(_exitAction, SIGNAL(triggered()), this, SLOT(exit()));
 
-  _fillHoleAction = new QAction(tr("&Fill Holes"), this);
-  _fillHoleAction->setStatusTip(tr("Tries to fill the holes of this model"));
-  connect(_fillHoleAction, SIGNAL(triggered()), this, SLOT(fillHole()));
+  _fillHoleSimpleAction = new QAction(tr("&Simple"), this);
+  _fillHoleSimpleAction->setStatusTip(tr("Tries to fill the holes of this model using CGAL's method"));
+  connect(_fillHoleSimpleAction, SIGNAL(triggered()), this, SLOT(fillHoleSimple()));
+
+  _fillHoleCenterAction = new QAction(tr("&Center"), this);
+  _fillHoleCenterAction->setStatusTip(tr("Tries to fill the holes of this model using the geocenter method"));
+  connect(_fillHoleCenterAction, SIGNAL(triggered()), this, SLOT(fillHoleCenter()));
+
+  _fillHoleEarClippingAction = new QAction(tr("&Ear Clipping"), this);
+  _fillHoleEarClippingAction->setStatusTip(tr("Tries to fill the holes of this model using the ear clipping method"));
+  connect(_fillHoleEarClippingAction, SIGNAL(triggered()), this, SLOT(fillHoleEarClipping()));
 }
 
 void MainWindow::createMenu() {
@@ -74,8 +82,10 @@ void MainWindow::createMenu() {
   _fileMenu->addSeparator();
   _fileMenu->addAction(_exitAction);
 
-  _modelMenu = menuBar()->addMenu(tr("&Model"));
-  _modelMenu->addAction(_fillHoleAction);
+  _fillHoleMenu = menuBar()->addMenu(tr("&Fill Holes"));
+  _fillHoleMenu->addAction(_fillHoleSimpleAction);
+  _fillHoleMenu->addAction(_fillHoleCenterAction);
+  _fillHoleMenu->addAction(_fillHoleEarClippingAction);
 }
 
 // Handles the opening of a 3D file
@@ -113,13 +123,21 @@ void MainWindow::exportAsObj() {
 						  tr("3D model (*.obj)"),
 						  Q_NULLPTR,
 						  QFileDialog::Options(QFileDialog::DontUseNativeDialog));
-  
+
   //_viewer->getVEF()->exportToObj(fileName.toStdString());
   _viewer->getVEF()->halfedgeToObj(fileName.toStdString());
 }
 
-void MainWindow::fillHole() {
-  _viewer->getVEF()->fillHoles();
+void MainWindow::fillHoleSimple() {
+  _viewer->getVEF()->fillHoleSimple();
+}
+
+void MainWindow::fillHoleCenter() {
+  _viewer->getVEF()->fillHoleCenter();
+}
+
+void MainWindow::fillHoleEarClipping() {
+  _viewer->getVEF()->fillHoleEarClipping();
 }
 
 void MainWindow::exit() {
